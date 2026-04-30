@@ -91,6 +91,7 @@ const tweets = (await getCollection('tweets'))
             </li>
           ))}
         </ul>
+        <p class="archive-link"><a href="/writing/">Browse the full Fun In Space archive</a></p>
       </div>
       <div class="panel">
         <h3>Newer writing on Substack</h3>
@@ -227,6 +228,10 @@ const tweets = (await getCollection('tweets'))
     padding-left: 1.1rem;
     color: var(--muted);
     line-height: 1.6;
+  }
+
+  .archive-link {
+    margin: 1rem 0 0;
   }
 
   .writing-grid {
