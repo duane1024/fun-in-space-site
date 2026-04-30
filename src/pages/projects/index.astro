@@ -9,7 +9,7 @@ const projects = (await getCollection('projects')).sort((a, b) => a.data.order -
 const ventures = (await getCollection('ventures')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Projects — Duane Moore" description="Selected projects, ventures, and technical work by Duane Moore.">
+<Layout title="Projects — Fun In Space" description="Selected projects, ventures, and technical work by Duane Moore.">
   <Section title="Projects" intro="Current products, technical experiments, and other work worth showing off in public.">
     <CardGrid>
       {projects.map((entry) => (
@@ -21,8 +21,35 @@ const ventures = (await getCollection('ventures')).sort((a, b) => a.data.order -
   <Section title="Ventures and companies" intro="Some things start as products, some as companies, and some as the sort of trouble worth causing.">
     <CardGrid>
       {ventures.map((entry) => (
-        <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
+        <article class="venture-card">
+          {entry.id === 'channel19' && (
+            <img class="venture-logo" src="/images/channel19-logo.svg" alt="Channel19 logo" />
+          )}
+          <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
+        </article>
       ))}
     </CardGrid>
   </Section>
 </Layout>
+
+<style>
+  .venture-card {
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(18, 26, 49, 0.95), rgba(11, 16, 32, 0.95));
+    border-radius: 18px;
+    padding: 1.2rem;
+  }
+
+  .venture-logo {
+    display: block;
+    width: 110px;
+    height: auto;
+    margin: 0 0 1rem;
+  }
+
+  .venture-card :global(.card) {
+    border: 0;
+    background: transparent;
+    padding: 0;
+  }
+</style>

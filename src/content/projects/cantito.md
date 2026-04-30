@@ -5,8 +5,8 @@ status: Active
 featured: true
 order: 1
 links:
-  - label: Project notes
-    url: /projects/
+  - label: Visit cantito.ai
+    url: https://cantito.ai/
 tech:
   - Product strategy
   - Language learning

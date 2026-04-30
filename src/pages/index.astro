@@ -24,10 +24,14 @@ const tweets = (await getCollection('tweets'))
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Duane Moore — Fun in Space" description={site.description}>
+<Layout title="Fun In Space | My contributions to the technium" description={site.description}>
   <section class="hero">
+    <div class="brand-banner">
+      <img src="/images/fun-in-space-header.jpg" alt="Fun In Space header banner" />
+    </div>
     <p class="eyebrow">{site.hero.eyebrow}</p>
     <h1>{site.hero.title}</h1>
+    <p class="tagline">My contributions to the technium</p>
     <p class="blurb">{site.hero.blurb}</p>
     <p class="detail">{site.hero.detail}</p>
     <div class="cta-row">
@@ -49,7 +53,12 @@ const tweets = (await getCollection('tweets'))
   <Section title="Companies and ventures" intro="Startups, consulting, and product bets — not just places worked, but things built from the inside.">
     <CardGrid>
       {ventures.map((entry) => (
-        <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
+        <article class="venture-card">
+          {entry.id === 'channel19' && (
+            <img class="venture-logo" src="/images/channel19-logo.svg" alt="Channel19 logo" />
+          )}
+          <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
+        </article>
       ))}
     </CardGrid>
   </Section>
@@ -106,8 +115,22 @@ const tweets = (await getCollection('tweets'))
 
 <style>
   .hero {
-    padding: 3rem 0 1.5rem;
-    max-width: 780px;
+    padding: 2rem 0 1.5rem;
+    max-width: 900px;
+  }
+
+  .brand-banner {
+    margin: 0 0 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    background: #0d1324;
+  }
+
+  .brand-banner img {
+    display: block;
+    width: 100%;
+    height: auto;
   }
 
   .eyebrow,
@@ -126,6 +149,13 @@ const tweets = (await getCollection('tweets'))
     margin: 0;
     font-size: clamp(2.8rem, 7vw, 5rem);
     line-height: 0.95;
+  }
+
+  .tagline {
+    margin: 0.5rem 0 0;
+    color: var(--accent-strong);
+    font-size: 1rem;
+    font-style: italic;
   }
 
   .blurb {
@@ -165,7 +195,8 @@ const tweets = (await getCollection('tweets'))
 
   .career-card,
   .panel,
-  .tweet {
+  .tweet,
+  .venture-card {
     border: 1px solid var(--border);
     background: linear-gradient(180deg, rgba(18, 26, 49, 0.95), rgba(11, 16, 32, 0.95));
     border-radius: 18px;
@@ -202,5 +233,18 @@ const tweets = (await getCollection('tweets'))
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
+  }
+
+  .venture-logo {
+    display: block;
+    width: 110px;
+    height: auto;
+    margin: 0 0 1rem;
+  }
+
+  .venture-card :global(.card) {
+    border: 0;
+    background: transparent;
+    padding: 0;
   }
 </style>

@@ -1,7 +1,7 @@
 ---
 title: Zarkov Technologies
 role: Founder / Consultant
-timeframe: 2019–2025
+timeframe: 2019–Present
 summary: Consulting and product work spanning payment systems, architecture modernization, and the messy reality of partner-facing technical delivery.
 featured: true
 order: 1

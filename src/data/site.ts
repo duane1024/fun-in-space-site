@@ -1,7 +1,7 @@
 export const site = {
-  title: 'Duane Moore',
+  title: 'Fun In Space',
   description:
-    'Engineer, architect, founder, and systems thinker. I build ambitious software products, lead technical teams, and write about systems, tools, and technology.',
+    'Fun In Space — Duane Moore on products, systems, software projects, and contributions to the technium.',
   url: 'https://fun-in-space.com',
   nav: [
     { href: '/', label: 'Home' },
@@ -19,9 +19,9 @@ export const site = {
   },
   hero: {
     eyebrow: 'Engineer / Architect / Founder',
-    title: 'Duane Moore',
+    title: 'Fun In Space',
     blurb:
-      'Engineer, architect, founder, and systems thinker. I build products, platforms, and technical organizations — then write about the systems, tools, and ideas behind them.',
+      'My contributions to the technium: products, platforms, technical organizations, and the systems, tools, and ideas behind them.',
     detail:
       'My work spans transaction-heavy platforms, mobile systems, AI assistants, language-learning products, and terminal software. The common thread is technical depth in service of something practical: a product that works, a team that ships, or a system that holds up under real pressure.',
   },
