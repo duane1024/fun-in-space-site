@@ -30,7 +30,8 @@ const tweets = (await getCollection('tweets'))
       <img src="/images/fun-in-space-header.jpg" alt="Fun In Space header banner" />
     </div>
     <p class="eyebrow">{site.hero.eyebrow}</p>
-    <h1>{site.hero.title}</h1>
+    <p class="site-title">{site.hero.title}</p>
+    <h1>Duane Moore</h1>
     <p class="tagline">My contributions to the technium</p>
     <p class="blurb">{site.hero.blurb}</p>
     <p class="detail">{site.hero.detail}</p>
@@ -45,7 +46,7 @@ const tweets = (await getCollection('tweets'))
   <Section title="Featured projects" intro="A few things that best capture what Duane is building now: products with a point of view, not just code for its own sake.">
     <CardGrid>
       {projects.map((entry) => (
-        <Card title={entry.data.title} subtitle={entry.data.status} body={entry.data.summary} links={entry.data.links} />
+        <Card title={entry.data.title} icon={entry.data.icon} subtitle={entry.data.status} body={entry.data.summary} links={entry.data.links} />
       ))}
     </CardGrid>
   </Section>
@@ -53,12 +54,7 @@ const tweets = (await getCollection('tweets'))
   <Section title="Companies and ventures" intro="Startups, consulting, and product bets — not just places worked, but things built from the inside.">
     <CardGrid>
       {ventures.map((entry) => (
-        <article class="venture-card">
-          {entry.id === 'channel19' && (
-            <img class="venture-logo" src="/images/channel19-logo.svg" alt="Channel19 logo" />
-          )}
-          <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
-        </article>
+        <Card title={entry.data.title} icon={entry.data.icon} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
       ))}
     </CardGrid>
   </Section>
@@ -68,7 +64,10 @@ const tweets = (await getCollection('tweets'))
       {career.map((entry) => (
         <article class="career-card">
           <p class="subtitle">{entry.data.role}</p>
-          <h3>{entry.data.company}</h3>
+          <h3 class="title-row">
+            {entry.data.icon && <img class="inline-icon" src={entry.data.icon} alt="" aria-hidden="true" />}
+            <span>{entry.data.company}</span>
+          </h3>
           <p class="summary">{entry.data.summary}</p>
           <ul>
             {entry.data.highlights.map((item) => (
@@ -145,10 +144,18 @@ const tweets = (await getCollection('tweets'))
     margin: 0 0 0.8rem;
   }
 
-  h1 {
+  .site-title {
     margin: 0;
-    font-size: clamp(2.8rem, 7vw, 5rem);
-    line-height: 0.95;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    color: white;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  h1 {
+    margin: 0.2rem 0 0;
+    font-size: clamp(2.2rem, 5vw, 3.6rem);
+    line-height: 0.98;
   }
 
   .tagline {
@@ -195,8 +202,7 @@ const tweets = (await getCollection('tweets'))
 
   .career-card,
   .panel,
-  .tweet,
-  .venture-card {
+  .tweet {
     border: 1px solid var(--border);
     background: linear-gradient(180deg, rgba(18, 26, 49, 0.95), rgba(11, 16, 32, 0.95));
     border-radius: 18px;
@@ -235,16 +241,16 @@ const tweets = (await getCollection('tweets'))
     gap: 1rem;
   }
 
-  .venture-logo {
-    display: block;
-    width: 110px;
-    height: auto;
-    margin: 0 0 1rem;
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
   }
 
-  .venture-card :global(.card) {
-    border: 0;
-    background: transparent;
-    padding: 0;
+  .inline-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    flex: 0 0 auto;
   }
 </style>

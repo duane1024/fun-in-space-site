@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Atlas</title>
+
+    <link rel="icon" type="image/svg+xml" href="/logos/atlas-logo.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/logos/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/logos/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logos/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/logos/apple-touch-icon-ipad.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#e14328" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Atlas" />
+    <meta property="og:description" content="Atlas - The Brokerage of the Future. Available Today." />
+    <meta property="og:image" content="https://www.atlascdt.com/images/rothko-with-logo.png" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Atlas" />
+    <meta name="twitter:description" content="Atlas - The Brokerage of the Future. Available Today." />
+    <meta name="twitter:image" content="https://www.atlascdt.com/images/rothko-with-logo.png" />
+    <meta name="twitter:app:name:iphone" content="Atlas - Buy, Sell, Rent" />
+    <meta name="twitter:app:id:iphone" content="6746348779" />
+    <meta name="twitter:app:url:iphone" content="https://apps.apple.com/us/app/atlas-buy-sell-rent/id6746348779" />
+    <script type="module" crossorigin src="/assets/index-BZpG84PG.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-n-C0EjKv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

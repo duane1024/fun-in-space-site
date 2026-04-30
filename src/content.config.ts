@@ -5,6 +5,7 @@ const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
   schema: z.object({
     title: z.string(),
+    icon: z.string().optional(),
     summary: z.string(),
     status: z.string().optional(),
     featured: z.boolean().default(false),
@@ -25,6 +26,7 @@ const ventures = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/ventures' }),
   schema: z.object({
     title: z.string(),
+    icon: z.string().optional(),
     role: z.string(),
     timeframe: z.string(),
     summary: z.string(),
@@ -45,6 +47,8 @@ const career = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/career' }),
   schema: z.object({
     company: z.string(),
+    icon: z.string().optional(),
+    siteUrl: z.string().optional(),
     role: z.string(),
     timeframe: z.string(),
     summary: z.string(),

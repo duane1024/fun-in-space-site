@@ -1,5 +1,7 @@
 ---
 company: Clover / First Data
+icon: /icons/sites/clover-card.svg
+siteUrl: https://clover.com/
 role: Vice President of Engineering
 timeframe: 2013–2018
 summary: Led payments engineering across device software, backend services, and platform architecture for secure, high-availability transaction systems.

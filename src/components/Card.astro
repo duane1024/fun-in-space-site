@@ -3,16 +3,20 @@ interface Props {
   title: string;
   subtitle?: string;
   body: string;
+  icon?: string;
   links?: { label: string; url: string }[];
 }
 
-const { title, subtitle, body, links = [] } = Astro.props;
+const { title, subtitle, body, icon, links = [] } = Astro.props;
 ---
 
 <article class="card">
   <div class="copy">
     <p class="subtitle">{subtitle}</p>
-    <h3>{title}</h3>
+    <h3 class="title-row">
+      {icon && <img class="inline-icon" src={icon} alt="" aria-hidden="true" />}
+      <span>{title}</span>
+    </h3>
     <p>{body}</p>
   </div>
   {links.length > 0 && (
@@ -47,6 +51,19 @@ const { title, subtitle, body, links = [] } = Astro.props;
   h3 {
     margin: 0 0 0.5rem;
     font-size: 1.2rem;
+  }
+
+  .title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .inline-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    flex: 0 0 auto;
   }
 
   .copy p:last-child {

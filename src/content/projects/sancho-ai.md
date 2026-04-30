@@ -1,5 +1,6 @@
 ---
 title: Sancho AI
+icon: /icons/sites/sancho-ai-card.svg
 summary: An AI assistant product and operating environment focused on practical autonomy, reliable workflows, and the radical idea that assistants should be genuinely useful.
 status: Active
 featured: true

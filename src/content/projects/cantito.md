@@ -1,5 +1,6 @@
 ---
 title: Cantito
+icon: /icons/sites/cantito-card.svg
 summary: A language-learning product built around music, stories, literature, and spaced repetition — meant to feel like contact with a culture, not a pile of flashcards.
 status: Active
 featured: true
