@@ -1,5 +1,7 @@
 ---
 company: Intelligent Software Solutions (ISS)
+icon: /icons/sites/iss-card.png
+siteUrl: https://www.issinc.com/
 role: Chief Architect
 timeframe: 2003–2013
 summary: Led architecture for large-scale data and platform systems, setting long-range technical direction across complex programs.
