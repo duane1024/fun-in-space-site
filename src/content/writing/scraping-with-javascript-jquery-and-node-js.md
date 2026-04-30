@@ -11,9 +11,9 @@ tags:
 draft: false
 ---
 
-OK, I admit it. The biggest thing I knew about Node.js before working with it over the past couple of days was from this video, entitled: [“Node.js is Bad Ass Rock Star Tech”](http://www.youtube.com/watch?v=bzkRVzciAZg).
+OK, I admit it. The biggest thing I knew about Node.js before working with it over the past couple of days was from this video, entitled: [“Node.js is Bad Ass Rock Star Tech”](https://www.youtube.com/watch?v=bzkRVzciAZg).
 
-It still cracks me up. However, after watching this [intro video](http://www.youtube.com/watch?v=jo_B4LTHi3I) by the creator of Node.js and doing a few Google searches, I have a new (partial) web scraper written in Javascript (and using libraries from Node.js via the [Node package manager](https://npmjs.org)) that is extremely simple.  I’m pretty impressed.  I should point out that I’m not trying to run any type of services here, just using Node.js as a scripting environment that I can run on the command line that allows me to use some simple Javascript and JQuery commands to do my web scraping.  The code is simple enough that I could reproduce it here, pretty much verbatim (see also the [original file in Github](https://github.com/duane1024/miracle/blob/master/scraping/node/qp_scrape.js)).
+It still cracks me up. However, after watching this [intro video](https://www.youtube.com/watch?v=jo_B4LTHi3I) by the creator of Node.js and doing a few Google searches, I have a new (partial) web scraper written in Javascript (and using libraries from Node.js via the [Node package manager](https://npmjs.org)) that is extremely simple.  I’m pretty impressed.  I should point out that I’m not trying to run any type of services here, just using Node.js as a scripting environment that I can run on the command line that allows me to use some simple Javascript and JQuery commands to do my web scraping.  The code is simple enough that I could reproduce it here, pretty much verbatim (see also the [original file in Github](https://github.com/duane1024/miracle/blob/master/scraping/node/qp_scrape.js)).
 
 var $ = require('jquery');
 
@@ -29,37 +29,37 @@ var html = '';
 
 http.get(queenpediaSongList, function(result) {
 
-  result.on('data', function(data) {
+  result.on('data', function(data) {
 
-    html += data;
+    html += data;
 
-  }).on('end', function() {
+  }).on('end', function() {
 
-    var songitemsInTables =
+    var songitemsInTables =
 
-      $(html).find('#bodyContent > table')
+      $(html).find('#bodyContent > table')
 
-        .slice(1).find('td').find('li');
+        .slice(1).find('td').find('li');
 
-    var songitemsInList =
+    var songitemsInList =
 
-      $(html).find('#bodyContent > ul').find('li');
+      $(html).find('#bodyContent > ul').find('li');
 
-    var songitems = $.merge(songitemsInTables, songitemsInList);
+    var songitems = $.merge(songitemsInTables, songitemsInList);
 
-    songitems.each(function() {
+    songitems.each(function() {
 
-      var songtitle = $(this).find('a').text().trim();
+      var songtitle = $(this).find('a').text().trim();
 
-      var songurl = $(this).find('a').attr('href');
+      var songurl = $(this).find('a').attr('href');
 
-      console.log("Song Title = " + songtitle + ",
+      console.log("Song Title = " + songtitle + ",
 
-        Song URL = " + songurl);
+        Song URL = " + songurl);
 
-    });
+    });
 
-  });
+  });
 
 });
 
