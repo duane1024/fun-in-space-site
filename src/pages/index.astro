@@ -4,6 +4,7 @@ import Card from '../components/Card.astro';
 import CardGrid from '../components/CardGrid.astro';
 import Section from '../components/Section.astro';
 import { site } from '../data/site';
+import { recentSubstackPosts } from '../data/substack';
 import Layout from '../layouts/Layout.astro';
 
 const projects = (await getCollection('projects'))
@@ -94,8 +95,17 @@ const tweets = (await getCollection('tweets'))
         <p class="archive-link"><a href="/writing/">Browse the full Fun In Space archive</a></p>
       </div>
       <div class="panel">
-        <h3>Newer writing on Substack</h3>
-        <p>For more recent essays, analysis, and updates, Substack is the best place to follow along.</p>
+        <h3>Recent from Substack</h3>
+        <p>More recent essays and updates live on Substack.</p>
+        <div class="substack-list">
+          {recentSubstackPosts.map((post) => (
+            <article class="substack-item">
+              <p class="sub-meta">{post.publication} · {post.date}</p>
+              <h4><a href={post.url}>{post.title}</a></h4>
+              <p>{post.summary}</p>
+            </article>
+          ))}
+        </div>
         <a class="text-link" href={site.social.substack}>Visit duane1024.substack.com</a>
       </div>
     </div>
@@ -244,6 +254,39 @@ const tweets = (await getCollection('tweets'))
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
+  }
+
+  .substack-list {
+    display: grid;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+
+  .substack-item {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .substack-item:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .sub-meta {
+    margin: 0;
+    color: var(--accent);
+    font-size: 0.82rem;
+  }
+
+  .substack-item h4 {
+    margin: 0.35rem 0 0.4rem;
+    font-size: 1rem;
+  }
+
+  .substack-item p:last-child {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.6;
   }
 
   .title-row {
