@@ -1,6 +1,6 @@
 ---
 company: Clover / First Data
-icon: /icons/sites/clover-card.svg
+icon: /icons/sites/clover-card.jpg
 siteUrl: https://clover.com/
 role: Vice President of Engineering
 timeframe: 2013–2018
