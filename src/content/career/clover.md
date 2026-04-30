@@ -4,7 +4,7 @@ icon: /icons/sites/clover-card.jpg
 siteUrl: https://clover.com/
 role: Vice President of Engineering
 timeframe: 2013–2018
-summary: Led payments engineering across device software, backend services, and platform architecture for secure, high-availability transaction systems.
+summary: Led engineering in the point-of-sale and payments space across device software, backend services, and platform architecture for secure, high-availability transaction systems.
 highlights:
   - Led large distributed engineering teams of 65+ across multiple regions.
   - Directed software spanning payments devices, backend services, and platform systems.
