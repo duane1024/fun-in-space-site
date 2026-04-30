@@ -100,12 +100,12 @@ const tweets = (await getCollection('tweets'))
     </div>
   </Section>
 
-  <Section title="Selected posts from X" intro="A few posts that reflect Duane's public voice: builder energy, technical judgment, and the occasional well-earned side-eye.">
+  <Section title="Selected posts from X / Twitter" intro="A few posts that reflect Duane's public voice: builder energy, technical judgment, and the occasional well-earned side-eye.">
     <div class="tweet-list">
       {tweets.map((entry) => (
         <article class="tweet">
           <p>{entry.body}</p>
-          <a href={entry.data.url}>View on X</a>
+          <a href={entry.data.url}>View on X / Twitter</a>
         </article>
       ))}
     </div>

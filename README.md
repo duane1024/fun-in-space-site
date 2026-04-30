@@ -7,7 +7,7 @@ Built with Astro and intended to replace the legacy WordPress.com site with a fa
 - companies and ventures
 - career highlights
 - archived writing from Fun in Space
-- selected posts from X
+- selected posts from X / Twitter
 
 ## Local development
 
