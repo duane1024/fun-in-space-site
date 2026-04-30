@@ -1,0 +1,66 @@
+---
+interface Props {
+  title: string;
+  subtitle?: string;
+  body: string;
+  links?: { label: string; url: string }[];
+}
+
+const { title, subtitle, body, links = [] } = Astro.props;
+---
+
+<article class="card">
+  <div class="copy">
+    <p class="subtitle">{subtitle}</p>
+    <h3>{title}</h3>
+    <p>{body}</p>
+  </div>
+  {links.length > 0 && (
+    <ul class="links">
+      {links.map((link) => (
+        <li><a href={link.url}>{link.label}</a></li>
+      ))}
+    </ul>
+  )}
+</article>
+
+<style>
+  .card {
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(18, 26, 49, 0.95), rgba(11, 16, 32, 0.95));
+    border-radius: 18px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-height: 100%;
+  }
+
+  .subtitle {
+    margin: 0 0 0.3rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.78rem;
+  }
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .copy p:last-child {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+</style>

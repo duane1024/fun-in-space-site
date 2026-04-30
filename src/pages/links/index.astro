@@ -1,0 +1,24 @@
+---
+import { site } from '../../data/site';
+import Layout from '../../layouts/Layout.astro';
+import Section from '../../components/Section.astro';
+---
+
+<Layout title="Links — Duane Moore" description="Links for Duane Moore.">
+  <Section title="Links" intro="The short version: here are the places on the internet where Duane actually shows up.">
+    <ul class="links">
+      <li><a href={site.social.x}>X / Twitter</a></li>
+      <li><a href={site.social.substack}>Substack</a></li>
+      <li><a href={site.social.linkedin}>LinkedIn</a></li>
+      <li><a href={site.social.sancho}>AskSancho.ai</a></li>
+    </ul>
+  </Section>
+</Layout>
+
+<style>
+  .links {
+    display: grid;
+    gap: 0.8rem;
+    padding-left: 1.1rem;
+  }
+</style>

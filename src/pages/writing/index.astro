@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import Section from '../../components/Section.astro';
+import { site } from '../../data/site';
+import Layout from '../../layouts/Layout.astro';
+
+const posts = (await getCollection('writing'))
+  .filter((entry) => !entry.data.draft)
+  .sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+---
+
+<Layout title="Writing — Duane Moore" description="Archive and writing links for Duane Moore.">
+  <Section title="Writing" intro="Fun in Space posts are being migrated here as first-class content, not buried in some sad export folder.">
+    <div class="posts">
+      {posts.map((entry) => (
+        <article class="post-row">
+          <p class="meta">{entry.data.published.toISOString().slice(0, 10)}</p>
+          <h3><a href={`/writing/${entry.id}/`}>{entry.data.title}</a></h3>
+          <p>{entry.data.excerpt}</p>
+        </article>
+      ))}
+    </div>
+  </Section>
+
+  <Section title="Elsewhere" intro="Newer writing lives on Substack.">
+    <p><a href={site.social.substack}>Visit duane1024.substack.com</a></p>
+  </Section>
+</Layout>
+
+<style>
+  .posts {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .post-row {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  .post-row:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  .meta,
+  .post-row p {
+    color: var(--muted);
+  }
+
+  h3 {
+    margin: 0.15rem 0 0.45rem;
+  }
+</style>

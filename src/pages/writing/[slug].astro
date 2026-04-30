@@ -1,0 +1,46 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('writing', ({ data }) => !data.draft);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<Layout title={`${post.data.title} — Duane Moore`} description={post.data.excerpt}>
+  <article class="post">
+    <p class="meta">{post.data.published.toISOString().slice(0, 10)}</p>
+    <h1>{post.data.title}</h1>
+    <Content />
+    {post.data.legacyUrl && (
+      <p class="legacy">Legacy URL: <a href={post.data.legacyUrl}>{post.data.legacyUrl}</a></p>
+    )}
+  </article>
+</Layout>
+
+<style>
+  .post {
+    max-width: 760px;
+  }
+
+  .meta,
+  .legacy {
+    color: var(--muted);
+  }
+
+  h1 {
+    margin-top: 0.25rem;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.05;
+  }
+
+  .post :global(p),
+  .post :global(li) {
+    color: var(--muted);
+    line-height: 1.8;
+  }
+</style>

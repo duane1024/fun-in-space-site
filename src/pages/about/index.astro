@@ -1,0 +1,41 @@
+---
+import Section from '../../components/Section.astro';
+import Layout from '../../layouts/Layout.astro';
+
+---
+
+<Layout title="About — Duane Moore" description="About Duane Moore.">
+  <Section title="About" intro="A builder's bio, not a corporate hostage note.">
+    <div class="stack">
+      <p>
+        Duane Moore is an engineer, architect, founder, and systems thinker with experience spanning startups,
+        consulting, mobile platforms, backend systems, AI workflows, and high-availability transaction infrastructure.
+      </p>
+      <p>
+        He has led engineering organizations, built products across iOS, Android, web, and backend systems, and spent
+        a good chunk of his career translating ambitious ideas into working software under real-world constraints.
+      </p>
+      <p>
+        His work has included product and engineering leadership at Atlas and Channel19, consulting through Zarkov
+        Technologies, payments and platform leadership at Clover, and large-scale systems architecture at Intelligent
+        Software Solutions.
+      </p>
+      <p>
+        He writes about software, tools, AI, systems design, and the occasional technological absurdity. These days,
+        his main public outposts are this site, Substack, and <a href="https://x.com/Duane1024">@Duane1024</a>.
+      </p>
+    </div>
+  </Section>
+</Layout>
+
+<style>
+  .stack {
+    max-width: 760px;
+  }
+
+  .stack p {
+    color: var(--muted);
+    line-height: 1.8;
+    font-size: 1.03rem;
+  }
+</style>
