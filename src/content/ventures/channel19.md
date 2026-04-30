@@ -8,4 +8,4 @@ order: 3
 links: []
 ---
 
-At Channel19, Duane led engineering execution and architecture, improving external data source query performance by roughly 95% while balancing product speed with production quality.
+At Channel19, Duane led engineering execution and architecture, improving external data-source query performance by roughly 95% while balancing product velocity with production quality and operational sanity.

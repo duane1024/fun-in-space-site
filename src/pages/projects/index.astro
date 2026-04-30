@@ -10,7 +10,7 @@ const ventures = (await getCollection('ventures')).sort((a, b) => a.data.order -
 ---
 
 <Layout title="Projects — Duane Moore" description="Selected projects, ventures, and technical work by Duane Moore.">
-  <Section title="Projects" intro="Current products, technical experiments, and work worth showing off in public.">
+  <Section title="Projects" intro="Current products, technical experiments, and other work worth showing off in public.">
     <CardGrid>
       {projects.map((entry) => (
         <Card title={entry.data.title} subtitle={entry.data.status} body={entry.data.summary} links={entry.data.links} />
@@ -18,7 +18,7 @@ const ventures = (await getCollection('ventures')).sort((a, b) => a.data.order -
     </CardGrid>
   </Section>
 
-  <Section title="Ventures and companies" intro="Some things start as products, some as companies, and some as delightful trouble.">
+  <Section title="Ventures and companies" intro="Some things start as products, some as companies, and some as the sort of trouble worth causing.">
     <CardGrid>
       {ventures.map((entry) => (
         <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />

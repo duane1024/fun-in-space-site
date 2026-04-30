@@ -38,7 +38,7 @@ const tweets = (await getCollection('tweets'))
     </div>
   </section>
 
-  <Section title="Featured projects" intro="Products and technical work that best capture what Duane is building now.">
+  <Section title="Featured projects" intro="A few things that best capture what Duane is building now: products with a point of view, not just code for its own sake.">
     <CardGrid>
       {projects.map((entry) => (
         <Card title={entry.data.title} subtitle={entry.data.status} body={entry.data.summary} links={entry.data.links} />
@@ -46,7 +46,7 @@ const tweets = (await getCollection('tweets'))
     </CardGrid>
   </Section>
 
-  <Section title="Companies and ventures" intro="A mix of startups, consulting, and product bets — not just jobs, but things built from the inside.">
+  <Section title="Companies and ventures" intro="Startups, consulting, and product bets — not just places worked, but things built from the inside.">
     <CardGrid>
       {ventures.map((entry) => (
         <Card title={entry.data.title} subtitle={`${entry.data.role} · ${entry.data.timeframe}`} body={entry.data.summary} links={entry.data.links} />
@@ -54,7 +54,7 @@ const tweets = (await getCollection('tweets'))
     </CardGrid>
   </Section>
 
-  <Section title="Career highlights" intro="A few stops where the scale, complexity, or impact was too meaningful to bury in a resume PDF.">
+  <Section title="Career highlights" intro="A few roles where the scale, complexity, or consequences were too significant to leave trapped in resume bullets.">
     <CardGrid>
       {career.map((entry) => (
         <article class="career-card">
@@ -92,7 +92,7 @@ const tweets = (await getCollection('tweets'))
     </div>
   </Section>
 
-  <Section title="Selected posts from X" intro="A few recent posts that reflect Duane's current public voice: builder energy, technical judgment, and occasional side-eye.">
+  <Section title="Selected posts from X" intro="A few posts that reflect Duane's public voice: builder energy, technical judgment, and the occasional well-earned side-eye.">
     <div class="tweet-list">
       {tweets.map((entry) => (
         <article class="tweet">

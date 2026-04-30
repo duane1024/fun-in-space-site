@@ -21,8 +21,8 @@ export const site = {
     eyebrow: 'Engineer / Architect / Founder',
     title: 'Duane Moore',
     blurb:
-      'Engineer, architect, founder, and systems thinker. I build ambitious software products, lead technical teams, and write about systems, tools, AI, and the occasional technological absurdity.',
+      'Engineer, architect, founder, and systems thinker. I build products, platforms, and technical organizations — then write about the systems, tools, and ideas behind them.',
     detail:
-      'From transaction-heavy platforms and mobile systems to AI assistants, language-learning products, and terminal software, my work tends to sit at the intersection of technical depth, product ambition, and practical execution.',
+      'My work spans transaction-heavy platforms, mobile systems, AI assistants, language-learning products, and terminal software. The common thread is technical depth in service of something practical: a product that works, a team that ships, or a system that holds up under real pressure.',
   },
 };

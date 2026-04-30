@@ -1,6 +1,6 @@
 ---
 title: Cantito
-summary: A language-learning product built around music, stories, literature, and spaced repetition instead of sterile drill work.
+summary: A language-learning product built around music, stories, literature, and spaced repetition — meant to feel like contact with a culture, not a pile of flashcards.
 status: Active
 featured: true
 order: 1
@@ -14,4 +14,4 @@ tech:
   - AI workflows
 ---
 
-Cantito is Duane's effort to make language learning feel like contact with a culture rather than a grind of disconnected vocabulary exercises.
+Cantito is Duane's attempt to make language learning feel alive: less drill, more meaning; less gamified busywork, more music, stories, and cultural immersion with enough structure to actually stick.
