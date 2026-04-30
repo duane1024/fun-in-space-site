@@ -41,3 +41,5 @@ Legacy WordPress post URLs are mapped in `public/_redirects` so old links can fo
 - Writing content lives under `src/content/writing/`
 - Featured homepage data is currently content-driven via Astro collections
 - Newer essays should link out to Substack unless we later choose to ingest them locally
+
+<!-- redeploy trigger: 2026-04-30T23:28Z -->
