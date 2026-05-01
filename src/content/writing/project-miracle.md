@@ -20,4 +20,6 @@ First, a little bit of background.  In 1988, after a roughly two-year hiatus, Qu
 
 ![](https://i0.wp.com/static.queenonline.com.s3.amazonaws.com/cms_page_media/uploads/the_miracle_resize_240_240.jpg)
 
+![Project Miracle artwork](/images/project-miracle-queen.jpg)
+
 More to come shortly.
