@@ -1,6 +1,6 @@
 ---
 company: National Center for Supercomputing Applications (NCSA)
-icon: /icons/sites/ncsa-card.svg
+icon: /icons/sites/ncsa-card.jpg
 siteUrl: https://www.ncsa.illinois.edu/
 role: Undergraduate Research Programmer
 timeframe: 1995–1999
