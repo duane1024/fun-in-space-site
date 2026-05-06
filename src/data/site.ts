@@ -23,6 +23,6 @@ export const site = {
     blurb:
       'My contributions to the technium: products, platforms, technical organizations, and the systems, tools, and ideas behind them.',
     detail:
-      'My work spans transaction-heavy platforms, mobile systems, AI assistants, language-learning products, and terminal software. The common thread is technical depth in service of something practical: a product that works, a team that ships, or a system that holds up under real pressure.',
+      'I build ambitious software at the intersection of product, systems, and execution: transaction-heavy platforms, mobile experiences, AI assistants, language-learning products, and developer tools. Across startups and established teams, I’ve led architecture, shipped real products, and turned messy, high-stakes problems into systems that are resilient, elegant, and useful enough that people actually want to use them.',
   },
 };
