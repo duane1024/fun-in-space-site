@@ -1,8 +1,8 @@
 ---
 tweetId: '2028290454706348245'
 url: https://x.com/Duane1024/status/2028290454706348245
-featured: true
-order: 3
+featured: false
+order: 99
 published: 2026-03-02T02:05:02Z
 ---
 

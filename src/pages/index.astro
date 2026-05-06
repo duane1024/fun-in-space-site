@@ -23,6 +23,16 @@ const writing = (await getCollection('writing'))
 const tweets = (await getCollection('tweets'))
   .filter((entry) => entry.data.featured)
   .sort((a, b) => a.data.order - b.data.order);
+
+const tweetTimestampFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  timeZone: 'UTC',
+  timeZoneName: 'short',
+});
 ---
 
 <Layout title="Fun In Space | My contributions to the technium" description={site.description}>
@@ -115,6 +125,13 @@ const tweets = (await getCollection('tweets'))
     <div class="tweet-list">
       {tweets.map((entry) => (
         <article class="tweet">
+          {entry.data.published && (
+            <p class="tweet-meta">
+              <time datetime={entry.data.published.toISOString()}>
+                {tweetTimestampFormatter.format(entry.data.published)}
+              </time>
+            </p>
+          )}
           <p>{entry.body}</p>
           <a href={entry.data.url}>View on X / Twitter</a>
         </article>
@@ -143,7 +160,8 @@ const tweets = (await getCollection('tweets'))
   }
 
   .eyebrow,
-  .subtitle {
+  .subtitle,
+  .tweet-meta {
     color: var(--accent);
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -152,6 +170,12 @@ const tweets = (await getCollection('tweets'))
 
   .eyebrow {
     margin: 0 0 0.8rem;
+  }
+
+  .tweet-meta {
+    margin: 0 0 0.65rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
   }
 
   .site-title {
