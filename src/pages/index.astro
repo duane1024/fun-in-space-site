@@ -33,7 +33,9 @@ const tweets = (await getCollection('tweets'))
     <p class="eyebrow">{site.hero.eyebrow}</p>
     <h1>Duane Moore</h1>
     <p class="tagline">{site.hero.blurb}</p>
-    <p class="detail">{site.hero.detail}</p>
+    <p class="detail">{site.hero.detail.map((segment) => (
+      typeof segment === 'string' ? segment : <a href={segment.href}>{segment.text}</a>
+    ))}</p>
     <div class="cta-row">
       <a class="button primary" href="/projects/">View projects</a>
       <a class="button" href="/writing/">Read writing</a>
@@ -124,7 +126,6 @@ const tweets = (await getCollection('tweets'))
 <style>
   .hero {
     padding: 2rem 0 1.5rem;
-    max-width: 900px;
   }
 
   .brand-banner {
@@ -185,7 +186,7 @@ const tweets = (await getCollection('tweets'))
     margin: 1rem 0 0;
     color: var(--muted);
     line-height: 1.75;
-    max-width: 70ch;
+    max-width: 85ch;
   }
 
   .cta-row {
