@@ -23,6 +23,6 @@ export const site = {
     blurb:
       'My contributions to the technium: products, platforms, technical organizations, and the systems, tools, and ideas behind them.',
     detail:
-      'I build ambitious software at the intersection of product, systems, and execution: transaction-heavy platforms, mobile experiences, AI assistants, language-learning products, and developer tools. Across startups and established teams, I’ve led architecture, shipped real products, and turned messy, high-stakes problems into systems that are resilient, elegant, and useful enough that people actually want to use them.',
+      'I’ve spent my career at the frontier where new technology meets consequential real-world systems: early online collaboration and distance learning, autonomous vehicles, Air Force command-and-control, large-scale data platforms for space situational awareness, secure payments, mobile computing, and AI-native products. I’ve worked across the stack — from embedded systems and distributed infrastructure to developer platforms, mobile apps, and product architecture — and across the org chart, as an engineer, architect, executive, and founder. The pattern is simple: I go deep fast, bring clarity to hard problems, and help build systems, teams, and products that hold up when the stakes are real.',
   },
 };
