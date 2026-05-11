@@ -1,0 +1,650 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 8 — MIMD MPP: The Killer Micros, Connected &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-08-mimd-mpp';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 9 — MPI: The Standard That Stuck" href="week-09-mpi.html" />
+    <link rel="prev" title="Week 7 — The Connection Machine: SIMD Massively Parallel" href="week-07-connection-machine.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-08-mimd-mpp.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 8 — MIMD MPP: The Killer Micros, Connected</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-shape-of-an-mpp">The shape of an MPP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intel-ipsc-family-19851990">Intel iPSC family (1985–1990)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intel-paragon-1992">Intel Paragon (1992)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-t3d-1993-and-t3e-1995-cray-s-mpp-turn">Cray T3D (1993) and T3E (1995): Cray’s MPP turn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t3d-1993">T3D (1993)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t3e-1995-the-most-successful-pure-mpp-ever-sold">T3E (1995): the most successful pure MPP ever sold</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ibm-sp1-1993-and-sp2-1994">IBM SP1 (1993) and SP2 (1994)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asci-red-1997-the-first-sustained-tflops">ASCI Red (1997): the first sustained TFLOPS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-two-programming-models-shmem-vs-mpi">The two programming models: SHMEM vs. MPI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-mpp-won">Why MPP won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-mpp-cost-the-programmer">What MPP cost the programmer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-toy-mpp-simulator">Lab — Toy MPP simulator</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-8-mimd-mpp-the-killer-micros-connected">
+<h1>Week 8 — MIMD MPP: The Killer Micros, Connected<a class="headerlink" href="#week-8-mimd-mpp-the-killer-micros-connected" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>A modern supercomputer is a tightly-coupled collection of independent computers, each running a copy of an operating system, executing different parts of a parallel application, communicating over a fast network. This is the <strong>MIMD MPP</strong> model — Multiple Instruction Multiple Data, Massively Parallel Processor. The ideas are older, but the commercial form that won HPC took shape in the mid-1980s, was productized in the early 1990s, and decisively won the architecture war by 1996. Every Top500 entry today is some flavor of MIMD MPP with accelerators bolted on.</p>
+<p>This week is the formative phase: 1985–1997, when the industry settled the question of how to lash thousands of microprocessors together.</p>
+</section>
+<section id="the-shape-of-an-mpp">
+<h2>The shape of an MPP<a class="headerlink" href="#the-shape-of-an-mpp" title="Link to this heading">#</a></h2>
+<p>An MIMD MPP is conceptually simple:</p>
+<ol class="arabic simple">
+<li><p><strong>Nodes</strong>: each is a self-contained computer, with a CPU (microprocessor, not bespoke ECL), local memory, and a network interface. Often, a stripped-down kernel (not a full OS).</p></li>
+<li><p><strong>Interconnect</strong>: a fast network connecting the nodes. Topology matters: torus, hypercube, fat-tree, dragonfly. Latency and bandwidth dominate the system’s character.</p></li>
+<li><p><strong>Programming model</strong>: each node runs a separate process. Processes communicate by <em>sending messages</em> over the network or, in some designs, by <em>directly accessing remote memory</em> (one-sided communication / SHMEM).</p></li>
+</ol>
+<p>The hard part is the interconnect. The hard part has <em>always</em> been the interconnect.</p>
+</section>
+<section id="intel-ipsc-family-19851990">
+<h2>Intel iPSC family (1985–1990)<a class="headerlink" href="#intel-ipsc-family-19851990" title="Link to this heading">#</a></h2>
+<p>Intel’s first MPP, the <strong>iPSC/1</strong> (1985), was 32 to 128 Intel 80286 nodes connected in a hypercube — an explicit homage to the Connection Machine, but with full general-purpose microprocessors instead of bit-serial SIMD elements. The iPSC/2 (1988) used 386 + 387 nodes; the iPSC/860 (1990) used the i860 vector microprocessor, the first time a “supercomputer-class” microprocessor was used as a node. <em>Sources: Intel iPSC product literature (1985–1990); Pierce (1988) for the NX/2 operating environment that shipped on the iPSC/2 and Paragon.</em></p>
+<p>The iPSC family was a cautious commercial success. It established that you could <em>sell</em> MPPs to scientific customers if the per-CPU performance was good and the interconnect was fast enough. It also shipped the first credible programming environment for MPPs: <strong>NX</strong>, Intel’s message-passing library, the direct ancestor of MPI.</p>
+<p>NX let a programmer write:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">csend</span><span class="p">(</span><span class="n">message_type</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">,</span><span class="w"> </span><span class="n">dest_node</span><span class="p">,</span><span class="w"> </span><span class="n">dest_pid</span><span class="p">);</span>
+<span class="n">crecv</span><span class="p">(</span><span class="n">message_type</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>That’s the entire conceptual surface. Two operations: send a message, receive a message. Build everything else from that. (PVM, the Parallel Virtual Machine project at Oak Ridge from 1989, was a portable cross-vendor version of the same idea.)</p>
+</section>
+<section id="intel-paragon-1992">
+<h2>Intel Paragon (1992)<a class="headerlink" href="#intel-paragon-1992" title="Link to this heading">#</a></h2>
+<p>The iPSC’s successor was the <strong>Intel Paragon XP/S</strong>:</p>
+<ul class="simple">
+<li><p><strong>Up to 4,096 i860 XP nodes</strong>, each running a per-node microkernel called <strong>OSF/1</strong>.</p></li>
+<li><p><strong>2D mesh interconnect</strong>, 200 MB/s per link.</p></li>
+<li><p><strong>Peak</strong>: 300+ GFLOPS aggregate.</p></li>
+<li><p><strong>OS</strong>: each node ran a thin partition of OSF/1. Service nodes ran a full UNIX. Compute nodes ran a stripped microkernel. This <em>node specialization</em> is now standard on every supercomputer; the Paragon invented it.</p></li>
+</ul>
+<p><em>Sources: Mattson (1995) for the Paragon programming and OS environment; Top500 June 1994 list for the brief #1 placement; Intel SSD Paragon XP/S product specification (1992) for link bandwidth and topology.</em></p>
+<p>Sandia’s Paragon hit Top500 #1 briefly in 1994. It was the proof of concept for ASCI Red, which we’ll see shortly.</p>
+</section>
+<section id="cray-t3d-1993-and-t3e-1995-cray-s-mpp-turn">
+<h2>Cray T3D (1993) and T3E (1995): Cray’s MPP turn<a class="headerlink" href="#cray-t3d-1993-and-t3e-1995-cray-s-mpp-turn" title="Link to this heading">#</a></h2>
+<p>Cray Research, watching microprocessors close the gap, did not stand still. They acquired networking expertise, partnered with DEC for Alpha microprocessors, and built an MPP around them.</p>
+<section id="t3d-1993">
+<h3>T3D (1993)<a class="headerlink" href="#t3d-1993" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>DEC Alpha 21064</strong> at 150 MHz, 32 to 2,048 nodes.</p></li>
+<li><p><strong>3D torus interconnect</strong>, 300 MB/s per link, sub-microsecond latency.</p></li>
+<li><p><strong>Globally addressable memory</strong>: the T3D was the first MPP to expose all the memory in the machine as one shared address space, with explicit fast load/store instructions for remote memory (the <strong>SHMEM</strong> library).</p></li>
+<li><p><strong>No OS on compute nodes</strong>; just a user program and a thin runtime. Compute nodes were mute and stripped.</p></li>
+</ul>
+<p><em>Sources: Cray Research T3D system architecture overview (1993); the SHMEM model is documented in the Cray T3E Programming Environment manual (SR-2017), which describes the inherited T3D mechanism.</em></p>
+<p>The 3D torus was the design’s signature. Why a torus? Because for the kinds of physics simulations that filled DOE labs (hydrodynamics, particle-in-cell, lattice QCD), the data-access pattern was a 3D grid with nearest-neighbor communication. Mapping the application’s grid onto a physical 3D torus minimized communication distance — most messages traveled one hop.</p>
+</section>
+<section id="t3e-1995-the-most-successful-pure-mpp-ever-sold">
+<h3>T3E (1995): the most successful pure MPP ever sold<a class="headerlink" href="#t3e-1995-the-most-successful-pure-mpp-ever-sold" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>DEC Alpha 21164</strong> at 300–600 MHz, scaling to 2,048 CPUs.</p></li>
+<li><p><strong>Same 3D torus</strong>, faster and bigger.</p></li>
+<li><p><strong>Peak</strong>: ~1.2 TFLOPS at the high end.</p></li>
+<li><p><strong>Sales</strong>: dozens of major installations. ECMWF, US labs, Pittsburgh Supercomputing Center, NERSC, the UK Met Office.</p></li>
+</ul>
+<p><em>Sources: Cray Research T3E system architecture documentation (SR-2017); Scott &amp; Thorson (1996) for the adaptive routing in the T3E 3D torus; Top500 lists 1996–2003 for installations and peak figures.</em></p>
+<p>The T3E was the apex of the MPP form factor. It was also Cray Research’s last truly successful product line before the SGI acquisition in 1996. The T3E ran for many years; the Pittsburgh “BigBen” T3E ran until 2003, ECMWF’s until 2002. Codes that ran well on T3E ran well on later clusters with minimal porting — the SHMEM model survived (in fact, OpenSHMEM is still standardized today).</p>
+</section>
+</section>
+<section id="ibm-sp1-1993-and-sp2-1994">
+<h2>IBM SP1 (1993) and SP2 (1994)<a class="headerlink" href="#ibm-sp1-1993-and-sp2-1994" title="Link to this heading">#</a></h2>
+<p>IBM’s MPP take was different and ultimately more commercially successful than Cray’s:</p>
+<ul class="simple">
+<li><p><strong>Nodes were full RS/6000 workstations</strong>, each running full AIX, each independently capable.</p></li>
+<li><p><strong>High-Performance Switch</strong> (HPS): a multi-stage interconnect with substantial bandwidth and OK latency.</p></li>
+<li><p><strong>Programming</strong>: native MPL (IBM’s message passing) and MPI; PVM also widely used.</p></li>
+<li><p><strong>Killer application</strong>: ASCI Blue Pacific (LLNL, 1998), Deep Blue (the chess machine that beat Kasparov, 1997 — a 30-node IBM RS/6000 SP system with custom chess accelerator chips).</p></li>
+</ul>
+<p><em>Sources: Agerwala et al. (1995), “SP2 System Architecture,” IBM Systems Journal 34(2):152–184, for switch and node design; Hsu et al. (1990) and IBM RS/6000 SP product literature for the per-node specifications; IBM Deep Blue project documentation (1997) for the chess-accelerator system size.</em></p>
+<p>IBM’s choice to make every node a <em>full standalone system</em> was strategically clever. Customers could buy a small SP cluster, grow it incrementally, and not have to retrain people on a stripped-down compute node OS. This is the architectural pattern that won — modern Frontier nodes are full Linux systems, not stripped microkernels.</p>
+</section>
+<section id="asci-red-1997-the-first-sustained-tflops">
+<h2>ASCI Red (1997): the first sustained TFLOPS<a class="headerlink" href="#asci-red-1997-the-first-sustained-tflops" title="Link to this heading">#</a></h2>
+<p>The <strong>Accelerated Strategic Computing Initiative</strong> (ASCI) was the DOE’s response to the 1992 nuclear test moratorium: instead of physical tests, the US would simulate weapon physics. This required several orders of magnitude more compute than was available in 1995.</p>
+<p><strong>ASCI Red</strong> (Sandia, 1997): the first machine to sustain 1 TFLOPS on LINPACK.</p>
+<ul class="simple">
+<li><p><strong>9,632 Pentium Pro nodes</strong> (later upgraded to Pentium II Xeon), 200 MHz.</p></li>
+<li><p><strong>38×32×2 mesh interconnect</strong>, partitioned into compute, service, and I/O nodes.</p></li>
+<li><p><strong>1.8 TFLOPS peak</strong>, 1.06 TFLOPS sustained on HPL.</p></li>
+<li><p><strong>Cost</strong>: ~$55M. Vastly cheaper per FLOP than any vector machine.</p></li>
+<li><p>Held Top500 #1 from 1997 through mid-2000.</p></li>
+</ul>
+<p><em>Sources: Mattson &amp; Henderson, “ASCI Red: experiences and lessons learned with a massively parallel teraFLOP supercomputer” (Intel/Sandia, SC97); Foster et al. (2005) for the program-level retrospective; Top500 lists June 1997 through November 2000 for the #1 reign and Rmax = 1.06 TFLOPS sustained.</em></p>
+<p>ASCI Red was the moment the American HPC establishment publicly committed to the MIMD MPP path. Every subsequent ASCI/ASC machine through ~2015 was the same template: enormous numbers of commodity CPUs, custom interconnect, partitioned OS, message-passing software stack.</p>
+</section>
+<section id="the-two-programming-models-shmem-vs-mpi">
+<h2>The two programming models: SHMEM vs. MPI<a class="headerlink" href="#the-two-programming-models-shmem-vs-mpi" title="Link to this heading">#</a></h2>
+<p>There were two competing message-passing models in the early 1990s:</p>
+<p><strong>Two-sided (MPI, NX, PVM)</strong>: matched send/receive. Sender calls <code class="docutils literal notranslate"><span class="pre">send(msg,</span> <span class="pre">dest)</span></code>, receiver calls <code class="docutils literal notranslate"><span class="pre">recv(msg,</span> <span class="pre">src)</span></code>. Both must participate. Conceptually like a function call across the network.</p>
+<p><strong>One-sided (SHMEM, on T3D/T3E)</strong>: <code class="docutils literal notranslate"><span class="pre">shmem_put(remote_addr,</span> <span class="pre">local_addr,</span> <span class="pre">len,</span> <span class="pre">pe)</span></code> — write data into another process’s memory directly, no participation required from the target. Conceptually like a remote pointer dereference.</p>
+<p>One-sided was <em>faster</em> — no synchronization, just RDMA-style memory operations. Two-sided was <em>more portable</em> — didn’t require globally addressable memory hardware. Two-sided won because portability won, but one-sided survived (modern MPI has <code class="docutils literal notranslate"><span class="pre">MPI_Put</span></code> and <code class="docutils literal notranslate"><span class="pre">MPI_Get</span></code>, and OpenSHMEM is still a standard, used heavily by graph workloads).</p>
+<p>If you look at the modern stack: <strong>CXL.mem</strong>, <strong>NVLink</strong>, <strong>NVSwitch</strong>, and the GPU memory abstractions in CUDA Unified Memory — these are all bringing back one-sided memory operations on a per-node-cluster scale. The T3E got there 30 years early.</p>
+</section>
+<section id="why-mpp-won">
+<h2>Why MPP won<a class="headerlink" href="#why-mpp-won" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Per-FLOP cost</strong>: a Pentium Pro at <span class="math notranslate nohighlight">\(1k versus a Cray Y-MP CPU at \)</span>1M. Even after the interconnect tax, MPPs were 10–100× cheaper per FLOP.</p></li>
+<li><p><strong>Scalability</strong>: doubling the FLOPS meant adding nodes, not redesigning the CPU. The X-MP/Y-MP topped out at 16 CPUs; T3E scaled to 2,048; ASCI Red to 9,632.</p></li>
+<li><p><strong>Software portability</strong>: source code that ran on a T3E ran on an SP2 ran on a Beowulf cluster, with at most a recompile. The MPI standard (Week 9) made this concrete.</p></li>
+</ul>
+</section>
+<section id="what-mpp-cost-the-programmer">
+<h2>What MPP cost the programmer<a class="headerlink" href="#what-mpp-cost-the-programmer" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Distributed memory</strong>. You can no longer just declare a giant array and use it; you have to think about which process owns which slice, and how to communicate between them.</p></li>
+<li><p><strong>Manual data partitioning</strong>. Domain decomposition, halo exchange, load balancing — all became central concerns.</p></li>
+<li><p><strong>Latency awareness</strong>. A network round-trip is hundreds of CPU cycles. An algorithm that worked on shared memory might be terrible if mapped naïvely onto distributed memory.</p></li>
+<li><p><strong>Failure modes</strong>. With thousands of nodes, mean time between failures becomes hours, not weeks. You now need checkpointing.</p></li>
+</ul>
+<p>These costs are real and have not gone away. They are the costs every modern HPC programmer pays.</p>
+</section>
+<section id="lab-toy-mpp-simulator">
+<h2>Lab — Toy MPP simulator<a class="headerlink" href="#lab-toy-mpp-simulator" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/08-mpp-toy/</span></code>, you build a Python simulator of a 16-node 4×4 mesh MPP. Each node has a queue for incoming messages and a small program. You implement a halo-exchange stencil computation and measure how the choice of mesh topology affects the total time. Then you re-run with a hypercube topology (same node count, different wiring) and observe the difference. The point: interconnect topology has visible effects on simple algorithms.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>The T3D exposed a globally addressable memory model. Modern accelerator stacks are re-introducing this: NVIDIA’s “Grace Hopper” Superchip combines a CPU and GPU sharing one address space; CXL.mem extends a server’s memory across PCIe to neighbors. Why is the global-address-space model coming back now? What enabled it (or made it tolerable) that wasn’t true in 1995?</p></li>
+<li><p>The Paragon and ASCI Red ran a stripped microkernel on compute nodes. Modern Frontier and Aurora run full Linux. Why did the trend reverse?</p></li>
+<li><p>PVM vs. MPI — both were portable message-passing standards in the early 1990s. MPI won decisively. Read the early MPI Forum minutes (online) and identify the two or three design decisions that gave MPI its advantage. How would you apply those lessons today, e.g., to standardizing AI accelerator APIs?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Pierce, P. (1988). “The NX/2 Operating System”. <em>Proc. Hypercube Concurrent Computers and Applications Conference</em>. NX was MPI’s most direct precursor.</p></li>
+<li><p>Cray Research (1995). <em>Cray T3E Programming Environment</em>, publication SR-2017. Defines SHMEM and the T3E one-sided model.</p></li>
+<li><p>Mattson, T.G. (1995). <em>Programming with the Intel Paragon</em>. Practical view of an MPP from the user’s seat.</p></li>
+<li><p>Geist, A. et al. (1994). <em>PVM: Parallel Virtual Machine</em>. MIT Press. Online.</p></li>
+<li><p>Reed, D. (2003). “ASCI Red: A history”. <em>HPCwire</em>.</p></li>
+<li><p>Top500 lists from June 1993 through June 2000 — read them in sequence; the architectural shift is visible year over year.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-07-connection-machine.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 7 — The Connection Machine: SIMD Massively Parallel</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-09-mpi.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 9 — MPI: The Standard That Stuck</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-shape-of-an-mpp">The shape of an MPP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intel-ipsc-family-19851990">Intel iPSC family (1985–1990)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intel-paragon-1992">Intel Paragon (1992)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-t3d-1993-and-t3e-1995-cray-s-mpp-turn">Cray T3D (1993) and T3E (1995): Cray’s MPP turn</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t3d-1993">T3D (1993)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#t3e-1995-the-most-successful-pure-mpp-ever-sold">T3E (1995): the most successful pure MPP ever sold</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ibm-sp1-1993-and-sp2-1994">IBM SP1 (1993) and SP2 (1994)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asci-red-1997-the-first-sustained-tflops">ASCI Red (1997): the first sustained TFLOPS</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-two-programming-models-shmem-vs-mpi">The two programming models: SHMEM vs. MPI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-mpp-won">Why MPP won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-mpp-cost-the-programmer">What MPP cost the programmer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-toy-mpp-simulator">Lab — Toy MPP simulator</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

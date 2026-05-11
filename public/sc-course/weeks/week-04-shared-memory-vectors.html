@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-04-shared-memory-vectors';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series" href="week-05-japanese-vectors.html" />
+    <link rel="prev" title="Week 3 — Vector Fortran and the Birth of Vectorization" href="week-03-vector-fortran.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-04-shared-memory-vectors.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-split-at-cray-research">The split at Cray Research</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-x-mp-1982-two-cray-1s-sharing-memory">Cray X-MP (1982): two Cray-1s sharing memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-2-1985-the-cooled-by-immersion-outlier">Cray-2 (1985): the cooled-by-immersion outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-y-mp-1988-the-x-mp-grown-up">Cray Y-MP (1988): the X-MP grown up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-programming-model-macrotasking-microtasking-autotasking">The programming model: macrotasking, microtasking, autotasking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#macrotasking-explicit-coarse-grained">Macrotasking — explicit, coarse-grained</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#microtasking-directive-based-finer-grained">Microtasking — directive-based, finer-grained</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autotasking-compiler-does-it-for-you">Autotasking — compiler does it for you</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saxpy-on-a-y-mp-8-the-full-story">SAXPY on a Y-MP/8 — the full story</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-generation-won">Why this generation won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-generation-eventually-lost">Why this generation eventually lost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-openmp-as-cray-microtasking">Lab — OpenMP as Cray Microtasking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-4-x-mp-cray-2-y-mp-when-vectors-met-multiprocessing">
+<h1>Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing<a class="headerlink" href="#week-4-x-mp-cray-2-y-mp-when-vectors-met-multiprocessing" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Every multi-core CPU you have ever programmed with OpenMP is using a programming model that was invented at Cray Research between 1982 and 1988, on machines that combined vector processing with shared-memory multiprocessing. The directives, the fork-join semantics, the contention management, the false-sharing problems, the autoparallelization — all of it was working production technology a decade before OpenMP was standardized in 1997.</p>
+<p>This week we look at the three machines that built that programming model: the <strong>Cray X-MP</strong>, the <strong>Cray-2</strong>, and the <strong>Cray Y-MP</strong>.</p>
+</section>
+<section id="the-split-at-cray-research">
+<h2>The split at Cray Research<a class="headerlink" href="#the-split-at-cray-research" title="Link to this heading">#</a></h2>
+<p>By 1980, Seymour Cray and Cray Research had a problem: Seymour wanted to build an even-faster single-processor machine (which would become the Cray-2), and the company needed a near-term follow-on to the Cray-1 that customers could order <em>now</em>. Cray Research’s compromise was to let <strong>Steve Chen</strong> lead a parallel design effort — the Cray-1 successor that became the X-MP. The two projects ran simultaneously. They produced different machines aimed at different customers, and one of them turned out to be much more successful than the other.</p>
+</section>
+<section id="cray-x-mp-1982-two-cray-1s-sharing-memory">
+<h2>Cray X-MP (1982): two Cray-1s sharing memory<a class="headerlink" href="#cray-x-mp-1982-two-cray-1s-sharing-memory" title="Link to this heading">#</a></h2>
+<p>Steve Chen’s design philosophy: take the Cray-1, make it 50% faster per processor, and give it 2 (later 4) of those processors sharing one memory.</p>
+<ul class="simple">
+<li><p><strong>Clock</strong>: 105 MHz, then 118 MHz on the X-MP/4, then 138 MHz on the X-MP/48.</p></li>
+<li><p><strong>Processors</strong>: 2 (X-MP/22), 4 (X-MP/48). All sharing one main memory.</p></li>
+<li><p><strong>Memory</strong>: Up to 16 MW (128 MB), 32-way interleaved. <em>Crucially</em>, <strong>multiple memory ports per CPU</strong> — every X-MP CPU could simultaneously execute two vector loads and one vector store, where Cray-1 had only one port.</p></li>
+<li><p><strong>Peak</strong>: 235 MFLOPS per CPU; 940 MFLOPS aggregate on X-MP/4.</p></li>
+<li><p><strong>Innovation</strong>: the <strong>Solid-State Storage Device (SSD)</strong> — DRAM organized as a 1024-megabyte block-addressable “disk” hanging off the I/O subsystem. The first time secondary storage was fast enough to feed a vector processor.</p></li>
+</ul>
+<p>The X-MP was the workhorse. Around 200 of them sold, vastly more than the Cray-1. The reason was the third memory port: real codes (especially solvers, FFTs, fluid dynamics) had been bandwidth-limited on the Cray-1, and the X-MP’s three-port memory unblocked them.</p>
+</section>
+<section id="cray-2-1985-the-cooled-by-immersion-outlier">
+<h2>Cray-2 (1985): the cooled-by-immersion outlier<a class="headerlink" href="#cray-2-1985-the-cooled-by-immersion-outlier" title="Link to this heading">#</a></h2>
+<p>Seymour Cray’s project, after he separated himself from the X-MP design effort.</p>
+<ul class="simple">
+<li><p><strong>Clock</strong>: 244 MHz (4.1 ns) — three times the Cray-1.</p></li>
+<li><p><strong>Processors</strong>: 4 “background processors” (vector CPUs) + 1 “foreground processor” (system management).</p></li>
+<li><p><strong>Memory</strong>: 256 MW (2 GB). At delivery, by far the largest main memory in any computer ever shipped.</p></li>
+<li><p><strong>Cooling</strong>: total immersion in <strong>Fluorinert</strong>, a 3M dielectric coolant. The boards literally sat in tanks of liquid that bubbled gently. (The Computer History Museum still has the bubbling-aquarium demo.)</p></li>
+<li><p><strong>Peak</strong>: 1.95 GFLOPS aggregate.</p></li>
+</ul>
+<p>The Cray-2 was a technology showcase but a commercial disappointment. Reasons:</p>
+<ul class="simple">
+<li><p>The clock was so fast that local memory references took <strong>long enough to be visible</strong> — 4–6 cycles, where Cray-1 references had effectively been single-cycle. Programmers had to be aware of memory layout in a new way, and a lot of legacy CFT-vectorized code didn’t optimize well.</p></li>
+<li><p>The X-MP’s three memory ports per CPU were not present on the Cray-2 (it had one port per CPU, with a much fancier crossbar to the banks). Net real-world performance was often <em>worse</em> than X-MP per CPU on bandwidth-bound code, despite the 2× clock advantage.</p></li>
+<li><p>The immersion cooling was operationally painful. Field engineers needed scuba gloves. (Not really. But almost.)</p></li>
+</ul>
+<p>About 27 Cray-2s sold. It is, however, the machine that proved 2 GB of main memory was buildable, and it is one of the machines where serious large-memory CFD work became routine. Do not confuse this with the earlier Lucasfilm/Pixar work on the <em>Genesis</em> sequence in <em>Star Trek II</em> (1982): that predates both the Cray-2’s 1985 shipment and RenderMan’s later productization.</p>
+</section>
+<section id="cray-y-mp-1988-the-x-mp-grown-up">
+<h2>Cray Y-MP (1988): the X-MP grown up<a class="headerlink" href="#cray-y-mp-1988-the-x-mp-grown-up" title="Link to this heading">#</a></h2>
+<p>After Steve Chen left Cray in 1987 to start Supercomputer Systems Inc. (which never shipped a machine before folding), Les Davis led the Y-MP team. The Y-MP was the X-MP done correctly: same architectural concept, eight processors, full 32-bit addressing (the X-MP and Cray-1 had been stuck at 24-bit, capping memory at 16 MW), 167 MHz clock, gallium arsenide considered and rejected in favor of refined silicon ECL.</p>
+<ul class="simple">
+<li><p><strong>Processors</strong>: up to 8.</p></li>
+<li><p><strong>Memory</strong>: up to 256 MW (2 GB). Same as Cray-2, but X-MP-style banked.</p></li>
+<li><p><strong>Peak</strong>: 333 MFLOPS per CPU; 2.67 GFLOPS aggregate.</p></li>
+</ul>
+<p>The Y-MP was the <strong>definitive</strong> late-1980s supercomputer. Hundreds of them sold. Most national labs, most major universities, every aerospace company, oil companies, and weather services. The lineage continued as the Y-MP C90 (1991, 1 GFLOPS per CPU) and the Cray T90 (1995, 1.8 GFLOPS per CPU) — the last of the classical bespoke-ECL multiprocessor vector machines.</p>
+</section>
+<section id="the-programming-model-macrotasking-microtasking-autotasking">
+<h2>The programming model: macrotasking, microtasking, autotasking<a class="headerlink" href="#the-programming-model-macrotasking-microtasking-autotasking" title="Link to this heading">#</a></h2>
+<p>You have multiple shared-memory vector CPUs. You have one large array-heavy Fortran code. How do you exploit all the CPUs at once? Cray Research developed three layered approaches.</p>
+<section id="macrotasking-explicit-coarse-grained">
+<h3>Macrotasking — explicit, coarse-grained<a class="headerlink" href="#macrotasking-explicit-coarse-grained" title="Link to this heading">#</a></h3>
+<p>You manually create tasks (think pthreads), each running a chunk of work, and you synchronize with events:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">CALL </span><span class="n">TSKSTART</span><span class="p">(</span><span class="n">TID</span><span class="p">,</span><span class="w"> </span><span class="n">SUBR</span><span class="p">,</span><span class="w"> </span><span class="n">ARG1</span><span class="p">,</span><span class="w"> </span><span class="n">ARG2</span><span class="p">)</span><span class="w">   </span><span class="c">! launch SUBR on another CPU</span>
+<span class="w">      </span><span class="p">...</span>
+<span class="w">      </span><span class="k">CALL </span><span class="n">TSKWAIT</span><span class="p">(</span><span class="n">TID</span><span class="p">)</span><span class="w">                       </span><span class="c">! join</span>
+</pre></div>
+</div>
+<p>The granularity was meant to be coarse: independent subroutine calls, not individual loops. Used heavily in production codes that had top-level parallel structure (e.g., computing forces between independent subdomains).</p>
+</section>
+<section id="microtasking-directive-based-finer-grained">
+<h3>Microtasking — directive-based, finer-grained<a class="headerlink" href="#microtasking-directive-based-finer-grained" title="Link to this heading">#</a></h3>
+<p>Compiler directives marking a parallel section:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="n">CMIC$</span><span class="w"> </span><span class="n">DOALL</span><span class="w"> </span><span class="n">SHARED</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">)</span><span class="w"> </span><span class="k">PRIVATE</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">C</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">!MIC$</span></code> directives told the compiler to fork the loop iterations across available CPUs at runtime, then join. The pool of worker threads was managed by the runtime — fork/join was cheap (microseconds). Compare to:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for shared(a, b, c)</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">    </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+</pre></div>
+</div>
+<p>This is <strong>the same thing</strong>. OpenMP, when it was standardized in 1997, was substantially the union of Cray Microtasking, SGI’s parallel directives, and Convex’s. The fork-join model, the data-sharing clauses, the worksharing constructs — all came from this period. If you’ve used OpenMP, you’ve used Cray Microtasking at one remove.</p>
+</section>
+<section id="autotasking-compiler-does-it-for-you">
+<h3>Autotasking — compiler does it for you<a class="headerlink" href="#autotasking-compiler-does-it-for-you" title="Link to this heading">#</a></h3>
+<p>Cray’s compiler could detect parallelizable loops automatically (extending the same dependency analysis CFT used for vectorization to also reason about parallelization across CPUs) and insert microtasking directives implicitly. This is the same thing modern Intel <code class="docutils literal notranslate"><span class="pre">icx</span> <span class="pre">-qopenmp</span> <span class="pre">-parallel</span></code> and IBM XL <code class="docutils literal notranslate"><span class="pre">-qsmp=auto</span></code> and NVHPC <code class="docutils literal notranslate"><span class="pre">-Mconcur</span></code> do today.</p>
+<p>The hierarchy was: autotask first, microtask the bits the compiler missed, macrotask the high-level structure. You’d often see all three in one application.</p>
+</section>
+</section>
+<section id="saxpy-on-a-y-mp-8-the-full-story">
+<h2>SAXPY on a Y-MP/8 — the full story<a class="headerlink" href="#saxpy-on-a-y-mp-8-the-full-story" title="Link to this heading">#</a></h2>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="n">CMIC$</span><span class="w"> </span><span class="n">DOALL</span><span class="w"> </span><span class="n">SHARED</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="k">PRIVATE</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="n">VECTOR</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p>What the compiler does:</p>
+<ol class="arabic simple">
+<li><p><strong>Outer</strong>: split iterations across 8 CPUs (microtasking).</p></li>
+<li><p><strong>Inner</strong>: each CPU’s chunk is strip-mined into 64-element register vectors (vectorization).</p></li>
+<li><p><strong>Innermost</strong>: each 64-element block is one chained vector multiply-add, fed by two memory ports per CPU.</p></li>
+</ol>
+<p>Throughput of an idealized SAXPY on Y-MP/8: roughly 2.6 GFLOPS sustained — close to peak. This is the “compose vectorization with parallelism” pattern, and it is <em>exactly</em> what <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">parallel</span> <span class="pre">for</span> <span class="pre">simd</span></code> does today on a 96-core EPYC chip with AVX-512.</p>
+</section>
+<section id="why-this-generation-won">
+<h2>Why this generation won<a class="headerlink" href="#why-this-generation-won" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>The programming model was incremental.</strong> A code base that ran on a Cray-1 ran on a Y-MP unchanged, then could be sped up by adding directives. No language change required. (This was the <em>huge</em> advantage versus the Connection Machine — see Week 7.)</p></li>
+<li><p><strong>Shared memory was a familiar mental model.</strong> Scientists already knew how to share data between subroutines. Sharing it between threads of execution was a small step.</p></li>
+<li><p><strong>The hardware was robust</strong>. Y-MPs ran for years at facilities. The error rates of bespoke ECL were lower than people feared.</p></li>
+</ul>
+</section>
+<section id="why-this-generation-eventually-lost">
+<h2>Why this generation eventually lost<a class="headerlink" href="#why-this-generation-eventually-lost" title="Link to this heading">#</a></h2>
+<p>For next week and the week after — but the short version:</p>
+<ul class="simple">
+<li><p><strong>Microprocessors got fast enough</strong>. By 1991 a single MIPS R4000 or Alpha 21064 was within striking distance of a Cray Y-MP CPU on scalar code, at 1/100 the price.</p></li>
+<li><p><strong>Aggregate scaling beat per-CPU scaling.</strong> Twenty IBM RS/6000s or DEC Alphas, lashed together, could outperform a Cray Y-MP/8 on parallel codes for one-fifth the price. The X-MP architecture didn’t scale past 8 CPUs in a shared-memory configuration; the bus and crossbar bottlenecks were brutal.</p></li>
+<li><p><strong>Cray Research’s parallel response — the T3D — was distributed-memory, not shared-memory.</strong> They saw the writing on the wall in 1992. We’ll get to it in Week 8.</p></li>
+</ul>
+</section>
+<section id="lab-openmp-as-cray-microtasking">
+<h2>Lab — OpenMP as Cray Microtasking<a class="headerlink" href="#lab-openmp-as-cray-microtasking" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/04-openmp/</span></code>, you write a five-point stencil three ways: scalar serial, OpenMP-parallelized, and OpenMP+SIMD. You compare to the Cray-style three-level hierarchy and measure scaling on your laptop’s cores. We provide a reference implementation that maps directly onto the Y-MP programming model so you can see the lineage.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>The X-MP added a second and third memory port per CPU. Modern CPUs have a fixed L1 cache port count (usually 2 loads + 1 store per cycle). When does adding more ports stop being profitable?</p></li>
+<li><p>The Cray-2’s immersion cooling allowed a 244 MHz clock. What’s the modern equivalent of “extreme cooling enables a clock advantage”? Why isn’t the modern equivalent (liquid nitrogen overclocking, or production immersion at OVHcloud / Submer) being used to ship machines that run at, say, 8 GHz?</p></li>
+<li><p>Microtasking, OpenMP, Apple GCD’s concurrent queue, Java’s parallel streams, Rust’s Rayon — all are fork-join. Is fork-join <em>fundamental</em>, or is it just a happy local optimum for the kind of regular numerical code that drove Cray? What workload would make you want a different shape?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Chen, S.S. (1984). “Large-scale and high-speed multiprocessor system for scientific applications: Cray X-MP series”. In Hwang, <em>Supercomputers: Design and Applications</em>. Steve Chen’s own description of the X-MP.</p></li>
+<li><p>Cray Research (1989). <em>Multitasking Programmer’s Manual</em>, publication SR-0222.</p></li>
+<li><p>Bailey, David H. et al. (1991). “The NAS Parallel Benchmarks”. <em>International Journal of Supercomputer Applications</em>. The benchmark suite that defined “fair comparison” for this generation.</p></li>
+<li><p>August, David, ed. <em>History of HPC</em>. Several chapters on the X-MP / Y-MP era.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-03-vector-fortran.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 3 — Vector Fortran and the Birth of Vectorization</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-05-japanese-vectors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-split-at-cray-research">The split at Cray Research</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-x-mp-1982-two-cray-1s-sharing-memory">Cray X-MP (1982): two Cray-1s sharing memory</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-2-1985-the-cooled-by-immersion-outlier">Cray-2 (1985): the cooled-by-immersion outlier</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-y-mp-1988-the-x-mp-grown-up">Cray Y-MP (1988): the X-MP grown up</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-programming-model-macrotasking-microtasking-autotasking">The programming model: macrotasking, microtasking, autotasking</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#macrotasking-explicit-coarse-grained">Macrotasking — explicit, coarse-grained</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#microtasking-directive-based-finer-grained">Microtasking — directive-based, finer-grained</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#autotasking-compiler-does-it-for-you">Autotasking — compiler does it for you</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#saxpy-on-a-y-mp-8-the-full-story">SAXPY on a Y-MP/8 — the full story</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-generation-won">Why this generation won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-this-generation-eventually-lost">Why this generation eventually lost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-openmp-as-cray-microtasking">Lab — OpenMP as Cray Microtasking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

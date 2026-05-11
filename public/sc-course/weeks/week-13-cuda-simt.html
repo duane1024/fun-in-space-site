@@ -1,0 +1,729 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 13 — CUDA and SIMT: Vectors Reborn as Threads &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-13-cuda-simt';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku" href="week-14-exascale.html" />
+    <link rel="prev" title="Week 12 — The Earth Simulator: When Vectors Briefly Won Again" href="week-12-earth-simulator.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-13-cuda-simt.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 13 — CUDA and SIMT: Vectors Reborn as Threads</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-gpus-came-from">Where GPUs came from</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-g80-2006-and-the-simt-idea">The G80 (2006) and the SIMT idea</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-in-five-lines">CUDA in five lines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-cuda-and-simt-won">Why CUDA and SIMT won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-gpu-generation-roadmap">The GPU generation roadmap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-about-amd-and-intel">What about AMD and Intel?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simt-is-vector-with-a-different-abstraction-surface">SIMT is vector with a different abstraction surface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sidebar-ispc-or-simt-on-the-cpu">Sidebar: ISPC, or SIMT on the CPU</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-about-non-nvidia-accelerators-in-hpc">What about non-NVIDIA accelerators in HPC?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-run-cuda-on-your-laptop">Lab — Run CUDA on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-13-cuda-and-simt-vectors-reborn-as-threads">
+<h1>Week 13 — CUDA and SIMT: Vectors Reborn as Threads<a class="headerlink" href="#week-13-cuda-and-simt-vectors-reborn-as-threads" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Open the spec sheet for any current Top500 system: most of the highest-FLOP systems get their arithmetic throughput from GPUs or GPU-like accelerators. NVIDIA H100, AMD MI300-class parts, Intel Ponte Vecchio. Much of modern AI training runs on the same accelerator pattern, though TPUs, Trainium, Cerebras, and other AI-specific systems are important counterexamples. That hardware is, <em>internally</em>, a vector machine — descendant of the Cray-1’s idea — wrapped in a programming abstraction that hides the vector ISA behind threads. The model is called <strong>SIMT</strong> — Single Instruction, Multiple Threads — and it was named, productized, and widely deployed by NVIDIA with <strong>CUDA</strong> in 2006.</p>
+<p>This week is the architecture and the programming model.</p>
+</section>
+<section id="where-gpus-came-from">
+<h2>Where GPUs came from<a class="headerlink" href="#where-gpus-came-from" title="Link to this heading">#</a></h2>
+<p>Before they were “GPUs”, they were “graphics accelerators”: fixed-function chips that drew triangles to a frame buffer. The 1990s milestones were 3dfx Voodoo (1996), NVIDIA RIVA 128 (1997), NVIDIA GeForce 256 (1999, the chip NVIDIA branded as the “first GPU”). These were unprogrammable — you fed them vertex and texture data, they produced pixels.</p>
+<p>Around 2001 the ARB and DirectX 8 specs added <strong>programmable shaders</strong>: small fragments of code (vertex shaders, then pixel shaders) that ran per-vertex or per-pixel. Suddenly the GPU was a <em>programmable</em> parallel processor. People started doing physics simulations and matrix multiplies by tricking the shader pipeline into computing them. The early GPGPU papers (Owens et al., 2004) made the trick respectable but tedious — you had to format your data as textures, write vertex shaders that did your computation, read the result out of the framebuffer.</p>
+<p>NVIDIA’s bet, made around 2003 and shipped with the <strong>G80</strong> chip in 2006, was to build a GPU that exposed a <em>first-class general-purpose programming model</em>, not just a shader language. That was CUDA.</p>
+</section>
+<section id="the-g80-2006-and-the-simt-idea">
+<h2>The G80 (2006) and the SIMT idea<a class="headerlink" href="#the-g80-2006-and-the-simt-idea" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>128 “stream processors”</strong> (in NVIDIA marketing). Internally: 16 multiprocessors of 8 lanes each.</p></li>
+<li><p>Each multiprocessor executed instructions in <strong>warps of 32 threads</strong>. All 32 threads in a warp run the same instruction at the same time, on different data, like a 32-wide SIMD lane.</p></li>
+<li><p>The hardware handled <strong>branch divergence</strong>: when the threads in a warp took different paths in an <code class="docutils literal notranslate"><span class="pre">if</span></code>, the warp executed both paths sequentially, with each thread masked off when its path wasn’t running. Slow, but correct.</p></li>
+<li><p>Each thread had <strong>its own registers and its own stack</strong>, so you could write arbitrary scalar code per thread, and the hardware would aggregate it into vector-style execution where possible.</p></li>
+<li><p>Threads were grouped into <strong>thread blocks</strong> (typically 128 to 1024 threads), which shared a small fast on-chip “shared memory” (16 KB on G80, programmer-managed scratch).</p></li>
+<li><p>Many thread blocks per <strong>grid</strong>, organized in 1D, 2D, or 3D, with the hardware scheduling them across multiprocessors.</p></li>
+</ul>
+<p>This is <strong>SIMT</strong>: write code that looks scalar, per-thread; the hardware groups threads into warps and executes them SIMD-style. It is, conceptually, the Connection Machine’s fine-grained parallelism with a <em>much</em> better story for irregular control flow.</p>
+<p>The architectural insight: <strong>a vector ISA is great when control flow is uniform; threads with masks are great when control flow is non-uniform.</strong> SIMT gets you both — the uniform case runs at full SIMD throughput, the non-uniform case runs at degraded but still correct throughput, <em>and the source code is the same in both cases.</em></p>
+</section>
+<section id="cuda-in-five-lines">
+<h2>CUDA in five lines<a class="headerlink" href="#cuda-in-five-lines" title="Link to this heading">#</a></h2>
+<p>The minimal CUDA program — vector add:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">add</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">20</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="o">*</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="w">    </span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+<span class="w">    </span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">grid</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">block</span><span class="p">;</span>
+<span class="w">    </span><span class="n">add</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cudaDeviceSynchronize</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">a</span><span class="p">);</span><span class="w"> </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">b</span><span class="p">);</span><span class="w"> </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">__global__</span></code> qualifier marks <code class="docutils literal notranslate"><span class="pre">add</span></code> as a function that runs on the device. The <code class="docutils literal notranslate"><span class="pre">&lt;&lt;&lt;grid,</span> <span class="pre">block&gt;&gt;&gt;</span></code> syntax launches one thread per <code class="docutils literal notranslate"><span class="pre">(blockIdx,</span> <span class="pre">threadIdx)</span></code> pair in the grid. Each thread computes its own array index from its block and thread coordinates and does one element of the vector add.</p>
+<p>Compare to the Cray-1 CAL listing for SAXPY from Week 2:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>        VL      A1
+        V0      ,A2,1
+        V1      ,A3,1
+        V2      S1*V0
+        V1      V1+V2
+        ,A3,1   V1
+</pre></div>
+</div>
+<p>These are the <strong>same algorithm</strong>. The CUDA version is a per-thread description of one element’s worth of work, which the hardware aggregates into 32-wide warps that execute as a vector. The CAL version is an explicit vector instruction over a vector register. Different abstraction surface, similar machine underneath.</p>
+</section>
+<section id="why-cuda-and-simt-won">
+<h2>Why CUDA and SIMT won<a class="headerlink" href="#why-cuda-and-simt-won" title="Link to this heading">#</a></h2>
+<p>Three reasons:</p>
+<ol class="arabic simple">
+<li><p><strong>Programming model fit the workload.</strong> Image, video, signal-processing, neural network workloads are mostly per-pixel-or-per-element computation. Per-thread programming with implicit warp aggregation matches that mental model exactly.</p></li>
+<li><p><strong>The hardware was already being built at scale for graphics.</strong> NVIDIA was selling tens of millions of GPUs to gamers; the per-unit cost of an accelerator chip was a small fraction of what custom HPC silicon cost. The volume economics that killed bespoke vector machines (Week 6) now favored GPUs.</p></li>
+<li><p><strong>Early DOE / Top500 commitment.</strong> Roadrunner (LANL, 2008) was the first hybrid CPU+accelerator petaflop machine, using IBM Cell BE accelerators. Cell didn’t last, but the <em>pattern</em> — fat host nodes with PCIe accelerators, application split into host code and accelerator code — became the template. <strong>Tianhe-1A</strong> (NUDT, China, 2010) was the first GPU-accelerated Top500 #1, using NVIDIA Tesla M2050s — the moment GPU acceleration crossed from research project to leadership-class architecture. <strong>Titan</strong> (ORNL, 2012) was the first US GPU-accelerated #1, using NVIDIA Kepler K20Xs. <strong>Summit</strong> (ORNL, 2018), IBM POWER9 + NVIDIA Volta V100, held #1 from June 2018 to June 2020. By Summit, GPU acceleration was no longer a bet; it was the default.</p></li>
+</ol>
+</section>
+<section id="the-gpu-generation-roadmap">
+<h2>The GPU generation roadmap<a class="headerlink" href="#the-gpu-generation-roadmap" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Year</p></th>
+<th class="head"><p>NVIDIA arch</p></th>
+<th class="head"><p>Per-chip peak FP64</p></th>
+<th class="head"><p>Memory</p></th>
+<th class="head"><p>Notable</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>2006</p></td>
+<td><p>G80 (Tesla)</p></td>
+<td><p>n/a (no FP64)</p></td>
+<td><p>1.5 GB GDDR3</p></td>
+<td><p>First CUDA GPU</p></td>
+</tr>
+<tr class="row-odd"><td><p>2008</p></td>
+<td><p>GT200</p></td>
+<td><p>78 GFLOPS</p></td>
+<td><p>4 GB GDDR3</p></td>
+<td><p>First scientific FP64</p></td>
+</tr>
+<tr class="row-even"><td><p>2010</p></td>
+<td><p>Fermi (GF100)</p></td>
+<td><p>515 GFLOPS</p></td>
+<td><p>6 GB GDDR5</p></td>
+<td><p>ECC memory, real cache</p></td>
+</tr>
+<tr class="row-odd"><td><p>2012</p></td>
+<td><p>Kepler (GK110)</p></td>
+<td><p>1.3 TFLOPS</p></td>
+<td><p>6 GB GDDR5</p></td>
+<td><p>Titan</p></td>
+</tr>
+<tr class="row-even"><td><p>2014</p></td>
+<td><p>Maxwell (GM200)</p></td>
+<td><p>200 GFLOPS FP64</p></td>
+<td><p>—</p></td>
+<td><p>(consumer-skewed)</p></td>
+</tr>
+<tr class="row-odd"><td><p>2016</p></td>
+<td><p>Pascal (P100)</p></td>
+<td><p>4.7 TFLOPS</p></td>
+<td><p>16 GB HBM2</p></td>
+<td><p>NVLink, HBM</p></td>
+</tr>
+<tr class="row-even"><td><p>2017</p></td>
+<td><p>Volta (V100)</p></td>
+<td><p>7.8 TFLOPS</p></td>
+<td><p>16 GB HBM2</p></td>
+<td><p>First Tensor Cores, Summit</p></td>
+</tr>
+<tr class="row-odd"><td><p>2020</p></td>
+<td><p>Ampere (A100)</p></td>
+<td><p>9.7 TFLOPS</p></td>
+<td><p>80 GB HBM2e</p></td>
+<td><p>Modern AI standard</p></td>
+</tr>
+<tr class="row-even"><td><p>2022</p></td>
+<td><p>Hopper (H100)</p></td>
+<td><p>34 TFLOPS</p></td>
+<td><p>80 GB HBM3</p></td>
+<td><p>Transformer engine</p></td>
+</tr>
+<tr class="row-odd"><td><p>2024</p></td>
+<td><p>Blackwell (B200)</p></td>
+<td><p>40 TFLOPS</p></td>
+<td><p>180 GB HBM3e</p></td>
+<td><p>NVLink-72</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Two trends are visible: (1) FP64 throughput scaled aggressively until ~2020, then leveled off as AI workloads pulled R&amp;D toward FP16 / FP8 / FP4. (2) Memory capacity and bandwidth grew steadily. The per-chip FLOPS-per-watt has improved more than 100× since G80.</p>
+</section>
+<section id="what-about-amd-and-intel">
+<h2>What about AMD and Intel?<a class="headerlink" href="#what-about-amd-and-intel" title="Link to this heading">#</a></h2>
+<p>NVIDIA dominates, but is not alone:</p>
+<ul class="simple">
+<li><p><strong>AMD ROCm / HIP</strong>: AMD’s CUDA-equivalent stack. HIP is source-compatible with CUDA — many CUDA programs port with <code class="docutils literal notranslate"><span class="pre">s/cuda/hip/g</span></code> and a recompile. Frontier (ORNL, 2022) and El Capitan (LLNL, 2024) run on AMD Instinct MI250X / MI300A.</p></li>
+<li><p><strong>Intel oneAPI / SYCL</strong>: Intel’s open standard, based on Khronos’s SYCL specification. Aurora (Argonne, 2023) runs Intel Ponte Vecchio (Data Center GPU Max) accelerators programmed in SYCL.</p></li>
+<li><p><strong>Open alternatives</strong>: OpenMP target offload, OpenACC, Kokkos, Raja, Triton (an OpenAI-led JIT for tensor kernels). These let you write portable code that compiles to any of CUDA, HIP, or SYCL.</p></li>
+</ul>
+<p>The architectural patterns are convergent. All three vendors build SIMT-like execution units, HBM memory, NVLink-or-equivalent inter-GPU fabric, host-device unified addressing. The wars are at the software stack level, not the architecture level.</p>
+</section>
+<section id="simt-is-vector-with-a-different-abstraction-surface">
+<h2>SIMT is vector with a different abstraction surface<a class="headerlink" href="#simt-is-vector-with-a-different-abstraction-surface" title="Link to this heading">#</a></h2>
+<p>Look hard at what SIMT actually does:</p>
+<ul class="simple">
+<li><p><strong>At the hardware level</strong>: 32 lanes of SIMD, with per-lane masks for divergence handling.</p></li>
+<li><p><strong>At the abstraction level</strong>: 32 threads per warp, each appearing to execute independently.</p></li>
+</ul>
+<p>This is the <em>exact</em> trade-off Cray made differently. Cray exposed the vector register and made the programmer (or compiler) write vector code. SIMT hides the vector and makes the programmer (or compiler) write thread code.</p>
+<p>For workloads where both work — uniform stride-1 arithmetic — they are equivalent. For workloads with branches and gathers, SIMT degrades gracefully (warp divergence, slow but correct) while classical vector ISAs handle it badly (gather/scatter with serialization, masked execution as bolt-on).</p>
+<p>The architecturally interesting result is: <strong>modern CPUs are growing toward SIMT</strong>. ARM SVE2’s “vector-length agnostic” predicated execution, RISC-V V’s masked vector ops, Intel AVX-512’s per-lane masks, the proliferation of <code class="docutils literal notranslate"><span class="pre">vcompress</span></code>/<code class="docutils literal notranslate"><span class="pre">vexpand</span></code> instructions — all of these are walking the CPU vector ISA toward what GPUs already are. The two architectural lines (CPU SIMD, GPU SIMT) are converging.</p>
+<section id="sidebar-ispc-or-simt-on-the-cpu">
+<h3>Sidebar: ISPC, or SIMT on the CPU<a class="headerlink" href="#sidebar-ispc-or-simt-on-the-cpu" title="Link to this heading">#</a></h3>
+<p>If SIMT is just “write per-element code and let the runtime aggregate into vector lanes,” that’s an abstraction, not a hardware requirement. Could you write CPU code that thinks in SIMT-style and have a compiler map it onto AVX-512 or NEON? Yes — that’s exactly what Intel’s open-source <strong>ISPC</strong> (Implicit SPMD Program Compiler, Pharr &amp; Mark 2012) does. The same SAXPY kernel:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// ISPC source — looks like C with a `foreach` and `uniform` qualifier</span>
+<span class="n">export</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">saxpy</span><span class="p">(</span><span class="n">uniform</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">uniform</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">a</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">uniform</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">x</span><span class="p">[],</span><span class="w"> </span><span class="n">uniform</span><span class="w"> </span><span class="kt">float</span><span class="w"> </span><span class="n">y</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">foreach</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">foreach</span></code> declares “this loop body is per-element parallel.” The compiler emits a <code class="docutils literal notranslate"><span class="pre">gang</span></code> of program instances, each running on a SIMD lane (8 lanes on AVX-512, 4 on AVX2, etc.). Branches that diverge across lanes get masked. Reductions get tree-reduced across lanes. Gather/scatter loads compile to <code class="docutils literal notranslate"><span class="pre">vgatherdps</span></code>/<code class="docutils literal notranslate"><span class="pre">vscatterdps</span></code>.</p>
+<p>The lesson is that SIMT is a <em>programming-model</em> idea, not a GPU-only idea. Treat ISPC as the missing intellectual bridge between “I write CUDA kernels” and “I get good AVX-512 throughput on a CPU.” The same mental model applies to both.</p>
+<p>Pharr’s argument is worth reading in its original form (linked in <code class="docutils literal notranslate"><span class="pre">references.md</span></code>). The 2012 paper makes the case more clearly than any tutorial: the SPMD-on-SIMD style was developed for GPUs because GPUs forced it, but it’s a better way to think about CPU vectorization than what most compilers do with auto-vectorization.</p>
+</section>
+</section>
+<section id="what-about-non-nvidia-accelerators-in-hpc">
+<h2>What about non-NVIDIA accelerators in HPC?<a class="headerlink" href="#what-about-non-nvidia-accelerators-in-hpc" title="Link to this heading">#</a></h2>
+<p>Worth mentioning briefly:</p>
+<ul class="simple">
+<li><p><strong>Cell BE</strong> (Sony/Toshiba/IBM, ~2005): the Roadrunner accelerator. PowerPC + 8 SPE (Synergistic Processing Element) vector cores. Hard to program. Lasted one HPC generation.</p></li>
+<li><p><strong>Intel Xeon Phi / Knights Landing</strong> (2010s): Intel’s “many-core x86” attempt. Had some traction (Tianhe-2 in 2013 used the prior generation). Discontinued in 2018 when Intel pivoted to discrete GPUs.</p></li>
+<li><p><strong>Fujitsu A64FX</strong> (2019, in Fugaku): not an accelerator — it’s the <em>only</em> compute on Fugaku nodes. ARM with SVE 512-bit vectors. <em>No GPU at all.</em> Fugaku ran #1 Top500 for two years (June 2020 to June 2022). It is the only major architectural counterexample to “modern HPC = CPU host + GPU accelerator”, and we discuss it next week.</p></li>
+</ul>
+</section>
+<section id="lab-run-cuda-on-your-laptop">
+<h2>Lab — Run CUDA on your laptop<a class="headerlink" href="#lab-run-cuda-on-your-laptop" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/13-cuda-saxpy/</span></code>, you have three options:</p>
+<ol class="arabic simple">
+<li><p><strong>You have an NVIDIA GPU on your laptop</strong>: install CUDA Toolkit, compile and run the provided SAXPY kernel. Profile with <code class="docutils literal notranslate"><span class="pre">nsys</span></code> and <code class="docutils literal notranslate"><span class="pre">ncu</span></code>.</p></li>
+<li><p><strong>You have an Apple Silicon Mac</strong>: run the provided Metal or MLX SAXPY version on the Apple GPU.</p></li>
+<li><p><strong>You have neither</strong>: run the provided Colab notebook on a free-tier NVIDIA GPU.</p></li>
+</ol>
+<p>The provided kernel is deliberately just SAXPY so the memory-bandwidth story is visible. Optional extensions ask you to try explicit CUDA copies, Triton, and larger problem sizes.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>SIMT degrades gracefully under branch divergence; classical SIMD does not. But modern CPUs (AVX-512, SVE) have predicated execution. Are CPUs becoming SIMT? What’s still different?</p></li>
+<li><p>The Cell BE was technically interesting and commercially short-lived. The Cell programmer had to manually orchestrate data motion to and from the SPE local stores. CUDA hid that with cache-and-memory-hierarchy abstractions. What lesson does the comparison suggest about <em>which</em> parts of an architecture should be exposed to programmers and which should be abstracted away?</p></li>
+<li><p>NVIDIA’s market dominance in HPC accelerators (~80% of Top500 accelerated FLOPS as of 2024) is partly architectural quality, partly software ecosystem (CUDA), partly first-mover. What would have to be true for AMD ROCm or Intel oneAPI to genuinely compete? Is the answer “a 10× hardware advantage” or “a 10× software advantage”?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Lindholm, E. et al. (2008). “NVIDIA Tesla: A unified graphics and computing architecture”. <em>IEEE Micro</em>. The G80 paper.</p></li>
+<li><p>Nickolls, J. &amp; Dally, W. (2010). “The GPU computing era”. <em>IEEE Micro</em>.</p></li>
+<li><p>Owens, J.D. et al. (2007). “A survey of general-purpose computation on graphics hardware”. <em>Computer Graphics Forum</em>. Pre-CUDA GPGPU.</p></li>
+<li><p>The CUDA Programming Guide (current version on <a class="reference external" href="http://docs.nvidia.com">docs.nvidia.com</a>). Required reference.</p></li>
+<li><p>Volkov, V. (2010). “Better performance at lower occupancy”. <em>GTC</em>. Influential on how to think about GPU performance models.</p></li>
+<li><p>For SIMT-vs-SIMD intellectual history: Hennessy &amp; Patterson, 6th ed., chapter 4.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-12-earth-simulator.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-14-exascale.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-gpus-came-from">Where GPUs came from</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-g80-2006-and-the-simt-idea">The G80 (2006) and the SIMT idea</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cuda-in-five-lines">CUDA in five lines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-cuda-and-simt-won">Why CUDA and SIMT won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-gpu-generation-roadmap">The GPU generation roadmap</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-about-amd-and-intel">What about AMD and Intel?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simt-is-vector-with-a-different-abstraction-surface">SIMT is vector with a different abstraction surface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sidebar-ispc-or-simt-on-the-cpu">Sidebar: ISPC, or SIMT on the CPU</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-about-non-nvidia-accelerators-in-hpc">What about non-NVIDIA accelerators in HPC?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-run-cuda-on-your-laptop">Lab — Run CUDA on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

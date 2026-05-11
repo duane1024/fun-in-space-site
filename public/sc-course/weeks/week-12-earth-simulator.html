@@ -1,0 +1,596 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 12 — The Earth Simulator: When Vectors Briefly Won Again &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-12-earth-simulator';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 13 — CUDA and SIMT: Vectors Reborn as Threads" href="week-13-cuda-simt.html" />
+    <link rel="prev" title="Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint" href="week-11-asci-bluegene.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-12-earth-simulator.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 12 — The Earth Simulator: When Vectors Briefly Won Again</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-it-was">What it was</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-made-the-linpack-number-remarkable">What made the LINPACK number remarkable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-it-ran">What it ran</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-american-reaction">The American reaction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-earth-simulator-did-not-do">What the Earth Simulator did <em>not</em> do</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-supercomputer-diverges-from-cray-s-vision-first-signpost">How “supercomputer” diverges from “Cray’s vision” — first signpost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-hpl-vs-hpcg-on-your-laptop">Lab — HPL vs. HPCG on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-12-the-earth-simulator-when-vectors-briefly-won-again">
+<h1>Week 12 — The Earth Simulator: When Vectors Briefly Won Again<a class="headerlink" href="#week-12-the-earth-simulator-when-vectors-briefly-won-again" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>In June 2002, the Top500 list arrived with a surprise: the world’s fastest supercomputer was not American, was not a cluster of microprocessors, and was not at a US national lab. It was a Japanese vector supercomputer, the <strong>Earth Simulator</strong>, at the Japan Marine Science and Technology Center in Yokohama. It was almost five times faster than the previous #1 by LINPACK Rmax: 35.86 TFLOPS versus IBM ASCI White’s 7.226 TFLOPS on the June 2002 Top500 list. It held the #1 spot for two and a half years.</p>
+<p>The reaction in the United States — political, scientific, and architectural — is one of the most consequential moments in late HPC history. It helped justify a wave of capability-computing investment, including DARPA HPCS and later DOE exascale programs, though the path from Earth Simulator to today’s exascale machines was indirect rather than a single procurement chain.</p>
+<p>This week is about that machine, why it won, and the response it triggered.</p>
+</section>
+<section id="what-it-was">
+<h2>What it was<a class="headerlink" href="#what-it-was" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Built</strong>: 2001–2002, by <strong>NEC</strong> and Mitsubishi Heavy Industries, at Yokohama.</p></li>
+<li><p><strong>Cost</strong>: ~$400M.</p></li>
+<li><p><strong>Purpose</strong>: Earth-system simulation — global atmospheric and oceanic modeling at sub-10 km resolution, for climate research and disaster prediction.</p></li>
+<li><p><strong>Compute nodes</strong>: 640 vector nodes.</p></li>
+<li><p><strong>Per-node</strong>: 8 NEC SX-6-derived vector CPUs (each with a 16-pipe vector unit, 8 GFLOPS peak), 16 GB shared memory. So <strong>64 GFLOPS peak per node</strong>.</p></li>
+<li><p><strong>Total CPUs</strong>: 5,120.</p></li>
+<li><p><strong>Aggregate peak</strong>: 40.96 TFLOPS.</p></li>
+<li><p><strong>LINPACK sustained</strong>: 35.86 TFLOPS — <em>87% of peak.</em> This number deserves a moment.</p></li>
+<li><p><strong>Interconnect</strong>: a custom <strong>single-stage crossbar</strong> connecting all 640 nodes. 12.3 GB/s per node link, all-to-all, sustained. Power-hungry, expensive, and <em>fast</em>.</p></li>
+<li><p><strong>Building</strong>: a dedicated three-story facility, ~3,250 m² of compute floor, with active seismic isolation and integrated cooling — the building was part of the architecture.</p></li>
+</ul>
+</section>
+<section id="what-made-the-linpack-number-remarkable">
+<h2>What made the LINPACK number remarkable<a class="headerlink" href="#what-made-the-linpack-number-remarkable" title="Link to this heading">#</a></h2>
+<p>87% of peak on LINPACK is <em>enormous</em>. Contemporary cluster machines typically hit 60–75% of peak on LINPACK; today’s GPU-based exascale machines hit ~65–70%. The Earth Simulator’s efficiency was a consequence of:</p>
+<ol class="arabic simple">
+<li><p><strong>Long vector registers</strong>. NEC’s 256-element vectors meant memory bandwidth was utilized at near-peak.</p></li>
+<li><p><strong>Memory bandwidth that matched the compute</strong>. Each node had 32 GB/s of memory bandwidth per CPU, sustained. Modern CPUs have a much higher compute-to-bandwidth ratio (the “memory wall”), so they spend a lot of cycles waiting on memory.</p></li>
+<li><p><strong>The crossbar interconnect</strong>. The single-stage crossbar gave the system high-bandwidth, low-contention all-to-all connectivity for many important communication patterns. It was much closer to nonblocking than contemporary cluster fabrics, though “every node to every other at full bandwidth at once” is too strong for arbitrary simultaneous traffic.</p></li>
+</ol>
+<p>The “memory wall” — the growing gap between CPU compute throughput and memory bandwidth — has been the dominant trend in microprocessor design since 1995. The Earth Simulator was, in a sense, the last machine where compute throughput and memory bandwidth were balanced.</p>
+</section>
+<section id="what-it-ran">
+<h2>What it ran<a class="headerlink" href="#what-it-ran" title="Link to this heading">#</a></h2>
+<p>Real codes, not just LINPACK:</p>
+<ul class="simple">
+<li><p><strong>AFES</strong> (atmospheric general circulation model). At ~10 km grid spacing globally, sustained 26.6 TFLOPS — the first time an Earth-system model ran at high resolution on real hardware.</p></li>
+<li><p><strong>OFES</strong> (ocean general circulation model). Tens of teraflops sustained.</p></li>
+<li><p><strong>Plasma simulation, seismic-wave propagation, turbulence DNS</strong> — multiple papers reporting sustained performance &gt;50% of peak across diverse scientific domains.</p></li>
+</ul>
+<p>The point: real applications, not just contrived benchmarks, ran at high sustained efficiency. ES was a productive scientific instrument, not a stunt. For climate-impact claims, cite the specific model and paper rather than the machine generically; the Earth Simulator was central to Japanese high-resolution climate and ocean modeling in this period, but “many IPCC AR4 results came off ES” is too broad without a source trail.</p>
+</section>
+<section id="the-american-reaction">
+<h2>The American reaction<a class="headerlink" href="#the-american-reaction" title="Link to this heading">#</a></h2>
+<p>The Earth Simulator’s #1 finish in June 2002 prompted what came to be called the “<strong>Computenik</strong>” reaction (echoing the Soviet Sputnik launch of 1957). The DOE, NSF, and DARPA all launched response programs, with arguments along these lines:</p>
+<blockquote>
+<div><p>The United States has lost its leadership in high-end computing. We have allowed our entire HPC architecture path to be commodity microprocessor clusters, optimized for cost, not capability. The Japanese have shown that purpose-built vector machines can deliver multiples better real-application performance. We need to fund the development of the next generation of high-end systems explicitly.</p>
+</div></blockquote>
+<p>The most consequential program that followed was DARPA’s <strong>High Productivity Computing Systems</strong> (HPCS) program, launched in 2002:</p>
+<ul class="simple">
+<li><p><strong>Phase I (2002–2003)</strong>: study contracts to Cray, IBM, HP, SGI, Sun.</p></li>
+<li><p><strong>Phase II (2004–2006)</strong>: prototype contracts to Cray, IBM, Sun.</p></li>
+<li><p><strong>Phase III (2006–2010)</strong>: production-system contracts to Cray and IBM. Cray’s line led through Cascade/XMT/Chapel work and strengthened the vendor base that also delivered XT/XE/XK systems; IBM’s PERCS work influenced Blue Waters even though the deployed NCSA system ultimately used Cray hardware rather than the original IBM design.</p></li>
+</ul>
+<p>HPCS was supposed to also produce next-generation programming languages — Cray’s <strong>Chapel</strong>, IBM’s <strong>X10</strong>, Sun’s <strong>Fortress</strong>. Of these, only Chapel survived as an active open-source project; X10 was discontinued in the mid-2010s; Fortress was canceled when Sun was acquired by Oracle.</p>
+<p>The hardware result, however, was concrete in a broader industrial sense. <strong>Jaguar</strong> (ORNL, 2009) became #1, then was upgraded to <strong>Titan</strong> (2012) — the first GPU-accelerated #1 system. <strong>Blue Waters</strong> at NCSA (2013) was, after schedule slips, a Cray XE/XK system rather than IBM’s original PERCS design. HPCS did not literally fund every subsequent American exascale machine, but it kept high-end system architecture, languages, and vendor co-design capacity alive during the period when commodity clusters might otherwise have narrowed the field.</p>
+</section>
+<section id="what-the-earth-simulator-did-not-do">
+<h2>What the Earth Simulator did <em>not</em> do<a class="headerlink" href="#what-the-earth-simulator-did-not-do" title="Link to this heading">#</a></h2>
+<p>It did not cause vector supercomputers to win again, in the long run. By 2004 the Top500 #1 was IBM’s BlueGene/L (cluster of low-power microprocessors), and from then on the vector model lost ground every year.</p>
+<p>The reason is simple: NEC SX vector processors cost far more per FLOP than commodity microprocessors. The Earth Simulator’s roughly $400M procurement bought 35.86 TFLOPS sustained on HPL. Sandia’s Red Storm/Cray XT3 arrived soon after on a commodity-processor MPP path at a much lower procurement class, though its initial Top500 HPL result was well below 36 TFLOPS and later upgrades improved it. Outside Japan, governments did not fund another vector machine of comparable scale. Inside Japan, the <strong>Earth Simulator 2</strong> (2009, 131 TFLOPS) and <strong>ES3</strong> (2015, 1.3 PFLOPS) followed, but neither was again the world’s fastest.</p>
+<p>What the Earth Simulator <em>did</em> do: it convinced the HPC community, durably, that:</p>
+<ol class="arabic simple">
+<li><p><strong>Per-application sustained performance, not peak FLOPS, is the figure of merit.</strong> This led to the introduction of HPCG (High Performance Conjugate Gradient) in 2014 as a complementary benchmark to LINPACK. HPCG stresses memory bandwidth and irregular access — <em>exactly</em> what made ES fast and what cluster-of-microprocessors makes slow.</p></li>
+<li><p><strong>Memory bandwidth and balance matter as much as raw FLOPS.</strong> The path of HBM (high-bandwidth memory) integration in modern chips — A100, H100, MI300, Fugaku’s A64FX — is in part a response to this lesson.</p></li>
+<li><p><strong>Government investment in HPC architecture has compounding returns.</strong> HPCS is one of the cleaner success stories.</p></li>
+</ol>
+<p>The Earth Simulator’s most important legacy might be that it made the metric “sustained on real applications” a permanent counterweight to the “peak FLOPS on LINPACK” headline number.</p>
+</section>
+<section id="how-supercomputer-diverges-from-cray-s-vision-first-signpost">
+<h2>How “supercomputer” diverges from “Cray’s vision” — first signpost<a class="headerlink" href="#how-supercomputer-diverges-from-cray-s-vision-first-signpost" title="Link to this heading">#</a></h2>
+<p>The Earth Simulator was the <em>last</em> major machine that one could plausibly describe as in the direct lineage of the Cray-1: a centrally-engineered, custom-silicon vector machine, where the architectural unit of thought was a single fast pipeline operating on long vectors. After ES, the lineage <em>all</em> runs through clusters and accelerators, regardless of whether the per-element compute happens to look vector-shaped.</p>
+<p>If you asked Seymour Cray what he thought a 2026 supercomputer should look like, the honest answer would be: “He would have enjoyed the engineering and disagreed with the architecture.” The Cray-1 was a unified mind doing one thing very fast. Frontier is fifty thousand minds doing fifty thousand things in coordination. They both compute — but the <em>kind of object</em> they are is different.</p>
+<p>We pick up that thread in Week 15.</p>
+</section>
+<section id="lab-hpl-vs-hpcg-on-your-laptop">
+<h2>Lab — HPL vs. HPCG on your laptop<a class="headerlink" href="#lab-hpl-vs-hpcg-on-your-laptop" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/12-hpl-hpcg/</span></code>, you build and run two benchmarks:</p>
+<ol class="arabic simple">
+<li><p><strong>HPL</strong> — High-Performance LINPACK. Solves a dense linear system. Compute-bound, hits a high fraction of peak FLOPS.</p></li>
+<li><p><strong>HPCG</strong> — High-Performance Conjugate Gradient. Solves a sparse system. Memory-bandwidth-bound, irregular access, hits 1–5% of peak FLOPS on most modern systems.</p></li>
+</ol>
+<p>You run both on your laptop and observe the ratio. Then we compare to the Top500-published HPL/HPCG ratios for major systems. HPCG did not exist during the Earth Simulator era, so we do not assign it a retrospective HPCG score. Instead, we compare the architectural reason ES achieved high application efficiency — high bytes per FLOP and predictable vector memory streams — with why modern GPU systems often score a much smaller fraction of peak on HPCG than on HPL.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>The Earth Simulator’s 87% of peak on LINPACK is unmatched in the modern era. Pick a current Top500 system and find its HPL fraction. Why is the gap so large? Identify the architectural choices responsible.</p></li>
+<li><p>The HPCS program funded development of three new languages (Chapel, X10, Fortress). None displaced Fortran/C/MPI. What conditions would have to be different for a “next-generation” HPC language to actually take hold? Is it a technical problem, an inertia problem, or a problem with the kind of organization that funds research languages?</p></li>
+<li><p>The Earth Simulator’s success was due to high memory bandwidth per FLOP. Modern GPUs have very high <em>aggregate</em> bandwidth (HBM3 at 3+ TB/s on H100), but extremely high FLOPS as well. The bytes-per-FLOP ratio has actually <em>decreased</em> over time. Find the bytes-per-FLOP ratio for an Earth Simulator node and an H100 GPU. Then think about which workloads run efficiently on each.</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Habata, S., Yokokawa, M. &amp; Kitawaki, S. (2003). “The Earth Simulator system”. <em>NEC Research &amp; Development</em>. The primary technical paper.</p></li>
+<li><p>Yokokawa, M. et al. (2002). “Performance evaluation of the Earth Simulator”. <em>Proc. SC02</em>. Application performance results.</p></li>
+<li><p>Dongarra, J. (2002). “The Earth Simulator system: A wake-up call”. A widely circulated commentary at the time of the announcement.</p></li>
+<li><p>Lazowska, E. &amp; Patterson, D. (2005). “Computing research: A looming crisis”. <em>CACM</em>. Part of the post-ES policy argument.</p></li>
+<li><p>Top500 / HPCG list (<a class="reference external" href="http://top500.org/lists/hpcg">top500.org/lists/hpcg</a>). Updated each year.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-11-asci-bluegene.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-13-cuda-simt.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-it-was">What it was</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-made-the-linpack-number-remarkable">What made the LINPACK number remarkable</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-it-ran">What it ran</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-american-reaction">The American reaction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-earth-simulator-did-not-do">What the Earth Simulator did <em>not</em> do</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-supercomputer-diverges-from-cray-s-vision-first-signpost">How “supercomputer” diverges from “Cray’s vision” — first signpost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-hpl-vs-hpcg-on-your-laptop">Lab — HPL vs. HPCG on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

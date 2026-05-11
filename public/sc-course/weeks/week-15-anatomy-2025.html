@@ -1,0 +1,689 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 15 — Anatomy of a 2025 Supercomputer &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-15-anatomy-2025';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 16 — Capstone: SAXPY Across the Eras" href="week-16-capstone.html" />
+    <link rel="prev" title="Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku" href="week-14-exascale.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-15-anatomy-2025.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 15 — Anatomy of a 2025 Supercomputer</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compute-the-node-is-itself-a-small-supercomputer">Compute: the node is itself a small supercomputer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interconnect-the-system-s-distinctive-component">Interconnect: the system’s distinctive component</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-node-level-subtlety-numa-and-first-touch">A node-level subtlety: NUMA and first-touch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storage-the-parallel-filesystem">Storage: the parallel filesystem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reasoning-about-performance-the-roofline-model">Reasoning about performance: the Roofline model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-the-pyramid">Software: the pyramid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#power-and-cooling">Power and cooling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operations">Operations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-differs-from-what-cray-sold-in-1976">How it differs from what Cray sold in 1976</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-a-virtual-datacenter">Lab — A virtual datacenter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-15-anatomy-of-a-2025-supercomputer">
+<h1>Week 15 — Anatomy of a 2025 Supercomputer<a class="headerlink" href="#week-15-anatomy-of-a-2025-supercomputer" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>A modern supercomputer is not a single machine. It is a tightly-coupled datacenter, optimized for one job at a time, where the <em>system</em> — not any individual node — is the unit of design. Understanding it requires understanding power, cooling, interconnect, storage, software, and operations as a coherent whole, because it is in the integration that the engineering happens.</p>
+<p>This week is the operational picture. What goes into Frontier, in 2025, beyond the FLOPS? And how does the answer differ from what Cray sold in 1976?</p>
+</section>
+<section id="compute-the-node-is-itself-a-small-supercomputer">
+<h2>Compute: the node is itself a small supercomputer<a class="headerlink" href="#compute-the-node-is-itself-a-small-supercomputer" title="Link to this heading">#</a></h2>
+<p>Frontier-class compute node, drawn from the public spec sheet:</p>
+<ul class="simple">
+<li><p><strong>CPU</strong>: 1× AMD EPYC “Trento” 7A53 — 64 cores at 2.0 GHz base, AVX2 (256-bit) vector unit per core. ~2 TFLOPS peak FP64 from the CPU alone (which would have been #1 on the Top500 in 1995).</p></li>
+<li><p><strong>GPUs</strong>: 4× AMD Instinct MI250X — 2 GCDs each = 8 GCDs per node. ~84 TFLOPS peak FP64.</p></li>
+<li><p><strong>Memory</strong>: 512 GB DDR4 attached to CPU, 512 GB HBM2e attached to GPUs (64 GB per GPU).</p></li>
+<li><p><strong>Local NVMe</strong>: 1.92 TB.</p></li>
+<li><p><strong>NIC</strong>: 4× HPE Slingshot Cassini network interfaces, 200 Gb/s each.</p></li>
+<li><p><strong>Power per node</strong>: ~5 kW.</p></li>
+</ul>
+<p>A single Frontier compute node has <em>more compute, more memory, and more network bandwidth than every supercomputer on Earth had combined in 1985</em>. Multiply by 9,408 nodes to get the system.</p>
+<p>The implication: a working engineer who wants to think about a modern supercomputer should think about a single node first (it’s a familiar object — a multi-socket fat server with accelerators), then think about how 10,000 of them are wired together.</p>
+</section>
+<section id="interconnect-the-system-s-distinctive-component">
+<h2>Interconnect: the system’s distinctive component<a class="headerlink" href="#interconnect-the-system-s-distinctive-component" title="Link to this heading">#</a></h2>
+<p>The interconnect is what separates a supercomputer from a colocation rack of servers. The relevant specifications:</p>
+<ul class="simple">
+<li><p><strong>Bandwidth per port</strong>: 200 Gb/s (Slingshot-11), 400 Gb/s (NDR InfiniBand), 800 Gb/s (XDR, shipping now, in some 2025 systems). Up from 1 Gb/s on Quadrics (1998).</p></li>
+<li><p><strong>Latency</strong>: ~1 µs end-to-end for small MPI messages on modern fabrics; was 10 µs on Myrinet (1995).</p></li>
+<li><p><strong>Topology</strong>: <strong>dragonfly</strong> is dominant for general-purpose HPC (Slingshot, Aries before it), <strong>fat-tree</strong> common for AI clusters, <strong>torus</strong> still favored for some physics workloads. Dragonfly is hierarchical: groups of nodes form “groups”, groups have all-to-all links to other groups, the system has a small diameter.</p></li>
+<li><p><strong>Adaptive routing</strong>: packets dynamically choose paths based on observed congestion. The simple “static shortest path” routing of older fabrics is gone.</p></li>
+<li><p><strong>Lossless transport</strong>: link-level credits, not TCP-style retransmission. Buffer overflow is <em>not allowed</em>; flow control prevents it.</p></li>
+<li><p><strong>RDMA</strong>: every modern HPC NIC supports <strong>remote direct memory access</strong> — the NIC reads/writes memory on the remote node without involving the remote CPU. This is what makes one-sided MPI and SHMEM operations fast.</p></li>
+<li><p><strong>Hardware collectives</strong>: dedicated hardware in the switches accelerates <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> and the like. Mellanox SHARP, HPE Slingshot’s collective offload — the trees of summing operations are done in the network rather than at the endpoints.</p></li>
+<li><p><strong>In-network processing</strong>: BlueField DPUs and Slingshot’s NIC processors offload protocol handling, security, and even some application-level operations.</p></li>
+</ul>
+<p>If you want to identify the most “supercomputer-distinctive” hardware in a modern system, point at the interconnect. The CPUs and GPUs are off-the-shelf. The interconnect is bespoke.</p>
+<section id="a-node-level-subtlety-numa-and-first-touch">
+<h3>A node-level subtlety: NUMA and first-touch<a class="headerlink" href="#a-node-level-subtlety-numa-and-first-touch" title="Link to this heading">#</a></h3>
+<p>Within a single Frontier node there are two CPU NUMA domains, eight GCDs each with their own HBM stack, and a topology of Infinity Fabric links between them. Memory access cost is not uniform — a load from a thread on socket 0 to memory physically attached to socket 1 is two to three times slower than a local access. This is <strong>NUMA</strong> (Non-Uniform Memory Access), and it has been a within-node performance concern since the SGI Origin 2000 (1996).</p>
+<p>The practical consequence: on a NUMA system, <em>the thread that first touches a page determines where the page is allocated.</em> If your program allocates a big array on the main thread and then parallelizes a loop over it, all the pages live in one NUMA domain and the threads on the other domain stall on remote loads. The fix — a one-liner that has become reflexive in HPC code — is to perform the <em>initial</em> allocation pass in parallel with the same iteration schedule as the computation:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma omp parallel for schedule(static)</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">;</span><span class="w">   </span><span class="c1">// first-touch placement</span>
+
+<span class="cp">#pragma omp parallel for simd schedule(static)</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">alpha</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">];</span><span class="w">   </span><span class="c1">// hits local memory</span>
+</pre></div>
+</div>
+<p>Same pattern on every NUMA-aware HPC system since 1996. The mechanism is invisible until you measure it; then it can be a 2-3× performance lever.</p>
+</section>
+</section>
+<section id="storage-the-parallel-filesystem">
+<h2>Storage: the parallel filesystem<a class="headerlink" href="#storage-the-parallel-filesystem" title="Link to this heading">#</a></h2>
+<p>Compute nodes don’t have local disks for application data. They mount a <strong>parallel filesystem</strong> that aggregates dozens to hundreds of storage servers into one logical filesystem. The standard options:</p>
+<ul class="simple">
+<li><p><strong>Lustre</strong>: open-source. Most widely deployed in HPC. Frontier’s Orion filesystem is Lustre; Fugaku uses FEFS, Fujitsu’s Lustre-derived filesystem; Aurora has Lustre available alongside DAOS rather than Lustre being the whole storage story.</p></li>
+<li><p><strong>IBM Spectrum Scale (formerly GPFS)</strong>: proprietary, well-regarded. Sequoia/Sierra/Summit at LLNL/ORNL.</p></li>
+<li><p><strong>DAOS</strong> (Distributed Asynchronous Object Storage): Intel-led, object-based, designed for NVMe. Aurora’s primary storage.</p></li>
+<li><p><strong>BeeGFS</strong>: open-source, popular for mid-sized clusters.</p></li>
+</ul>
+<p>Throughput on a production parallel filesystem is now in the <strong>terabytes per second</strong> range. Frontier’s “Orion” Lustre filesystem provides about 5 TB/s aggregate read bandwidth, 4 TB/s write, on 11.5 PB of NVMe and 679 PB of HDD.</p>
+<p>The architectural shift from spinning rust to NVMe (around 2018 for HPC) was as significant as the move from tape to disk in the 1980s. Modern systems have a tier-rich storage hierarchy:</p>
+<ol class="arabic simple">
+<li><p><strong>GPU HBM</strong>: TB/s bandwidth, GB capacity, latency on the order of hundreds of nanoseconds to low microseconds depending on access path and what you include in the measurement. Per-GPU.</p></li>
+<li><p><strong>CPU DDR</strong>: hundreds of GB/s, ~100 GB capacity, ~100 ns latency. Per-node.</p></li>
+<li><p><strong>Local NVMe (node-local burst buffer)</strong>: ~10 GB/s, ~TB capacity, ~10 μs latency. Per-node.</p></li>
+<li><p><strong>Cluster-shared NVMe (e.g., DAOS)</strong>: ~TB/s aggregate, ~PB capacity, ~ms latency.</p></li>
+<li><p><strong>Cluster-shared HDD (Lustre, GPFS)</strong>: ~hundreds of GB/s aggregate, ~hundreds of PB, ~10 ms latency.</p></li>
+<li><p><strong>Tape archive</strong>: GB/s, EB capacity, minute-to-hour latency.</p></li>
+</ol>
+<p>Programming applications that span these tiers explicitly is a research area. <strong>Burst buffer</strong> APIs let an application stage data through fast NVMe before doing slow operations on Lustre.</p>
+</section>
+<section id="reasoning-about-performance-the-roofline-model">
+<h2>Reasoning about performance: the Roofline model<a class="headerlink" href="#reasoning-about-performance-the-roofline-model" title="Link to this heading">#</a></h2>
+<p>A machine this complex needs an analysis framework or every performance argument becomes anecdotal. The standard one in HPC since 2009 is <strong>Roofline</strong> (Williams, Waterman &amp; Patterson, <em>CACM</em> 52(4)). It is simple enough to fit on a postcard and useful enough to apply to every kernel in this course.</p>
+<p>A kernel does some number of floating-point operations <span class="math notranslate nohighlight">\(F\)</span> and moves some number of bytes from memory <span class="math notranslate nohighlight">\(B\)</span>. Its <strong>arithmetic intensity</strong> is</p>
+<div class="math notranslate nohighlight">
+\[ I = F / B \quad \text{(flop/byte)} \]</div>
+<p>A machine has a peak FLOPS rate <span class="math notranslate nohighlight">\(P_\text{peak}\)</span> and a peak memory bandwidth <span class="math notranslate nohighlight">\(B_\text{peak}\)</span>. Achievable performance on this kernel is bounded by:</p>
+<div class="math notranslate nohighlight">
+\[ P_\text{achievable} = \min\bigl(P_\text{peak},\; I \cdot B_\text{peak}\bigr) \]</div>
+<p>Plot <span class="math notranslate nohighlight">\(\log(P)\)</span> vs <span class="math notranslate nohighlight">\(\log(I)\)</span>. You get a roof: a slanted line of slope <span class="math notranslate nohighlight">\(B_\text{peak}\)</span> for the memory-bound regime, transitioning to a flat ceiling at <span class="math notranslate nohighlight">\(P_\text{peak}\)</span> for the compute-bound regime. The “ridge point” is at <span class="math notranslate nohighlight">\(I^* = P_\text{peak} / B_\text{peak}\)</span>.</p>
+<p>A worked example. Frontier’s MI250X has <span class="math notranslate nohighlight">\(P_\text{peak} \approx 47\)</span> TFLOPS FP64 per GCD and <span class="math notranslate nohighlight">\(B_\text{peak} \approx 1.6\)</span> TB/s of HBM bandwidth. The ridge point is <span class="math notranslate nohighlight">\(I^* \approx 30\)</span> flop/byte. Now:</p>
+<ul class="simple">
+<li><p><strong>SAXPY</strong> has 2 flops per element, 24 bytes moved (two loads, one store, 8 bytes each). <span class="math notranslate nohighlight">\(I = 2/24 \approx 0.08\)</span> flop/byte. <em>Massively</em> memory-bound — expect <span class="math notranslate nohighlight">\(\sim 130\)</span> GFLOPS, about 0.3% of peak. SAXPY on an MI250X is <em>not</em> a FLOPS workload; it’s a bandwidth workload.</p></li>
+<li><p><strong>DGEMM</strong> at large <span class="math notranslate nohighlight">\(N\)</span> has <span class="math notranslate nohighlight">\(I \approx N/3\)</span> flop/byte (with cache reuse). For <span class="math notranslate nohighlight">\(N=4096\)</span>, <span class="math notranslate nohighlight">\(I \approx 1300\)</span> flop/byte. Compute-bound, expect near peak.</p></li>
+<li><p><strong>5-point stencil</strong> has 4 flops and ~40 bytes per cell (rough). <span class="math notranslate nohighlight">\(I \approx 0.1\)</span>. Memory-bound.</p></li>
+<li><p><strong>HPCG’s sparse conjugate gradient kernel</strong>: typically <span class="math notranslate nohighlight">\(I \approx 0.2-0.4\)</span>. Why HPCG reports 1-2% of HPL FLOPS on the same hardware.</p></li>
+</ul>
+<p>The framework explains the gap between “peak FLOPS” and “real application FLOPS” in one line: most scientific kernels live in the memory-bound regime, where peak FLOPS is irrelevant and only memory bandwidth matters. The Earth Simulator’s high efficiency (Week 12) was because its bytes-per-flop ratio was generous; modern GPUs have huge FLOPS budgets but bytes-per-flop has shrunk, and most applications haven’t moved with it.</p>
+<p>Roofline is also the right framework for benchmarks: <strong>STREAM</strong> (McCalpin, 1995) is the canonical microbenchmark for the bandwidth roof, and <strong>HPCG</strong> is the canonical sparse-application benchmark for the <em>practical</em> compute ceiling. The Top500 reports HPL (high <span class="math notranslate nohighlight">\(I\)</span>, hits the peak roof) and HPCG (low <span class="math notranslate nohighlight">\(I\)</span>, hits the bandwidth roof) precisely because those two numbers bracket the achievable performance of real codes.</p>
+<p>A working engineer should be able to look at any kernel, estimate its arithmetic intensity to within a factor of two, and predict whether it will be bandwidth- or compute-bound on a target machine. That single skill removes most of the mystery from “why isn’t my code hitting peak.”</p>
+</section>
+<section id="software-the-pyramid">
+<h2>Software: the pyramid<a class="headerlink" href="#software-the-pyramid" title="Link to this heading">#</a></h2>
+<p>The software stack on a 2025 supercomputer, bottom up:</p>
+<ul class="simple">
+<li><p><strong>OS</strong>: Linux (HPE Cray OS = SUSE Linux Enterprise Server with custom drivers, on Frontier; RHEL on others). Stripped-down compute-node configuration plus full user-environment login nodes.</p></li>
+<li><p><strong>Drivers and libraries</strong>: vendor-specific accelerator stacks (CUDA, ROCm, oneAPI), high-performance MPI (Cray MPT, Intel MPI, Open MPI, MPICH), and a site scheduler. Slurm is dominant in open HPC centers, but PBS, PJM, and other schedulers still matter on major systems.</p></li>
+<li><p><strong>Programming models</strong>: at any given site you will find code written in MPI + OpenMP (the workhorse), MPI + CUDA / HIP (NVIDIA / AMD GPU sites), MPI + SYCL (Aurora and oneAPI sites), MPI + OpenACC (legacy and incremental-offload codes, still active at NCAR and ECMWF), plus portable C++ abstractions like <strong>Kokkos</strong> (LLNL), <strong>Raja</strong> (LLNL), and <strong>SYCL/DPC++</strong> (Intel-led, multi-vendor). The diversity is real and not converging fast — codes that need to run on Frontier <em>and</em> Aurora <em>and</em> El Capitan typically go through a portability layer rather than committing to one vendor stack.</p></li>
+<li><p><strong>Module system</strong>: <code class="docutils literal notranslate"><span class="pre">module</span> <span class="pre">load</span> <span class="pre">openmpi/5.0</span></code> etc., for managing multiple compiler/library versions side by side. <strong>Lmod</strong> is the dominant implementation.</p></li>
+<li><p><strong>Package management for HPC</strong>: <strong>Spack</strong> (LLNL) for building scientific software stacks from source with optional ABI-compatible binaries. <strong>EasyBuild</strong> in some European sites.</p></li>
+<li><p><strong>Containers</strong>: <strong>Apptainer</strong> (formerly Singularity) is the HPC-native container runtime — built specifically for security models that don’t allow root, and for performance integration with MPI and InfiniBand. Docker doesn’t fly in HPC.</p></li>
+<li><p><strong>Job scheduling</strong>: <strong>Slurm</strong>, PBS Pro, PJM, LSF, and related systems write the job queue, allocate nodes, and execute job scripts. Slurm is the common case in many US open-science clusters, but not universal.</p></li>
+<li><p><strong>Monitoring</strong>: a stack of Prometheus, Grafana, custom Cray/HPE telemetry, NVIDIA DCGM, AMD SMI. Power, temperature, network counters, GPU utilization — every metric, every node, every second.</p></li>
+<li><p><strong>User workflow tools</strong>: <strong>Snakemake</strong>, <strong>Nextflow</strong>, <strong>Parsl</strong> for orchestrating long pipelines across many jobs.</p></li>
+<li><p><strong>Data movement</strong>: <strong>Globus</strong> for inter-site transfers (terabytes between sites is a normal weekly operation), <strong>mpi-IO</strong> within the system.</p></li>
+</ul>
+</section>
+<section id="power-and-cooling">
+<h2>Power and cooling<a class="headerlink" href="#power-and-cooling" title="Link to this heading">#</a></h2>
+<p>A 30 MW supercomputer dissipates 30 megawatts of heat. To put that in scale: 30 MW would heat ~10,000 single-family homes. It must be removed continuously.</p>
+<p>The dominant approach is <strong>direct liquid cooling</strong> with warm water:</p>
+<ol class="arabic simple">
+<li><p>Coolant water enters the building at ~30°C (warm — the cooling tower can produce this from a 10°C wet bulb without chillers).</p></li>
+<li><p>It flows through cold plates clamped to CPUs and GPUs, picking up heat to ~40°C.</p></li>
+<li><p>The hot return water goes to evaporative cooling towers or, increasingly, to <strong>building heat-recovery</strong> systems that warm offices or hot-water systems.</p></li>
+</ol>
+<p>The thermodynamic advantage over chilled-air cooling is enormous: 30°C inlet means the cooling-tower duty is small (no compressors), compared to traditional 12°C chilled water that requires substantial chiller plants.</p>
+<p>Two-phase cooling (the working fluid evaporates in the cold plate, condenses in a heat exchanger) is in use at some sites and is the next step. Full <strong>immersion cooling</strong> (servers submerged in dielectric fluid, like the Cray-2 in 1985 at much smaller scale) is shipping in some commercial datacenters and a few HPC sites; LLNL announced plans for immersion cooling in next-generation systems.</p>
+<p>The site selection for a modern HPC center is dominated by:</p>
+<ul class="simple">
+<li><p><strong>Power availability and price.</strong> ORNL benefits from TVA grid power, which includes hydroelectric generation but is not simply “hydro power.” RIKEN gets Kansai grid power. Argonne gets ComEd/northern Illinois grid power with substantial nuclear generation in the regional mix.</p></li>
+<li><p><strong>Cooling water availability.</strong> Either lake/river access or a large reclaimed-water supply.</p></li>
+<li><p><strong>Land for substations and cooling towers.</strong> A modern HPC site footprint is mostly utility plant.</p></li>
+</ul>
+</section>
+<section id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Link to this heading">#</a></h2>
+<p>A few statistics that are not on any architecture diagram but determine how the systems actually work:</p>
+<ul class="simple">
+<li><p><strong>Mean time between hardware failure (MTBF) at the node level</strong>: typically a few months. With 10,000 nodes, that’s <em>several failures per day across the system</em>. Applications must checkpoint, and the scheduler must reschedule failed jobs.</p></li>
+<li><p><strong>Effective utilization</strong>: well-managed sites run at 70–90% utilization, measured as “fraction of node-hours used by production jobs.” Below 70% suggests scheduling or queuing problems; above 90% is unusual.</p></li>
+<li><p><strong>Job size distribution</strong>: highly skewed. Most jobs are small (single-node-hour). A few jobs each year use the entire machine (“hero runs” — climate simulations, weapons calculations, ML pretraining). The scheduler has to fit them all in.</p></li>
+<li><p><strong>Allocations</strong>: in DOE labs, time on the machine is granted by competitive proposal. At LLNL, ORNL, Argonne, the <strong>INCITE</strong> and <strong>ALCC</strong> programs grant time on Frontier, Aurora, Polaris, etc., with proposals reviewed by panel. Most users are <em>not</em> the people who paid for the machine.</p></li>
+</ul>
+</section>
+<section id="how-it-differs-from-what-cray-sold-in-1976">
+<h2>How it differs from what Cray sold in 1976<a class="headerlink" href="#how-it-differs-from-what-cray-sold-in-1976" title="Link to this heading">#</a></h2>
+<p>Recall the Cray-1:</p>
+<ul class="simple">
+<li><p>1 CPU at 80 MHz, 8 MB memory, 5 tons, 115 kW, 160 MFLOPS, $8.8M.</p></li>
+<li><p>A <em>single user, single program</em> machine. The OS — COS, then later UNICOS — ran one job at a time on the central processor; everything else was the I/O subsystem.</p></li>
+<li><p>Bespoke ECL throughout. Built by Cray Research employees in Chippewa Falls; every chip was custom.</p></li>
+<li><p>Programmed in CFT Fortran or CAL. The compiler emitted vector instructions; the programmer reasoned about a single fast pipeline.</p></li>
+</ul>
+<p>Frontier:</p>
+<ul class="simple">
+<li><p>9,408 nodes, each with 64-core CPU + 4 GPUs, about 9.4 PB combined CPU+GPU memory (roughly half DDR and half HBM), 14,000 ft² floor, 21 MW at debut, exaflop-class HPL performance, ~$600M.</p></li>
+<li><p>A <em>thousand-user, hundreds-of-jobs-at-a-time</em> machine, with dynamic job scheduling. There is no “one program” per machine; there is a job queue.</p></li>
+<li><p>Commodity throughout: AMD CPUs (volume product), AMD GPUs (HPC variant of a volume product), HPE Cray interconnect (the only truly bespoke bit), Linux (free software), Slurm (free software), Lustre (free software).</p></li>
+<li><p>Programmed in MPI for the cross-node parallelism, OpenMP/HIP/CUDA for the on-node parallelism, with codes that have been continuously evolved for thirty years across multiple machine generations.</p></li>
+</ul>
+<p>The architectural change from “single fast machine” to “fleet of coordinated machines” is total. The technology is unrecognizable.</p>
+<p>But — and this is the point of the course — the <em>intellectual lineage</em> is direct. Frontier’s GPUs are vector machines, descendants of the Cray-1 by way of the Connection Machine and CUDA. Frontier’s message-passing model descends through NX/PVM and the MPI Forum, not from CFT. Frontier’s Slingshot interconnect descends from the same design line that produced T3E, SeaStar, Gemini, and Aries. Frontier’s parallel Lustre filesystem descends from decades of parallel-I/O work. Frontier’s compiler stack descends from CFT and Kuck’s Parafrase.</p>
+<p>The architecture changed. The ideas walked through.</p>
+</section>
+<section id="lab-a-virtual-datacenter">
+<h2>Lab — A virtual datacenter<a class="headerlink" href="#lab-a-virtual-datacenter" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/15-virtual-dc/</span></code>, we set up a small “datacenter” with:</p>
+<ul class="simple">
+<li><p>4 Docker-container “compute nodes” running Slurm and Open MPI.</p></li>
+<li><p>1 “head node” with the Slurm controller and a shared NFS volume.</p></li>
+<li><p>A simple “monitoring” view via Grafana (optional).</p></li>
+</ul>
+<p>You submit a multi-node MPI job to this miniature, watch it scheduled, watch it run, watch the (artificial) telemetry roll in. You also kill a “node” mid-job and observe the failure mode. The point: see in miniature what the operations team at ORNL is doing in production, and feel the difference between writing code and running a production HPC service.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>The “interconnect is the most distinctive part of a modern supercomputer” claim. Is it still true if you compare to a hyperscale AI training cluster (e.g., NVIDIA DGX SuperPOD with NVLink + InfiniBand)? Are AI clusters supercomputers, or something else?</p></li>
+<li><p>Modern HPC sites depend on warm-water cooling and dense liquid plumbing. What’s the largest <em>consumer-grade</em> analog? At what scale would your home computer benefit from liquid cooling? Why don’t most consumer machines have it despite the apparent cooling advantage?</p></li>
+<li><p>The Cray-1 had one program at a time. Frontier has thousands. Did the change in time-sharing model also change what a “supercomputer” is for, in terms of who uses it and what it accomplishes?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>ORNL (2022). <em>Frontier System Architecture</em>. Public technical reports on <a class="reference external" href="http://olcf.ornl.gov/frontier">olcf.ornl.gov/frontier</a>.</p></li>
+<li><p>HPE (2021). <em>HPE Slingshot Architecture White Paper</em>. Specification for the dragonfly interconnect.</p></li>
+<li><p>Garcia, K. et al. (2022). “El Capitan: An advanced architecture exascale system at LLNL”. <em>Proc. SC22</em>.</p></li>
+<li><p>Schwan, P. (2003). “Lustre: Building a file system for 1000-node clusters”. <em>Linux Symposium</em>. The Lustre design paper, still relevant.</p></li>
+<li><p>Yoo, A.B. et al. (2003). “SLURM: Simple Linux Utility for Resource Management”. <em>JSSPP ‘03</em>.</p></li>
+<li><p>For modern operations and lifecycle: ECP final report (Argonne, 2023) and the OLCF/ALCF/NERSC user documentation (free online).</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-14-exascale.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-16-capstone.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 16 — Capstone: SAXPY Across the Eras</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compute-the-node-is-itself-a-small-supercomputer">Compute: the node is itself a small supercomputer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interconnect-the-system-s-distinctive-component">Interconnect: the system’s distinctive component</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-node-level-subtlety-numa-and-first-touch">A node-level subtlety: NUMA and first-touch</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#storage-the-parallel-filesystem">Storage: the parallel filesystem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reasoning-about-performance-the-roofline-model">Reasoning about performance: the Roofline model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#software-the-pyramid">Software: the pyramid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#power-and-cooling">Power and cooling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#operations">Operations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-differs-from-what-cray-sold-in-1976">How it differs from what Cray sold in 1976</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-a-virtual-datacenter">Lab — A virtual datacenter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

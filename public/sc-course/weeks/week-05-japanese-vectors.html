@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-05-japanese-vectors';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke" href="week-06-vector-wall.html" />
+    <link rel="prev" title="Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing" href="week-04-shared-memory-vectors.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-05-japanese-vectors.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-parallel-ecosystem-existed">Why a parallel ecosystem existed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fujitsu-vp-200-1982">Fujitsu VP-200 (1982)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hitachi-s-810-1983">Hitachi S-810 (1983)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nec-sx-2-1985-the-multi-pipe-extreme">NEC SX-2 (1985): the multi-pipe extreme</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sx-3-sx-4-sx-5-the-dynasty">SX-3, SX-4, SX-5: the dynasty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like">What the code looked like</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-earth-simulator-2002-vectors-strike-back">The Earth Simulator (2002): vectors strike back</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-japanese-vector-ecosystem-persisted-longer-than-cray-s">Why the Japanese vector ecosystem persisted longer than Cray’s</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-long-vectors-vs-short-vectors">Lab — Long vectors vs. short vectors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-5-japan-nec-sx-fujitsu-vp-hitachi-s-series">
+<h1>Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series<a class="headerlink" href="#week-5-japan-nec-sx-fujitsu-vp-hitachi-s-series" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Long-vector architectures — vector lengths of 256 or longer, with deep multi-pipe execution — are not a Cray invention. From 1982 through the mid-2000s, Japanese vendors (NEC, Fujitsu, Hitachi) built vector machines that often <em>exceeded</em> Cray’s per-processor performance, used different architectural choices, and ran a parallel software ecosystem. They produced the Earth Simulator (2002), which knocked the United States off the top of the Top500 and triggered a multi-billion-dollar policy response.</p>
+<p>If you only learn the American story you miss half of how vector computing actually evolved. This week is the other half.</p>
+</section>
+<section id="why-a-parallel-ecosystem-existed">
+<h2>Why a parallel ecosystem existed<a class="headerlink" href="#why-a-parallel-ecosystem-existed" title="Link to this heading">#</a></h2>
+<p>Three forces:</p>
+<ol class="arabic simple">
+<li><p><strong>MITI</strong> (Japan’s Ministry of International Trade and Industry) ran the National Superspeed Computer Project from 1981 to 1989, funding NEC, Fujitsu, and Hitachi to develop competitive supercomputers explicitly to challenge Cray Research.</p></li>
+<li><p><strong>Trade tensions</strong> made imports of US supercomputers into Japanese government and academic sites politically charged. NEC, Fujitsu, and Hitachi had a captive home market.</p></li>
+<li><p><strong>Genuine technical divergence</strong>: the Japanese designs were not Cray clones. They used different vector-register strategies, different pipe counts, different memory architectures.</p></li>
+</ol>
+</section>
+<section id="fujitsu-vp-200-1982">
+<h2>Fujitsu VP-200 (1982)<a class="headerlink" href="#fujitsu-vp-200-1982" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Clock</strong>: 7.5 ns (133 MHz). Faster than Cray-1.</p></li>
+<li><p><strong>Vector registers</strong>: dynamically reconfigurable — a 64KB register file the programmer could partition as 8×1024 or 16×512 or 32×256 elements depending on workload.</p></li>
+<li><p><strong>Peak</strong>: 533 MFLOPS — three to four times the Cray-1.</p></li>
+<li><p><strong>Cooling</strong>: Air-cooled with refrigerated cabinets. No Freon, no Fluorinert.</p></li>
+</ul>
+<p>The reconfigurable register file was the first major divergence from the Cray model. Cray-1 had a fixed 8×64 layout. Fujitsu argued: workloads have different vector-length sweet spots, and the compiler should pick. The VP-200 sold well in Japan and Europe and competed seriously with the X-MP on per-processor performance, though it was a uniprocessor and could not match X-MP/4 aggregate throughput.</p>
+</section>
+<section id="hitachi-s-810-1983">
+<h2>Hitachi S-810 (1983)<a class="headerlink" href="#hitachi-s-810-1983" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Two parallel pipelines per CPU</strong>, each of which was a multi-pipe vector unit. So one instruction could produce up to <em>four</em> results per cycle (Cray-1 produced one, X-MP per-CPU produced two via chaining).</p></li>
+<li><p><strong>Peak</strong>: 630 MFLOPS.</p></li>
+<li><p><strong>Memory</strong>: highly interleaved, with explicit vector “stride” instructions that handled non-unit-stride loads at full bandwidth (a chronic Cray weakness).</p></li>
+</ul>
+<p>The S-810 introduced the idea of <strong>multi-pipe vector units</strong>: rather than a single vector pipeline producing one element per cycle, run multiple parallel pipelines and produce N elements per cycle. The trade-off is that each pipe needs its own port to memory and its own slice of the vector register file. Hitachi made it work because they were willing to spend more silicon per CPU than Cray was. NEC took this strategy further than anyone.</p>
+</section>
+<section id="nec-sx-2-1985-the-multi-pipe-extreme">
+<h2>NEC SX-2 (1985): the multi-pipe extreme<a class="headerlink" href="#nec-sx-2-1985-the-multi-pipe-extreme" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Sixteen parallel arithmetic pipelines</strong> in one CPU, organized as four “sets” of four (add/multiply/divide/etc).</p></li>
+<li><p><strong>Clock</strong>: 6 ns (167 MHz).</p></li>
+<li><p><strong>Peak</strong>: 1.3 GFLOPS — a single CPU at near-Y-MP-aggregate throughput, three years before Y-MP shipped.</p></li>
+<li><p><strong>Vector length</strong>: long. Up to 256 elements per register, with strip-mining in hardware.</p></li>
+</ul>
+<p>NEC’s bet was clear: rather than build many CPUs sharing a memory (the X-MP/Y-MP path), build <em>one</em> enormous CPU with so much internal parallelism that it ran a single-threaded vector program at scary speed. This bet paid off for NEC for <em>twenty years</em> — from SX-2 in 1985 through SX-9 in 2008, NEC consistently held the title of “fastest single processor for vector code” against all comers.</p>
+</section>
+<section id="sx-3-sx-4-sx-5-the-dynasty">
+<h2>SX-3, SX-4, SX-5: the dynasty<a class="headerlink" href="#sx-3-sx-4-sx-5-the-dynasty" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>SX-3 (1990)</strong>: 4 CPUs sharing memory, 16-pipe per CPU, 5.5 GFLOPS aggregate. It predated the Top500 list and was a major single-node vector milestone, but it was not a Top500 #1 system.</p></li>
+<li><p><strong>SX-4 (1995)</strong>: 32 CPUs, 8 GFLOPS per CPU, 256 GFLOPS peak. Competitive with everything from Cray.</p></li>
+<li><p><strong>SX-5 (1998)</strong>: 16 CPUs per node, multiple nodes networked — the architectural template that became the Earth Simulator.</p></li>
+</ul>
+<p>For most of the 1990s, an NEC SX was the fastest <em>single processor</em> in the world. American codes that needed long-vector throughput — climate models particularly — ran significantly faster on an NEC than on a Cray T3E or an SGI Origin. The US national labs declined to buy them, primarily for political reasons (a 1997 anti-dumping ruling effectively imposed a 454% tariff on NEC SX-4 imports into the US). Universities outside the US bought them in volume: ECMWF in the UK, DKRZ in Germany, the Australian Bureau of Meteorology, Météo-France.</p>
+</section>
+<section id="what-the-code-looked-like">
+<h2>What the code looked like<a class="headerlink" href="#what-the-code-looked-like" title="Link to this heading">#</a></h2>
+<p>The dirty secret: Fortran was Fortran. Vector code that ran on a Cray Y-MP would compile and run on an NEC SX-4. The compilers were different (NEC’s <code class="docutils literal notranslate"><span class="pre">f90</span></code>/<code class="docutils literal notranslate"><span class="pre">sxf90</span></code>, Fujitsu’s <code class="docutils literal notranslate"><span class="pre">frt</span></code>, Hitachi’s <code class="docutils literal notranslate"><span class="pre">xf77</span></code>), the directive vocabulary was different, and the <em>performance characteristics</em> were dramatically different — but the source-level model was the same: write Fortran loops, decorate with vendor directives, ship.</p>
+<p>Where a Y-MP wanted vector length 64 to be efficient, an NEC SX wanted <strong>256</strong> or more to amortize the wider pipe count. Code tuned for one machine often ran sub-optimally on the other:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!CDIR LONGLOOP             ! NEC SX: trip count &gt;&gt; 256, deep vector profitable</span>
+<span class="c">!DIR$ SHORTLOOP            ! Cray: trip count fits in 64-element register, skip cleanup</span>
+<span class="w">      </span><span class="k">DO </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="p">...</span>
+</pre></div>
+</div>
+<p>This is a real complication: the user-visible programming model was uniform-ish across vendors, but the <em>performance portability</em> was poor. Codes optimized for NEC ran well on NEC; the same source compiled for Cray was 30% off peak.</p>
+<p>This problem — performance portability across vector ISAs — has not gone away. Modern OpenMP and Kokkos and SYCL exist precisely to manage it across CPU SIMD widths and GPU architectures.</p>
+</section>
+<section id="the-earth-simulator-2002-vectors-strike-back">
+<h2>The Earth Simulator (2002): vectors strike back<a class="headerlink" href="#the-earth-simulator-2002-vectors-strike-back" title="Link to this heading">#</a></h2>
+<p>This was the apex of the long-vector approach. We give it a full chapter (Week 12), but you should know now what it was:</p>
+<ul class="simple">
+<li><p>640 nodes, each with 8 NEC SX-6-derived vector CPUs. <strong>5,120 CPUs total</strong>.</p></li>
+<li><p><strong>35.86 TFLOPS</strong> sustained on LINPACK.</p></li>
+<li><p>Held Top500 #1 from June 2002 to June 2004.</p></li>
+<li><p>Did so by being <em>almost 5× faster</em> than the previous #1 by LINPACK Rmax: 35.86 TFLOPS versus ASCI White’s 7.226 TFLOPS on the June 2002 Top500 list.</p></li>
+</ul>
+<p>It was the last machine where a vector architecture decisively led the world. After 2004 the cluster-and-accelerator era took over. The Earth Simulator’s success fed a broader US “Computenik” policy reaction. DARPA’s <strong>High Productivity Computing Systems</strong> (HPCS) program was the most visible response program, funding Cray, IBM, Sun, and others; its direct outputs include Chapel, IBM PERCS work, and Cray’s Cascade/XMT line, while later Cray XT/XE/XK systems such as Jaguar and Titan drew on overlapping vendor capacity rather than being simple one-to-one HPCS products.</p>
+</section>
+<section id="why-the-japanese-vector-ecosystem-persisted-longer-than-cray-s">
+<h2>Why the Japanese vector ecosystem persisted longer than Cray’s<a class="headerlink" href="#why-the-japanese-vector-ecosystem-persisted-longer-than-cray-s" title="Link to this heading">#</a></h2>
+<p>Three reasons:</p>
+<ol class="arabic simple">
+<li><p><strong>Government procurement.</strong> JMA (weather), MEXT (research), domestic universities — all kept buying.</p></li>
+<li><p><strong>Climate modeling.</strong> The single most demanding scientific workload of the era was atmospheric simulation. It vectorized beautifully and parallelized poorly. NEC’s long-vector approach was perfectly suited; clusters of microprocessors were not. ECMWF stayed on NEC and Cray X-series until 2014.</p></li>
+<li><p><strong>Genuine technical merit.</strong> Multi-pipe long-vector designs <em>are</em> good for the workload. They lost to clusters not because they were technically inferior but because clusters were <em>cheaper per FLOP</em> by an order of magnitude, on a $/FLOP curve dominated by the volume economics of microprocessors.</p></li>
+</ol>
+<p>The NEC SX line continued through SX-9 (2008), SX-ACE (2013), and finally <strong>SX-Aurora TSUBASA</strong> (2018). The Aurora TSUBASA is fascinating — it’s an NEC vector engine on a PCIe card, treating a host x86 server the way GPUs do. It is, in essence, a 21st-century pure-vector accelerator. Few outside of Japan have ever heard of it.</p>
+</section>
+<section id="lab-long-vectors-vs-short-vectors">
+<h2>Lab — Long vectors vs. short vectors<a class="headerlink" href="#lab-long-vectors-vs-short-vectors" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/05-vector-length/</span></code>, you run a NumPy SAXPY-style benchmark across a sweep of vector lengths, then focus on three reference regions:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">64</span></code> (Cray-1 sweet spot)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">256</span></code> (NEC SX sweet spot)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">1_000_000</span></code> (modern memory-bound)</p></li>
+</ul>
+<p>You’ll see the fixed-overhead-per-call versus per-element-cost trade-off in action. The lab is intentionally a portable Python/NumPy proxy: the modern low-level story is “many short SIMD vectors, fed by cache and prefetch”, not “one long vector”, but the measured curve still shows the trade-off that made Cray and NEC choose different vector lengths.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>NEC’s multi-pipe approach (16 parallel arithmetic pipes per CPU in 1985) is structurally similar to a modern GPU’s SM (32-wide SIMT, multiple SMs per chip). Why did this approach lose in CPUs (where SIMD widths topped out at 8–16 elements) but win in GPUs (where it kept growing)?</p></li>
+<li><p>Performance-portable vector programming was already a problem in 1990. How does ARM SVE (with its “vector-length agnostic” programming model) address this problem? Does it actually solve it, or does it just give the compiler a different set of choices?</p></li>
+<li><p>The 1997 anti-dumping tariff on NEC SX-4 imports was politically motivated but had real architectural consequences: US national labs developed long expertise in clusters and short consumer-CPU-derived SIMD, not long-vector machines. What current US export-control policies (e.g., NVIDIA H100 export to China) might have similar long-term architectural side effects?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Watanabe, T. (1987). “Architecture and performance of the NEC SX-2”. <em>IEEE Computer</em>. NEC’s own description.</p></li>
+<li><p>Miura, K. &amp; Uchida, K. (1983). “Fujitsu VP-100/200: Vector machines for scientific computation”. <em>Proc. Supercomputing</em>.</p></li>
+<li><p>Habata, S., Yokokawa, M. &amp; Kitawaki, S. (2003). “The Earth Simulator system”. <em>NEC Research &amp; Development</em>.</p></li>
+<li><p>Reed, D. &amp; Dongarra, J. (2015). “Exascale computing and big data”. <em>CACM</em>. Touches on the policy fallout from the Earth Simulator era.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-04-shared-memory-vectors.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-06-vector-wall.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a-parallel-ecosystem-existed">Why a parallel ecosystem existed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fujitsu-vp-200-1982">Fujitsu VP-200 (1982)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hitachi-s-810-1983">Hitachi S-810 (1983)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nec-sx-2-1985-the-multi-pipe-extreme">NEC SX-2 (1985): the multi-pipe extreme</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sx-3-sx-4-sx-5-the-dynasty">SX-3, SX-4, SX-5: the dynasty</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like">What the code looked like</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-earth-simulator-2002-vectors-strike-back">The Earth Simulator (2002): vectors strike back</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-japanese-vector-ecosystem-persisted-longer-than-cray-s">Why the Japanese vector ecosystem persisted longer than Cray’s</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-long-vectors-vs-short-vectors">Lab — Long vectors vs. short vectors</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

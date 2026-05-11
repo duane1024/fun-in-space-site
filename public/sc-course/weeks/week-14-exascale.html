@@ -1,0 +1,701 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-14-exascale';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 15 — Anatomy of a 2025 Supercomputer" href="week-15-anatomy-2025.html" />
+    <link rel="prev" title="Week 13 — CUDA and SIMT: Vectors Reborn as Threads" href="week-13-cuda-simt.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-14-exascale.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frontier-2022-the-first-exaflop">Frontier (2022): the first exaflop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aurora-2023-fully-online-2024">Aurora (2023, fully online 2024)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-capitan-2024">El Capitan (2024)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fugaku-2020-the-exception">Fugaku (2020): the exception</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupiter-2025-europe-s-first-exascale">JUPITER (2025): Europe’s first exascale</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-sve-code-looks-like">What SVE code looks like</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hpl-mxp-and-the-ai-hpc-convergence">HPL-MxP and the AI/HPC convergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-the-vector-processing-as-a-mainstream-capability-picture-then">What’s the “vector processing as a mainstream capability” picture, then?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-code-look-like-in-2026-on-these-machines">What does code look like, in 2026, on these machines?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-read-a-job-script">Lab — Read a job script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-14-exascale-frontier-aurora-el-capitan-fugaku">
+<h1>Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku<a class="headerlink" href="#week-14-exascale-frontier-aurora-el-capitan-fugaku" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Five machines define the present. Three of them — <strong>Frontier</strong>, <strong>Aurora</strong>, <strong>El Capitan</strong> — are American CPU-plus-GPU systems sitting on the post-2022 exascale plateau. One — <strong>Fugaku</strong> — is a Japanese ARM-with-wide-vectors machine that is the major architectural exception to the GPU consensus. The fifth — <strong>JUPITER</strong>, fully online in late 2025 — is the European Union’s first exascale system and a deliberate statement of HPC sovereignty. Together they map the design space available to anyone building HPC at the high end in 2025–2030.</p>
+<p>This week is the five machines, what they share, what they don’t, and what each is good at.</p>
+</section>
+<section id="frontier-2022-the-first-exaflop">
+<h2>Frontier (2022): the first exaflop<a class="headerlink" href="#frontier-2022-the-first-exaflop" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Site</strong>: Oak Ridge National Laboratory.</p></li>
+<li><p><strong>Vendor</strong>: HPE (the merged Cray + HPE Cray business).</p></li>
+<li><p><strong>Compute</strong>: 9,408 nodes. Each node = 1× AMD EPYC “Trento” 7A53 CPU (64 cores) + 4× AMD Instinct MI250X GPUs.</p></li>
+<li><p><strong>Per node</strong>: ~84 TFLOPS FP64 from the GPUs; the CPU is mostly traffic cop.</p></li>
+<li><p><strong>Total</strong>: debuted at 1.102 EFLOPS LINPACK sustained in June 2022, the first machine to break the exaflop barrier on HPL; later public Top500 results are about 1.35 EFLOPS.</p></li>
+<li><p><strong>Interconnect</strong>: HPE <strong>Slingshot-11</strong>, 200 Gb/s per port, dragonfly topology. Three planes for compute, with separate planes for storage.</p></li>
+<li><p><strong>Power</strong>: 21 MW. ~52 GFLOPS/W on HPL — winner of Green500 #1 at the time of debut.</p></li>
+<li><p><strong>Cooling</strong>: direct liquid cooling, warm-water (the cooling water comes in at ~30°C and leaves at ~40°C; no chillers, just cooling towers).</p></li>
+<li><p><strong>Cost</strong>: ~$600M.</p></li>
+</ul>
+<p><em>Sources for Frontier specifications: Atchley et al. (2023), “Frontier: Exploring exascale” (SC23), for node configuration, GPU and CPU details, and system topology; ORNL OLCF Frontier user documentation (<a class="reference external" href="http://olcf.ornl.gov/frontier">olcf.ornl.gov/frontier</a>) for storage and operational figures; Top500 June 2022 list for the 1.102 EFLOPS debut HPL, June 2025 list for ~1.35 EFLOPS; Green500 June 2022 for the 52 GFLOPS/W debut.</em></p>
+<p>Frontier’s architectural pattern is the canonical 2020s pattern: a few CPUs per node managing many GPUs, fast intra-node interconnect (Infinity Fabric for AMD GPUs; NVLink for NVIDIA), and a serious inter-node fabric (Slingshot, NDR InfiniBand). The CPU exists to feed the GPUs and run the parts of the application that don’t accelerate well.</p>
+<p>The MI250X GPU is itself two graphics compute dies in one package: an AMD multi-die/MCM GPU. On the spec sheet you have 4 GPUs per node, but it’s actually 8 graphics compute dies. The <strong>exposed</strong> unit is “Graphics Compute Die” (GCD); CUDA-equivalent code is written per-GCD, not per-package.</p>
+</section>
+<section id="aurora-2023-fully-online-2024">
+<h2>Aurora (2023, fully online 2024)<a class="headerlink" href="#aurora-2023-fully-online-2024" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Site</strong>: Argonne National Laboratory.</p></li>
+<li><p><strong>Vendor</strong>: Intel + HPE.</p></li>
+<li><p><strong>Compute</strong>: 10,624 nodes. Each node = 2× Intel Xeon Max (“Sapphire Rapids HBM”) CPUs + 6× Intel Data Center GPU Max (“Ponte Vecchio”) GPUs.</p></li>
+<li><p><strong>Per node</strong>: ~131 TFLOPS FP64.</p></li>
+<li><p><strong>Total</strong>: 1.012 EFLOPS LINPACK (June 2024).</p></li>
+<li><p><strong>Interconnect</strong>: HPE Slingshot-11, dragonfly.</p></li>
+<li><p><strong>Power</strong>: ~38 MW. Roughly 27 GFLOPS/W — significantly less efficient than Frontier.</p></li>
+<li><p><strong>Cooling</strong>: direct liquid cooling.</p></li>
+<li><p><strong>Cost</strong>: ~$500M.</p></li>
+</ul>
+<p><em>Sources for Aurora specifications: ANL ALCF Aurora user documentation (<a class="reference external" href="http://alcf.anl.gov/aurora">alcf.anl.gov/aurora</a>) for node configuration, GPU/CPU breakdown, and DAOS storage; Top500 June 2024 list for the 1.012 EFLOPS HPL Rmax; Green500 entries 2024 for power efficiency.</em></p>
+<p>Aurora was originally announced in 2015 to use Intel Xeon Phi accelerators and to ship in 2018. It was redesigned multiple times when Xeon Phi was canceled (2018) and then again as Ponte Vecchio’s schedule slipped. Aurora’s eventual debut at #2 (behind Frontier) closed a chapter for Intel: Ponte Vecchio is competitive enough to make Aurora an exascale system, but Intel’s accelerator roadmap has been reset more than once since then. Treat Aurora as an important production machine and as a cautionary example about relying on a vendor roadmap at decade scale.</p>
+</section>
+<section id="el-capitan-2024">
+<h2>El Capitan (2024)<a class="headerlink" href="#el-capitan-2024" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Site</strong>: Lawrence Livermore National Laboratory.</p></li>
+<li><p><strong>Vendor</strong>: HPE / AMD.</p></li>
+<li><p><strong>Compute</strong>: 11,039 nodes. Each node = 4× AMD Instinct MI300A APUs.</p></li>
+<li><p><strong>Total</strong>: 1.742 EFLOPS LINPACK on its November 2024 debut; about 1.81 EFLOPS on the November 2025 Top500 list. Currently #1 on the Top500 as of that list.</p></li>
+<li><p><strong>Interconnect</strong>: Slingshot-11.</p></li>
+<li><p><strong>Power</strong>: ~30 MW. Roughly 60 GFLOPS/W on HPL in current public list results, ahead of Frontier on the same metric.</p></li>
+<li><p><strong>Cooling</strong>: direct liquid cooling.</p></li>
+</ul>
+<p><em>Sources for El Capitan specifications: Garcia et al. (2022), “El Capitan: An advanced architecture exascale system at LLNL” (SC22), for the planned MI300A node design; LLNL Livermore Computing El Capitan platform pages (<a class="reference external" href="http://hpc.llnl.gov">hpc.llnl.gov</a>) for the as-deployed node count; Top500 November 2024 list for the debut 1.742 EFLOPS HPL Rmax; Top500 November 2025 list for the updated ~1.81 EFLOPS figure.</em></p>
+<p>The architectural innovation in El Capitan is the <strong>APU</strong>. The MI300A integrates CPU and GPU dies on the same package, sharing a coherent address space and HBM stacks. There is no PCIe between the CPU and GPU on the same package — they share memory at memory-bus speed. This eliminates a huge category of CPU-GPU data-movement headaches that have plagued every accelerated HPC system since Roadrunner.</p>
+<p>The MI300A is, in some sense, where the industry has been heading since heterogeneous systems began: collapse the host-and-accelerator distinction into a single coherent compute substrate. NVIDIA’s response is the Grace-Hopper Superchip (a Grace CPU and a Hopper GPU on a single board, connected by NVLink-C2C, with a unified memory abstraction); the next-generation Grace-Blackwell continues the pattern. The lines are blurring.</p>
+</section>
+<section id="fugaku-2020-the-exception">
+<h2>Fugaku (2020): the exception<a class="headerlink" href="#fugaku-2020-the-exception" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Site</strong>: RIKEN Center for Computational Science, Kobe.</p></li>
+<li><p><strong>Vendor</strong>: Fujitsu.</p></li>
+<li><p><strong>Compute</strong>: 158,976 nodes. <strong>Each node = 1 Fujitsu A64FX chip and nothing else.</strong></p></li>
+<li><p><strong>Per node</strong>: 48 cores + 4 assistant cores, ARM v8.2-A with <strong>SVE</strong> (Scalable Vector Extension) at 512-bit.</p></li>
+<li><p><strong>Per chip</strong>: 32 GB HBM2 (no DRAM), 1 TB/s memory bandwidth.</p></li>
+<li><p><strong>Total</strong>: ~7 million cores, 442 PFLOPS LINPACK (June 2020) — held #1 for two years.</p></li>
+<li><p><strong>Interconnect</strong>: Tofu-D, a 6D-torus-of-something custom interconnect, specifically designed for the workloads RIKEN cares about.</p></li>
+<li><p><strong>Power</strong>: 28 MW. ~16 GFLOPS/W — much <em>less</em> efficient than the GPU-based machines on HPL. Fugaku led HPCG for several lists and remains one of the strongest systems on that memory-bound benchmark, but it is no longer #1 as of the November 2025 HPCG list.</p></li>
+<li><p><strong>Cooling</strong>: direct liquid cooling.</p></li>
+</ul>
+<p><em>Sources for Fugaku specifications: Sato et al. (2020), “Co-design for A64FX manycore processor and Fugaku” (SC20), for the A64FX architecture, SVE design, HBM2 bandwidth, and Tofu-D interconnect; Top500 June 2020 list for the 442 PFLOPS Rmax debut; HPCG list 2020–2024 for Fugaku’s memory-bound benchmark performance; RIKEN R-CCS Fugaku machine documentation for node count and operational details.</em></p>
+<p>Fugaku is the architectural counter-argument. Rather than CPU + GPU, it goes “CPU only — but with vector units so wide and memory bandwidth so high that the GPU isn’t needed.” Each A64FX core supports 512-bit SVE operations, with high aggregate HBM2 bandwidth directly attached to the chip. Comparing “per-core” CPU bandwidth to GPU bandwidth is awkward because a GPU’s execution units are organized differently, but the point stands: A64FX spends far more silicon budget on memory bandwidth per unit of scalar/vector CPU throughput than ordinary server CPUs do.</p>
+<p>For the workloads that Japanese national institutions actually run — climate models, structural simulations, drug-discovery codes — Fugaku can be a better fit than a GPU-heavy system when the application is limited by memory bandwidth, latency, or CPU control flow rather than dense matrix throughput. On HPL it is much slower than the exascale GPU machines; on HPCG its ratio of useful sparse-solver work to HPL peak is still unusually strong. The Earth Simulator’s lesson, applied at exascale.</p>
+<p>The architectural success of Fugaku revives a question every HPC architect re-asks: <strong>does the workload genuinely need the per-flop throughput of GPUs, or is it bandwidth-bound, in which case a wide-SIMD CPU with HBM is sufficient?</strong> For climate, weather, and a chunk of CFD: bandwidth-bound. For dense linear algebra and AI training: throughput-bound. Different workloads, different answers.</p>
+</section>
+<section id="jupiter-2025-europe-s-first-exascale">
+<h2>JUPITER (2025): Europe’s first exascale<a class="headerlink" href="#jupiter-2025-europe-s-first-exascale" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Site</strong>: Forschungszentrum Jülich (Jülich Supercomputing Centre), Germany.</p></li>
+<li><p><strong>Vendor</strong>: Eviden (Atos) on the BullSequana XH3000 platform; NVIDIA silicon for the primary “Booster” module.</p></li>
+<li><p><strong>Compute</strong>: ~24,000 NVIDIA Grace Hopper GH200 superchips in the Booster module — Grace ARM CPU and Hopper GPU in a single NVLink-C2C-coherent package, sharing memory. A separate “Cluster” module uses SiPearl Rhea1 ARM CPUs for memory-bandwidth-bound workloads.</p></li>
+<li><p><strong>Total</strong>: 1.000 EFLOPS HPL Rmax (November 2025 Top500 — the cleanest exascale number ever recorded).</p></li>
+<li><p><strong>Interconnect</strong>: NVIDIA Quantum-2 InfiniBand NDR (400 Gb/s per port).</p></li>
+<li><p><strong>Power</strong>: ~18 MW. Direct warm-water cooling.</p></li>
+<li><p><strong>Sponsor</strong>: EuroHPC Joint Undertaking, ~€500M procurement.</p></li>
+</ul>
+<p><em>Sources: Forschungszentrum Jülich JUPITER documentation (<a class="reference external" href="http://fz-juelich.de/jupiter">fz-juelich.de/jupiter</a>); EuroHPC JU announcement materials; Top500 November 2025 list for the 1.000 EFLOPS HPL Rmax.</em></p>
+<p>JUPITER matters beyond the FLOPS number. It is the architectural concretization of a policy bet that European HPC must not depend permanently on American procurements. The Cluster module specifically uses SiPearl’s Rhea1 chips — European-designed ARM processors — for the bandwidth-bound tier, part of a longer European Processor Initiative trajectory toward European silicon. The Booster module uses NVIDIA GH200s because no European GPU vendor exists yet; the gap is acknowledged. If you wanted a single image of how geopolitics shapes HPC architecture in 2026: it is the JUPITER procurement, where the <em>application FLOPS</em> came from Santa Clara and the <em>strategic positioning</em> came from Brussels.</p>
+<section id="what-sve-code-looks-like">
+<h3>What SVE code looks like<a class="headerlink" href="#what-sve-code-looks-like" title="Link to this heading">#</a></h3>
+<p>SVE’s signature design choice is <strong>vector-length agnosticism</strong>: the hardware vector width is <em>not encoded in the program</em>. The same binary runs efficiently on chips with 128-bit, 256-bit, 512-bit, or wider vectors. The programmer writes a loop with a predicate that masks off lanes past the array end:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;arm_sve.h&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">daxpy_sve</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">svcntd</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">svbool_t</span><span class="w">   </span><span class="n">pg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">svwhilelt_b64</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span><span class="w">     </span><span class="c1">// active lanes for this chunk</span>
+<span class="w">        </span><span class="n">svfloat64_t</span><span class="w"> </span><span class="n">xv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">svld1</span><span class="p">(</span><span class="n">pg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">svfloat64_t</span><span class="w"> </span><span class="n">yv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">svld1</span><span class="p">(</span><span class="n">pg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">yv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">svmla_f64_m</span><span class="p">(</span><span class="n">pg</span><span class="p">,</span><span class="w"> </span><span class="n">yv</span><span class="p">,</span><span class="w"> </span><span class="n">xv</span><span class="p">,</span><span class="w"> </span><span class="n">svdup_f64</span><span class="p">(</span><span class="n">a</span><span class="p">));</span><span class="w">   </span><span class="c1">// y += a*x, masked</span>
+<span class="w">        </span><span class="n">svst1</span><span class="p">(</span><span class="n">pg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">yv</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>There is no <code class="docutils literal notranslate"><span class="pre">8</span></code> or <code class="docutils literal notranslate"><span class="pre">16</span></code> in the loop. <code class="docutils literal notranslate"><span class="pre">svcntd()</span></code> returns the runtime double count, <code class="docutils literal notranslate"><span class="pre">svwhilelt_b64</span></code> builds the per-lane mask, and every operation is <em>predicated</em> on that mask. On an A64FX core (512-bit), each iteration processes 8 doubles; on a future 1024-bit Arm chip the same binary processes 16. <em>The Cray-1’s strip-mining wrapper has been moved inside the ISA.</em></p>
+<p>This is the architectural strength of Fugaku: SVE code compiled once will run efficiently on every future Arm HPC chip without recompilation, because the program never asserted a width. Stephens et al. (2017) describes the design rationale; the worked example above is in the report’s “Further reading.”</p>
+</section>
+</section>
+<section id="hpl-mxp-and-the-ai-hpc-convergence">
+<h2>HPL-MxP and the AI/HPC convergence<a class="headerlink" href="#hpl-mxp-and-the-ai-hpc-convergence" title="Link to this heading">#</a></h2>
+<p>The Top500’s headline metric is <strong>HPL</strong> — High-Performance LINPACK — solving a dense linear system in IEEE FP64. It is the benchmark on which every machine above ranks itself. It is also, increasingly, <em>not what these machines actually spend their time running.</em></p>
+<p>The November 2024 Top500 added a companion list: <strong>HPL-MxP</strong> (Mixed Precision), which permits the solver to do most of its computational work in low precision (FP16, BF16, or FP8) and only refine to FP64 accuracy at the end. The relevant numbers from late 2025:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>System</p></th>
+<th class="head"><p>HPL FP64</p></th>
+<th class="head"><p>HPL-MxP</p></th>
+<th class="head"><p>Ratio</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>El Capitan</p></td>
+<td><p>1.742 EFLOPS</p></td>
+<td><p>16.7 EFLOPS</p></td>
+<td><p>~10×</p></td>
+</tr>
+<tr class="row-odd"><td><p>Aurora</p></td>
+<td><p>1.012 EFLOPS</p></td>
+<td><p>11.6 EFLOPS</p></td>
+<td><p>~11×</p></td>
+</tr>
+<tr class="row-even"><td><p>Frontier</p></td>
+<td><p>1.353 EFLOPS</p></td>
+<td><p>11.4 EFLOPS</p></td>
+<td><p>~8×</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The ratio reveals the underlying architectural truth. Modern HPC accelerators have a <em>vastly</em> larger budget for low-precision matrix arithmetic than for FP64 — NVIDIA H100 does ~67 TFLOPS FP64 and ~1,979 TFLOPS FP16 on tensor cores (with sparsity), a nearly 30× gap. That gap exists because <strong>AI training is now the primary workload these chips are designed for.</strong> FP64 is the legacy HPC-compatibility ceiling; FP16/BF16/FP8 is what the silicon is <em>for</em>.</p>
+<p>This has reshaped HPC procurement. The DOE labs explicitly committed to dual-use systems with Sierra/Summit (2018), making stockpile-stewardship simulations <em>and</em> AI/ML training first-class workloads. By Frontier/El Capitan (2022/2024), the AI-training capability is openly part of the procurement justification; LLNL’s El Capitan runs both weapons-physics simulations and generative-AI work on classified datasets. By 2025, a substantial fraction of leadership-class compute hours go to AI training rather than to traditional simulation.</p>
+<p>The architectural pressure runs both ways. AI workloads want low precision, dense matmul, and very fast NVLink-style intra-pod fabrics. Climate codes want high precision, sparse irregular access, and high inter-node bandwidth. The exascale systems are <em>negotiated compromises</em> between these two workload families. Each generation, the AI side wins more of the budget, because that is where the volume is. If FP64 becomes a niche feature on AI-first chips — and there are several plausible trajectories where that happens by 2030 — the lineage from Cray-1 to El Capitan will need to be re-evaluated. The vector idea will still be there; the precision floor under it will have moved.</p>
+<p><em>Sources for the table: Top500/HPL-MxP list, June and November 2025 editions (<a class="reference external" href="http://top500.org/lists/hpcg">top500.org/lists/hpcg</a> and the linked MxP rankings); ORNL, ANL, and LLNL system briefings for the per-machine MxP debut numbers.</em></p>
+</section>
+<section id="what-s-the-vector-processing-as-a-mainstream-capability-picture-then">
+<h2>What’s the “vector processing as a mainstream capability” picture, then?<a class="headerlink" href="#what-s-the-vector-processing-as-a-mainstream-capability-picture-then" title="Link to this heading">#</a></h2>
+<p>Every machine on this list runs vector code:</p>
+<ul class="simple">
+<li><p><strong>Frontier</strong>: SIMT/SIMD on AMD GPUs. Vector lanes 64 wide (AMD wavefronts).</p></li>
+<li><p><strong>Aurora</strong>: SIMT on Intel GPU Max (8-wide SIMD per Xe-vector engine, 8 of them per Xe-core, organized in subslices).</p></li>
+<li><p><strong>El Capitan</strong>: SIMT on AMD GPU dies (same wavefront concept), unified with CPU AVX/AVX-512 vectors via shared HBM.</p></li>
+<li><p><strong>Fugaku</strong>: ARM SVE 512-bit vectors in each A64FX core, with multiple vector pipelines per core.</p></li>
+<li><p><strong>Modern x86 CPUs in any of the above as host</strong>: AVX-512.</p></li>
+</ul>
+<p>Cray-1 had 8 vector registers of 64 elements at 80 MHz with one functional unit per type, hitting 160 MFLOPS. A modern A64FX core has SVE registers of 8 doubles at ~2 GHz with two FMA pipelines, hitting ~32 GFLOPS per core × 48 cores = 1.5 TFLOPS per chip. <strong>Per-chip, that’s 10,000× the Cray-1.</strong></p>
+<p>But the <em>idea</em> is the same: pipeline-friendly vector instructions operating on registers full of data, fed by a memory subsystem deliberately engineered to keep them fed, with the loop-overhead amortized across the vector. Cray’s bet went mainstream. The Cray-1 of 1976 is not where modern HPC stops — it’s the architectural pattern modern HPC is <em>built out of</em>.</p>
+</section>
+<section id="what-does-code-look-like-in-2026-on-these-machines">
+<h2>What does code look like, in 2026, on these machines?<a class="headerlink" href="#what-does-code-look-like-in-2026-on-these-machines" title="Link to this heading">#</a></h2>
+<p>Here’s the honest answer: it depends on how recent the code is.</p>
+<ol class="arabic simple">
+<li><p><strong>A 1995 MPI Fortran code</strong> running on Frontier: recompiled with <code class="docutils literal notranslate"><span class="pre">cc</span></code>/<code class="docutils literal notranslate"><span class="pre">ftn</span></code> (HPE’s wrapper), runs on the CPU only, gets a few percent of peak. <em>Real codes are often in this state.</em></p></li>
+<li><p><strong>A 2010-era MPI + OpenMP code</strong>: same situation, slightly better single-node performance.</p></li>
+<li><p><strong>A modern code targeting GPUs</strong>: written with one of:</p>
+<ul class="simple">
+<li><p><strong>CUDA / HIP</strong> directly. Maximal performance, vendor-locked.</p></li>
+<li><p><strong>OpenMP target offload</strong> (<code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">target</span> <span class="pre">teams</span> <span class="pre">distribute</span> <span class="pre">parallel</span> <span class="pre">for</span></code>). Portable, with performance that ranges from excellent to disappointing depending on compiler, kernel, and memory behavior.</p></li>
+<li><p><strong>Kokkos / Raja / SYCL</strong>: portable C++ abstractions. Often competitive with native backends on well-tuned kernels, but not automatically so.</p></li>
+<li><p><strong>Standard Parallelism in C++23/26 (<code class="docutils literal notranslate"><span class="pre">std::execution::par_unseq</span></code>)</strong> or <strong>Fortran 2018 <code class="docutils literal notranslate"><span class="pre">do</span> <span class="pre">concurrent</span></code></strong>. The compiler generates GPU code if you compile with NVHPC or Cray CCE’s offload mode. The <em>most</em> portable; performance varies.</p></li>
+</ul>
+</li>
+<li><p><strong>A 2020-era ML training code</strong>: PyTorch / JAX / Triton, on top of CUDA / ROCm / XLA. Different software stack, same hardware.</p></li>
+</ol>
+<p>The best-case sustained efficiency on real applications, on a modern exascale system, is around 20–40% of peak FP64. That’s <em>worse</em> than the Earth Simulator’s 87%. Why? The bytes-per-flop ratio of GPUs has fallen below what most non-GEMM applications need. We’re memory-bandwidth-bound on the workloads people actually run. For pure GEMM (LINPACK, AI training), the ratio is fine and we get high efficiency. For everything else, we don’t.</p>
+<p>This is the central architectural challenge of the next decade: fix the bytes-per-flop, or accept that a lot of useful applications run at &lt;10% of peak.</p>
+</section>
+<section id="lab-read-a-job-script">
+<h2>Lab — Read a job script<a class="headerlink" href="#lab-read-a-job-script" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/14-job-scripts/</span></code> we provide three heavily commented job-script examples — one for Frontier, one Aurora-style PBS script, and one Fugaku-style PJM script translated into a Slurm-like shape for comparison. You read them, identify the architectural assumptions baked in (per-node GPU counts, memory binding, interconnect tuning flags), and adapt one to run on a small Slurm cluster (which we set up in lab 10).</p>
+<p>You won’t run a job on Frontier from your laptop. But you’ll know what someone running a job on Frontier writes.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Frontier (CPU+GPU) and Fugaku (CPU only with wide vectors) reach roughly comparable performance on bandwidth-bound applications. They differ enormously on dense-linear-algebra benchmarks. Which architecture would you bet on for the next decade, and why? What workload mix would change your answer?</p></li>
+<li><p>The MI300A APU collapses the CPU/GPU distinction. NVIDIA Grace-Blackwell does the same with NVLink-C2C. Both are described as “memory-coherent.” How is this different from the original goal of “shared memory multiprocessing” the Cray X-MP/Y-MP shipped in 1985? What does it cost?</p></li>
+<li><p>Fugaku reached #1 with no GPUs. Aurora reached the exascale list using Intel GPUs that are now end-of-line. What does this say about how to evaluate an HPC architecture’s <em>durability</em> as opposed to its peak benchmark performance?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Atchley, S. et al. (2023). “Frontier: Exploring exascale”. <em>Proc. SC23</em>.</p></li>
+<li><p>Sato, M. et al. (2020). “Co-design for A64FX manycore processor and Fugaku”. <em>Proc. SC20</em>.</p></li>
+<li><p>Argonne ALCF documentation (<a class="reference external" href="http://alcf.anl.gov/aurora">alcf.anl.gov/aurora</a>) for Aurora architecture.</p></li>
+<li><p>LLNL HPC Center documentation (<a class="reference external" href="http://hpc.llnl.gov/hardware/compute-platforms/el-capitan">hpc.llnl.gov/hardware/compute-platforms/el-capitan</a>) for El Capitan architecture.</p></li>
+<li><p>Top500 / HPCG list, current. Watch Fugaku’s HPCG ranking versus its HPL ranking.</p></li>
+<li><p>ECP Software Technology Capability Assessment Reports (ECP, multi-year). Honest discussion of how well real codes are running on exascale machines.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-13-cuda-simt.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-15-anatomy-2025.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 15 — Anatomy of a 2025 Supercomputer</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#frontier-2022-the-first-exaflop">Frontier (2022): the first exaflop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#aurora-2023-fully-online-2024">Aurora (2023, fully online 2024)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#el-capitan-2024">El Capitan (2024)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fugaku-2020-the-exception">Fugaku (2020): the exception</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jupiter-2025-europe-s-first-exascale">JUPITER (2025): Europe’s first exascale</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-sve-code-looks-like">What SVE code looks like</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#hpl-mxp-and-the-ai-hpc-convergence">HPL-MxP and the AI/HPC convergence</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-s-the-vector-processing-as-a-mainstream-capability-picture-then">What’s the “vector processing as a mainstream capability” picture, then?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-does-code-look-like-in-2026-on-these-machines">What does code look like, in 2026, on these machines?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-read-a-job-script">Lab — Read a job script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

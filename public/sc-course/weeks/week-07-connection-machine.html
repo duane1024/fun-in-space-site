@@ -1,0 +1,653 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 7 — The Connection Machine: SIMD Massively Parallel &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-07-connection-machine';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 8 — MIMD MPP: The Killer Micros, Connected" href="week-08-mimd-mpp.html" />
+    <link rel="prev" title="Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke" href="week-06-vector-wall.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-07-connection-machine.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 7 — The Connection Machine: SIMD Massively Parallel</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mit-origin-story">The MIT origin story</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cm-1-1985">CM-1 (1985)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cm-2-1987-floating-point-bolts-on">CM-2 (1987): floating point bolts on</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like">What the code looked like</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lisp-data-parallel-common-lisp"><code class="docutils literal notranslate"><span class="pre">*Lisp</span></code> — data-parallel Common Lisp</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-data-parallel-c"><code class="docutils literal notranslate"><span class="pre">C*</span></code> — data-parallel C</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cm-fortran-what-eventually-became-fortran-90">CM Fortran — what eventually became Fortran 90</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-lesson-the-connection-machine-taught-and-learned">The lesson the Connection Machine taught — and learned</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-survived">What survived</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coda-hpf-and-what-didn-t-survive">Coda: HPF, and what didn’t survive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-numpy-as-a-connection-machine-emulator">Lab — <code class="docutils literal notranslate"><span class="pre">numpy</span></code> as a Connection Machine emulator</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-7-the-connection-machine-simd-massively-parallel">
+<h1>Week 7 — The Connection Machine: SIMD Massively Parallel<a class="headerlink" href="#week-7-the-connection-machine-simd-massively-parallel" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Every modern GPU is, internally, a SIMD massively-parallel machine. A single CUDA “warp” is 32 threads executing the same instruction in lockstep on different data. A NVIDIA H100 has 16,896 CUDA cores running at warp granularity. The architectural philosophy — <em>thousands of simple processors executing one program on different data</em> — was prototyped fifteen years before the first GPGPU paper, by a startup that built a beautifully strange machine and then went bankrupt: <strong>Thinking Machines Corporation</strong>, with the <strong>Connection Machine</strong> series.</p>
+<p>This week we look at the most architecturally interesting commercial failure in the history of supercomputing.</p>
+</section>
+<section id="the-mit-origin-story">
+<h2>The MIT origin story<a class="headerlink" href="#the-mit-origin-story" title="Link to this heading">#</a></h2>
+<p>Daniel Hillis was a graduate student at the MIT Artificial Intelligence Lab in the early 1980s, working with Marvin Minsky. His PhD thesis (1985) was titled <em>The Connection Machine</em> — an argument that AI workloads (knowledge representation, semantic networks, vision) needed a fundamentally different architecture: one where <strong>memory and processing were colocated</strong>, with a processor at every word of memory, and a fast interconnect that let them all communicate.</p>
+<p>The thesis argued the right number of processors was around 65,536, the right per-processor compute was <em>trivially small</em> (a 1-bit ALU, a few words of RAM), and the right interconnect was a <strong>hypercube</strong> of dimension 16 (so any processor could reach any other in 16 hops).</p>
+<p>Thinking Machines Corporation was founded in 1983 to build it. The first machine, the <strong>CM-1</strong>, shipped in 1985.</p>
+</section>
+<section id="cm-1-1985">
+<h2>CM-1 (1985)<a class="headerlink" href="#cm-1-1985" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>65,536 1-bit processors</strong>, each with 4 kilobits of local RAM (yes, 4 kilo<em>bits</em>), arranged on a 12-dimensional <strong>hypercube</strong> interconnect.</p></li>
+<li><p><strong>No floating point</strong>. Multi-bit integer or floating-point arithmetic was synthesized bit-serially across cycles. A 32-bit add took ~32 cycles.</p></li>
+<li><p><strong>Clock</strong>: 4 MHz.</p></li>
+<li><p><strong>Cost</strong>: about $5M.</p></li>
+<li><p><strong>Cabinet</strong>: an iconic 5-foot black cube, blinking with red LEDs (one per processor), now a museum piece. The cube design was deliberate — for the trade-show floor and for the reaction shot in the <em>Jurassic Park</em> film (a CM-5 actually, but the visual lineage was CM-1).</p></li>
+</ul>
+<p>Hillis’s bet was that:</p>
+<ol class="arabic simple">
+<li><p>AI-style workloads (graph traversal, neural networks, image processing) had abundant data parallelism — millions of independent operations per problem.</p></li>
+<li><p>A processor per data element was the natural fit.</p></li>
+<li><p>Bit-serial was OK because the processors were so cheap you could afford to waste cycles per word and still come out ahead in throughput per dollar.</p></li>
+</ol>
+<p>The bit-serial bet was technically correct for some workloads (image processing, content-addressable search) and totally wrong for others (anything floating-point heavy). When the CM-1 met its first scientific-computing customers, the answer was “we love the architecture, where’s the FPU”.</p>
+</section>
+<section id="cm-2-1987-floating-point-bolts-on">
+<h2>CM-2 (1987): floating point bolts on<a class="headerlink" href="#cm-2-1987-floating-point-bolts-on" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Same 65,536 1-bit processors (organized in groups of 32 on each chip), <strong>but</strong>:</p></li>
+<li><p>One <strong>Weitek 32-bit floating-point coprocessor</strong> added per group of 32 processors. So 2,048 FPUs across the machine.</p></li>
+<li><p>64 Kbits of RAM per 1-bit processor in common CM-2 configurations, with larger aggregate memory options available. A fully configured 65,536-processor CM-2 could reach hundreds of megabytes total, but that is kilobytes per processor, not hundreds of kilobytes.</p></li>
+<li><p><strong>Peak</strong>: ~2.5 GFLOPS — comparable to a Cray Y-MP/8, at substantially lower cost.</p></li>
+</ul>
+<p>The CM-2 was the machine that made Thinking Machines briefly important. Sandia, Los Alamos, several oil companies, and a clutch of universities bought them. Algorithms developed for them — particle simulations, certain kinds of fluid dynamics, neural network training (the precursors to modern deep learning, in fact) — ran beautifully.</p>
+<p>It is genuinely worth pausing on this: in 1988, a Connection Machine running a backpropagation neural network was the fastest neural-net training rig in the world. The architectural fit between SIMD massive parallelism and neural network training was already obvious. It just took until ~2012 (Krizhevsky, AlexNet, on a pair of NVIDIA GPUs) for the workload to become big enough to drive a market.</p>
+</section>
+<section id="what-the-code-looked-like">
+<h2>What the code looked like<a class="headerlink" href="#what-the-code-looked-like" title="Link to this heading">#</a></h2>
+<p>Three languages mattered on the Connection Machine. All of them have modern counterparts you’d recognize.</p>
+<section id="lisp-data-parallel-common-lisp">
+<h3><code class="docutils literal notranslate"><span class="pre">*Lisp</span></code> — data-parallel Common Lisp<a class="headerlink" href="#lisp-data-parallel-common-lisp" title="Link to this heading">#</a></h3>
+<p>Lisp with parallel-array primitives:</p>
+<div class="highlight-lisp notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="nv">*let</span><span class="w"> </span><span class="p">((</span><span class="nv">x</span><span class="w"> </span><span class="p">(</span><span class="nv">!!</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span><span class="w">                     </span><span class="c1">; x is a 64K-element parallel array</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">*set</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="p">(</span><span class="nv">+!!</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span><span class="w">                   </span><span class="c1">; element-wise add: x = a + b across all 64K</span>
+<span class="w">  </span><span class="p">(</span><span class="nv">*let</span><span class="w"> </span><span class="p">((</span><span class="nv">s</span><span class="w"> </span><span class="p">(</span><span class="nv">sum!!</span><span class="w"> </span><span class="nv">x</span><span class="p">)))</span><span class="w">                </span><span class="c1">; reduction across all 64K processors</span>
+<span class="w">    </span><span class="nv">s</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">!!</span></code> suffix marks an operation as “happen at every processor in parallel”. <code class="docutils literal notranslate"><span class="pre">sum!!</span></code> is a global reduction, implemented in <span class="math notranslate nohighlight">\(O(\log N)\)</span> using the hypercube — every processor exchanges with its neighbors, halving the unique-summed count each step.</p>
+</section>
+<section id="c-data-parallel-c">
+<h3><code class="docutils literal notranslate"><span class="pre">C*</span></code> — data-parallel C<a class="headerlink" href="#c-data-parallel-c" title="Link to this heading">#</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">shape</span><span class="w"> </span><span class="p">[</span><span class="mi">65536</span><span class="p">]</span><span class="n">ProcessorGrid</span><span class="p">;</span>
+<span class="nl">double</span><span class="p">:</span><span class="n">ProcessorGrid</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">;</span><span class="w">     </span><span class="cm">/* parallel arrays */</span>
+<span class="p">[</span><span class="n">ProcessorGrid</span><span class="p">]</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w">        </span><span class="cm">/* element-wise add */</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="o">+=</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w">                </span><span class="cm">/* reduction sum */</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">shape</span></code> types declared the parallel domain. Variables declared <code class="docutils literal notranslate"><span class="pre">T:Shape</span></code> were implicitly parallel — one element per processor in the shape. Operators auto-broadcast and auto-reduced.</p>
+</section>
+<section id="cm-fortran-what-eventually-became-fortran-90">
+<h3>CM Fortran — what eventually became Fortran 90<a class="headerlink" href="#cm-fortran-what-eventually-became-fortran-90" title="Link to this heading">#</a></h3>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="kt">REAL</span><span class="p">,</span><span class="w"> </span><span class="k">ARRAY</span><span class="p">(</span><span class="mi">65536</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span>
+<span class="w">      </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="w">                  </span><span class="c">! whole-array assignment, runs in parallel</span>
+<span class="w">      </span><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">SUM</span><span class="p">(</span><span class="n">A</span><span class="p">)</span><span class="w">                 </span><span class="c">! reduction</span>
+<span class="w">      </span><span class="k">WHERE</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">2</span><span class="w">    </span><span class="c">! masked, all in parallel</span>
+</pre></div>
+</div>
+<p>This is recognizably the same idiom as <strong>Fortran 90 array syntax</strong> before Fortran 90 was formally standardized. Whole-array operations, masked assignment, broadcast, and reductions shipped on the CM-2 in 1988 while the Fortran 8x/90 standardization process was already underway. The Connection Machine did not single-handedly invent Fortran 90’s array model, but it productized the data-parallel style early and helped prove that the idiom was usable at machine scale.</p>
+<p>This is one of the most underappreciated design influences in the history of programming languages.</p>
+</section>
+</section>
+<section id="the-lesson-the-connection-machine-taught-and-learned">
+<h2>The lesson the Connection Machine taught — and learned<a class="headerlink" href="#the-lesson-the-connection-machine-taught-and-learned" title="Link to this heading">#</a></h2>
+<p>The lesson it <em>taught</em>: you can write data-parallel code, in a high-level language, and have it run efficiently on thousands of processors, <em>if</em> the language is built for parallelism from the start. You don’t need to bolt on <code class="docutils literal notranslate"><span class="pre">pthread_create</span></code> or <code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code>. You just need parallel array operations as a first-class language feature.</p>
+<p>This is the lesson NumPy users use every day. It’s the lesson Halide and Triton are built around. It’s <em>exactly</em> what CUDA’s grid-of-threads abstraction does at a slightly lower level. Hillis was right about the abstraction.</p>
+<p>The lesson the Connection Machine <em>learned</em>, painfully: <strong>rigid SIMD doesn’t scale to the workloads people actually have.</strong> The CM-2 was strict SIMD: every processor executed the same instruction every cycle. If your algorithm had branches that took different paths on different data, half your processors had to NOP while the other half ran. Real applications had a lot of branches.</p>
+<p>The CM-5 (1991) was Thinking Machines’ attempt to fix this. They abandoned SIMD entirely and went MIMD — every node was an independent SPARC-based workstation, with a 4-element vector unit per node, lashed together with a fat-tree interconnect. It worked technically, but it was no longer architecturally novel: a CM-5 was a fancy MIMD MPP, and IBM and Intel and Cray were going to build cheaper ones.</p>
+<p>Thinking Machines filed for Chapter 11 in <strong>August 1994</strong>.</p>
+</section>
+<section id="what-survived">
+<h2>What survived<a class="headerlink" href="#what-survived" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Hypercube interconnect</strong> influenced the Intel iPSC and IBM SP2 networks.</p></li>
+<li><p><strong>Data-parallel array syntax</strong> helped shape Fortran 90 practice, NumPy, MATLAB, and indirectly NumPy → JAX → PyTorch’s tensor operations.</p></li>
+<li><p><strong>The PRAM-ish programming model</strong> influenced CUDA’s grid-and-block abstraction (one thread per data element, hardware schedules them in warps of 32 — a <em>softer</em> SIMD that handles branch divergence by masking inactive lanes).</p></li>
+<li><p><strong>The Star Lisp / C* community</strong> dispersed and ended up at Sun, Sequent, and Intel, where their data-parallel-language thinking influenced the OpenMP design and the Intel Threading Building Blocks team.</p></li>
+</ul>
+<p>If you have ever written <code class="docutils literal notranslate"><span class="pre">numpy.where(a</span> <span class="pre">&gt;</span> <span class="pre">0,</span> <span class="pre">b,</span> <span class="pre">c)</span></code> instead of a loop with an <code class="docutils literal notranslate"><span class="pre">if</span></code> statement — you are writing CM Fortran, with sixty-four-million-times-larger data sizes and sixty-four-million-times-faster hardware. The continuity is direct.</p>
+</section>
+<section id="coda-hpf-and-what-didn-t-survive">
+<h2>Coda: HPF, and what didn’t survive<a class="headerlink" href="#coda-hpf-and-what-didn-t-survive" title="Link to this heading">#</a></h2>
+<p>If the Connection Machine taught the lesson that data-parallel array operations belonged in the language, the obvious next move was: <em>standardize that, take it cross-vendor, and make it work on distributed-memory machines too</em>. The result was <strong>High Performance Fortran</strong> (HPF), drafted by an industry-academic forum from 1991 to 1993 and shipped by Cray, IBM, Intel, HP, DEC, NEC, Fujitsu, Lahey, and PGI in commercial compilers by 1995.</p>
+<p>HPF took Fortran 90’s array syntax — the syntax CM Fortran had just established — and added a small set of directives that told the compiler <em>how data was distributed across processors</em>. SAXPY in HPF:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="k">SUBROUTINE </span><span class="n">SAXPY_HPF</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">)</span>
+<span class="w">  </span><span class="kt">REAL</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="c">!HPF$ PROCESSORS PROCS(NUMBER_OF_PROCESSORS())</span>
+<span class="c">!HPF$ DISTRIBUTE X(BLOCK) ONTO PROCS</span>
+<span class="c">!HPF$ ALIGN Y(:) WITH X(:)</span>
+<span class="w">  </span><span class="n">Y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span>
+<span class="k">END SUBROUTINE</span>
+</pre></div>
+</div>
+<p>The compiler was supposed to: split <code class="docutils literal notranslate"><span class="pre">X</span></code> into block-distributed chunks across processors, co-locate <code class="docutils literal notranslate"><span class="pre">Y</span></code> with <code class="docutils literal notranslate"><span class="pre">X</span></code>, generate the local computation, and generate whatever communication was needed for non-element-local operations. In principle, the programmer never wrote a send or receive.</p>
+<p>It failed. By 1998 every major vendor had quietly stopped investing in HPF. The reasons are worth understanding because they are the same reasons high-level parallel languages keep failing:</p>
+<ol class="arabic simple">
+<li><p><strong>Compiler complexity exceeded the state of the art.</strong> Inferring optimal communication patterns from declarative data-layout hints is, in general, undecidable. The compilers shipped, but their generated code was unpredictable and often slow.</p></li>
+<li><p><strong>Performance was non-portable in a <em>new</em> way.</strong> With MPI, the programmer wrote communication explicitly — so it was at least <em>legible</em>. With HPF, two compilers from two vendors could turn the same source into wildly different communication schedules. HPC programmers couldn’t tune what they couldn’t see.</p></li>
+<li><p><strong>The standard had real gaps.</strong> Irregular workloads (sparse matrices, unstructured grids, adaptive meshes) were awkward to express. The very kernels that needed parallelism most were the ones HPF couldn’t handle cleanly.</p></li>
+<li><p><strong>MPI was already winning the same problem.</strong> By 1994 the national labs had MPI codes that ran; they were not going to rewrite them for a compiler with bugs.</p></li>
+</ol>
+<p>The HPF ambition — <em>declarative data layout, the compiler does the work</em> — keeps coming back. <strong>Chapel</strong> (Cray, 2009 onward), <strong>X10</strong> (IBM), <strong>Fortress</strong> (Sun, canceled), <strong>Coarray Fortran</strong> (folded into Fortran 2008), <strong>UPC</strong>, <strong>Julia’s distributed arrays</strong>, and arguably <strong>JAX/XLA</strong>’s sharding annotations for ML are all spiritual descendants. None has displaced MPI for production HPC. The pattern is durable: declarative parallelism is elegant; predictable performance wins customers.</p>
+</section>
+<section id="lab-numpy-as-a-connection-machine-emulator">
+<h2>Lab — <code class="docutils literal notranslate"><span class="pre">numpy</span></code> as a Connection Machine emulator<a class="headerlink" href="#lab-numpy-as-a-connection-machine-emulator" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/07-data-parallel/</span></code>, you implement Conway’s Game of Life and a simple cellular automaton three ways:</p>
+<ol class="arabic simple">
+<li><p>Imperative, Python loops.</p></li>
+<li><p>NumPy whole-array (the <code class="docutils literal notranslate"><span class="pre">C*</span></code> / CM Fortran way).</p></li>
+<li><p>CuPy on a GPU (or NumPy with <code class="docutils literal notranslate"><span class="pre">numba.cuda</span></code> if no GPU; or skip if you have neither).</p></li>
+</ol>
+<p>Then you visualize the result. The point: the <em>programming idiom</em> the Connection Machine taught us is now the lingua franca of scientific Python. You write <code class="docutils literal notranslate"><span class="pre">next_grid</span> <span class="pre">=</span> <span class="pre">update_rule(grid)</span></code> and the runtime handles the parallelism. That’s what Hillis meant.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>The CM-2 had 65,536 processors. A modern NVIDIA H100 has 16,896 CUDA cores grouped into warps of 32. Are these architecturally the same idea, or is the warp-based SIMT model fundamentally different from CM-2’s bit-serial SIMD?</p></li>
+<li><p>CM Fortran shipped data-parallel array syntax in 1988. Fortran 90 standardized it in 1991. NumPy adopted it in 1995. Why did it take <em>another twenty years</em> (until ~2015) for this idiom to become the default in mainstream high-performance Python?</p></li>
+<li><p>The Connection Machine failed commercially in 1994. The architectural ideas it championed (data-parallel languages, processor-per-element) won completely 20 years later. Find another instance where the architecture won but the company that pioneered it didn’t survive long enough to benefit. What does that pattern say about how to bet on architectures?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Hillis, W.D. (1985). <em>The Connection Machine</em>. MIT Press. Out of print but downloadable from Hillis’s site. Required reading.</p></li>
+<li><p>Hillis, W.D. &amp; Steele, G.L. (1986). “Data parallel algorithms”. <em>CACM</em>. The argument for the model.</p></li>
+<li><p>Steele, G.L. &amp; Hillis, W.D. (1986). “Connection Machine Lisp: Fine-grained parallel symbolic processing”. <em>LFP’86</em>. Steele was Thinking Machines’ compiler luminary.</p></li>
+<li><p><em>Programming the Connection Machine in C* and CM-Fortran</em>. Thinking Machines documentation, on <a class="reference external" href="http://archive.org">archive.org</a>.</p></li>
+<li><p>Murray, <em>The Supermen</em>, chapter 16 — covers Cray’s reaction to the Connection Machine.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-06-vector-wall.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-08-mimd-mpp.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 8 — MIMD MPP: The Killer Micros, Connected</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mit-origin-story">The MIT origin story</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cm-1-1985">CM-1 (1985)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cm-2-1987-floating-point-bolts-on">CM-2 (1987): floating point bolts on</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like">What the code looked like</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lisp-data-parallel-common-lisp"><code class="docutils literal notranslate"><span class="pre">*Lisp</span></code> — data-parallel Common Lisp</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-data-parallel-c"><code class="docutils literal notranslate"><span class="pre">C*</span></code> — data-parallel C</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cm-fortran-what-eventually-became-fortran-90">CM Fortran — what eventually became Fortran 90</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-lesson-the-connection-machine-taught-and-learned">The lesson the Connection Machine taught — and learned</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-survived">What survived</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coda-hpf-and-what-didn-t-survive">Coda: HPF, and what didn’t survive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-numpy-as-a-connection-machine-emulator">Lab — <code class="docutils literal notranslate"><span class="pre">numpy</span></code> as a Connection Machine emulator</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

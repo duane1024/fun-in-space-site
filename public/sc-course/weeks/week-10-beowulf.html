@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 10 — Beowulf and the Death of Bespoke &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-10-beowulf';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint" href="week-11-asci-bluegene.html" />
+    <link rel="prev" title="Week 9 — MPI: The Standard That Stuck" href="week-09-mpi.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-10-beowulf.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 10 — Beowulf and the Death of Bespoke</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-original-beowulf">The original Beowulf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-beowulf-won">Why Beowulf won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-19952005-cluster-software-stack">The 1995–2005 cluster software stack</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changed-when-interconnect-went-serious">What changed when interconnect went serious</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-mpi-source-looks-like-unchanged">What MPI source looks like — unchanged</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-beowulf-paper-in-retrospect">The Beowulf paper, in retrospect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-build-a-real-cluster-on-your-laptop">Lab — Build a real cluster on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-10-beowulf-and-the-death-of-bespoke">
+<h1>Week 10 — Beowulf and the Death of Bespoke<a class="headerlink" href="#week-10-beowulf-and-the-death-of-bespoke" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>When you spin up a 16-node EC2 cluster with Slurm and run an MPI job on it, you’re using the architecture and software stack invented by two NASA engineers in a basement in 1994 with $50,000 worth of off-the-shelf PCs and a stock Ethernet switch. Beowulf is the most consequential supercomputer architecture of the 1990s, not because it was the fastest (it wasn’t even close), but because it convinced the world that “supercomputer” did not require any custom hardware at all.</p>
+<p>This week is about how that idea took over.</p>
+</section>
+<section id="the-original-beowulf">
+<h2>The original Beowulf<a class="headerlink" href="#the-original-beowulf" title="Link to this heading">#</a></h2>
+<p>In summer 1994, <strong>Thomas Sterling</strong> (at NASA’s Center of Excellence in Space Data and Information Sciences, NASA Goddard) and <strong>Donald Becker</strong> (in the same group, primarily a Linux kernel developer who wrote most of the early Ethernet drivers) had a problem: their group needed compute for satellite data processing, the budget was tiny, and there was no path to a Cray.</p>
+<p>So they bought 16 Intel DX4 (a 100 MHz 486) PCs, each with 16 MB of RAM, connected them with two stock 10 Mbps Ethernet networks (one for application traffic, one for I/O), put <strong>Linux</strong> on them, installed <strong>PVM</strong>, and called it Beowulf. ~$50,000 total. ~74 MFLOPS sustained on LINPACK. <em>Forty times slower per CPU</em> than the contemporary Cray Y-MP, but at 1/2,000 the cost. <em>Source: Sterling &amp; Becker (1995), “How to Build a Beowulf,” NASA Goddard Space Flight Center; Sterling et al. (1995), “BEOWULF: A parallel workstation for scientific computation,” Proc. ICPP ‘95 — both report the same configuration, sustained LINPACK number, and price.</em></p>
+<p>Three things made Beowulf interesting beyond the obvious cost win:</p>
+<ol class="arabic simple">
+<li><p><strong>Linux</strong>. In 1994 Linux was three years old and not yet trusted by anyone. Becker wrote (or patched) the network drivers Beowulf needed, contributed them upstream, and made Linux a credible scientific OS in the process. The work flowed back: every Linux user since 1995 has been running Becker’s network drivers.</p></li>
+<li><p><strong>Open software stack</strong>. Beowulf used Linux (free), gcc (free), PVM and later MPICH (free), NFS (free). No vendor lock-in anywhere. You could replicate it.</p></li>
+<li><p><strong>The right level of “supercomputer-ness.”</strong> It was a real distributed-memory parallel computer, programmed with PVM and later MPI, capable of running real parallel scientific codes. Just slow, and cheap.</p></li>
+</ol>
+<p>Sterling and Becker published “How to Build a Beowulf” in 1995 and presented it at Supercomputing ‘94. The reaction was a mix of excitement (universities and small labs that couldn’t afford real supercomputers) and dismissal (the established HPC vendors). Both reactions were, in different ways, correct.</p>
+</section>
+<section id="why-beowulf-won">
+<h2>Why Beowulf won<a class="headerlink" href="#why-beowulf-won" title="Link to this heading">#</a></h2>
+<p>The dismissive reaction was: “this is a slow toy; real supercomputers will always need custom interconnects and tightly engineered systems.” That reaction was right about <em>peak performance</em>. It was wrong about <em>what customers wanted</em>. Three forces:</p>
+<ol class="arabic simple">
+<li><p><strong>Per-FLOP cost.</strong> The original 1994 Beowulf cost about $50k and sustained roughly 74 MFLOPS on LINPACK; it was not fast, but it made the price/performance argument concrete. By the late 1990s, larger commodity clusters using faster Pentium-class CPUs and better Ethernet/Myrinet could be scaled incrementally at far lower cost per delivered FLOP than bespoke vector systems.</p></li>
+<li><p><strong>Incremental scaling.</strong> A Cray T3E was a <span class="math notranslate nohighlight">\(30M decision. A cluster started at \)</span>50k and grew node-by-node as the budget arrived. For most institutions, gradual scaling won.</p></li>
+<li><p><strong>Workforce.</strong> Anyone who could administer a Linux server could administer a Beowulf cluster. The Cray system administrator was a specialty. In a labor-cost-dominated world, this mattered.</p></li>
+</ol>
+<p>By 2003, <strong>half</strong> of the Top500 was clusters. By 2010, well over 80% of the Top500 was clusters or cluster-derived architectures. The “Beowulf” name fell out of fashion (it became “cluster” or “HPC cluster” or “commodity cluster”), but the architecture won completely.</p>
+</section>
+<section id="the-19952005-cluster-software-stack">
+<h2>The 1995–2005 cluster software stack<a class="headerlink" href="#the-19952005-cluster-software-stack" title="Link to this heading">#</a></h2>
+<p>The basic structure that emerged and is still in use:</p>
+<ul class="simple">
+<li><p><strong>OS</strong>: Linux on every node. Initially Red Hat, then CentOS, now Rocky / Alma / Ubuntu / SUSE.</p></li>
+<li><p><strong>Compiler</strong>: gcc (free) or vendor (Intel, NVIDIA, IBM). Most academic codes used gcc and gfortran.</p></li>
+<li><p><strong>MPI</strong>: MPICH or LAM/MPI initially; Open MPI from 2004–2005 onward; vendor implementations (Intel MPI, MVAPICH, Cray MPT) for production HPC.</p></li>
+<li><p><strong>Job scheduler</strong>: PBS (Portable Batch System) → Torque, then <strong>Slurm</strong> (Lawrence Livermore, 2003) which won decisively. Slurm runs the job queue, tracks resource availability, launches and monitors jobs.</p></li>
+<li><p><strong>Shared filesystem</strong>: NFS in the early era, then Lustre (Cluster File Systems Inc., open-sourced 2003) and IBM GPFS / Spectrum Scale for production, OrangeFS / BeeGFS as alternatives.</p></li>
+<li><p><strong>Cluster management</strong>: home-grown scripts, then xCAT (IBM, 1999, open-sourced), Warewulf (Sterling’s team, 2002), ROCKS (UC San Diego, 2000).</p></li>
+</ul>
+<p>By 2005 you could buy a Beowulf cluster as a turnkey product from Penguin Computing or Linux Networx or Rackable or Dell, with all of this stack pre-integrated. You stopped having to be Don Becker.</p>
+</section>
+<section id="what-changed-when-interconnect-went-serious">
+<h2>What changed when interconnect went serious<a class="headerlink" href="#what-changed-when-interconnect-went-serious" title="Link to this heading">#</a></h2>
+<p>The first Beowulfs used 10/100 Mbps Ethernet, and the resulting MPI latency was ~150 µs and bandwidth ~10 MB/s. Real HPC workloads — anything that does halo exchange every step — couldn’t tolerate this.</p>
+<p>Three interconnect technologies fixed it:</p>
+<ol class="arabic simple">
+<li><p><strong>Myrinet</strong> (Myricom, 1995). 1.28 Gb/s, ~10 µs MPI latency. Used heavily through the early 2000s. Discontinued ~2013.</p></li>
+<li><p><strong>Quadrics QsNet</strong> (1998). 3.2 Gb/s, ~3 µs latency. ASCI machines used it. Quadrics folded 2009.</p></li>
+<li><p><strong>InfiniBand</strong> (2001). The standard that won. 10 Gb/s initially, 200 Gb/s HDR, 400 Gb/s NDR, and 800 Gb/s XDR in the newest systems. ~1 µs MPI latency. Open standard, multiple vendors (Mellanox, then NVIDIA after the 2019 acquisition; Cornelis Networks, formerly Intel Omni-Path).</p></li>
+</ol>
+<p><em>Sources: Boden et al. (1995), “Myrinet: A gigabit-per-second local area network,” IEEE Micro 15(1):29–36, for the original Myrinet design; Petrini et al. (2002), “The Quadrics network: high-performance clustering technology,” IEEE Micro 22(1):46–57, for QsNet figures; InfiniBand Trade Association specifications (<a class="reference external" href="http://ibta.org">ibta.org</a>) for HDR/NDR/XDR line rates.</em></p>
+<p>Once you bolted Myrinet or InfiniBand onto a Beowulf-style cluster, the architectural distinction between “cluster” and “MPP” dissolved. The 2000s ASCI machines (Q, White, Purple) were <em>all</em> clusters with serious interconnect, just bigger and more carefully engineered than the corner-of-the-lab variety.</p>
+<p>This is the architectural picture today: every Top500 entry is a cluster of fat nodes (multi-socket CPU + multiple GPUs) connected with a serious interconnect (Slingshot-11, NDR/XDR InfiniBand, BlueField, NVLink between nodes for AI workloads). The Beowulf model just kept getting more refined.</p>
+</section>
+<section id="what-mpi-source-looks-like-unchanged">
+<h2>What MPI source looks like — unchanged<a class="headerlink" href="#what-mpi-source-looks-like-unchanged" title="Link to this heading">#</a></h2>
+<p>A startling thing about the Beowulf-to-modern transition: <strong>the MPI source code did not change</strong>. A 1996 MPI heat-equation solver, written for a 16-node 486 cluster with PVM-then-MPICH, recompiles and runs largely unchanged on a 2026 Frontier-class system with roughly ten thousand nodes. The same <code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Recv</span></code>, <code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> calls. Same algorithmic decomposition. The only things that change at the source level are the constants — problem size, rank count — and sometimes the addition of GPU offload on top. Otherwise the <em>programming model is preserved</em>.</p>
+<p>This is the reason MPI persists. The whole point of investing in a programming model is portability, and MPI delivered portability so completely that codes have a 30-year working lifespan.</p>
+</section>
+<section id="the-beowulf-paper-in-retrospect">
+<h2>The Beowulf paper, in retrospect<a class="headerlink" href="#the-beowulf-paper-in-retrospect" title="Link to this heading">#</a></h2>
+<p>The 1995 paper makes three predictions:</p>
+<ol class="arabic simple">
+<li><p>“We expect the price-performance advantage of clusters to drive supercomputing economics for the next decade.” — <em>Right; lasted three decades and counting.</em></p></li>
+<li><p>“Free system software is necessary for the model to scale; vendor-specific OSes will fragment the cluster ecosystem.” — <em>Right; Linux became the universal HPC OS by 2003.</em></p></li>
+<li><p>“The interconnect will be the limiting factor; we need open standards for low-latency networks.” — <em>Right; InfiniBand emerged in 2001, the OpenFabrics Alliance in 2005, and OFED is the cross-vendor RDMA stack.</em></p></li>
+</ol>
+<p>You can find people complaining that academic predictions of computing trends never come true. Sterling and Becker hit three for three.</p>
+</section>
+<section id="lab-build-a-real-cluster-on-your-laptop">
+<h2>Lab — Build a real cluster on your laptop<a class="headerlink" href="#lab-build-a-real-cluster-on-your-laptop" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/10-mini-cluster/</span></code> you set up a tiny single-machine “cluster” using Docker containers as virtual nodes. You install Slurm, MPICH, and a shared NFS volume, submit a job, watch it scheduled across the containers, and run an MPI program. The architecture is the same pattern as a roughly 10,000-node Frontier-class system — just smaller. Then we run the same heat-equation code from Week 9 on this mini cluster via Slurm submission, instead of <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-n</span> <span class="pre">4</span></code> directly. You’ll see the actual production HPC workflow.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Beowulf assumed Ethernet would be cheap and good enough. It was good enough for embarrassingly parallel work, not enough for tightly-coupled simulations. Today, AI training is moving toward a similar hybrid: NVLink within a “pod” of GPUs, Ethernet (with RoCE) between pods. Is this analogous to the Myrinet/InfiniBand vs. Ethernet split of 2000? What’s different?</p></li>
+<li><p>Linux became universal in HPC because it was free, and then because everyone knew it. The same dynamic might play out for an HPC scheduler — Slurm has been overwhelmingly dominant for fifteen years. What would have to be true for a successor to displace it?</p></li>
+<li><p>Beowulf democratized supercomputing access. AWS, Azure, and GCP HPC offerings (ParallelCluster, CycleCloud, Cluster Toolkit) democratize it again. Is cloud HPC the “next Beowulf moment”, or is it a different transition (capital expense → operating expense, dedicated → multi-tenant)? What’s the equivalent of Sterling and Becker’s $50k bet that would establish whether cloud HPC is structurally cheaper?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Sterling, T. &amp; Becker, D. (1995). <em>How to Build a Beowulf</em>. Initial paper, Goddard Space Flight Center. Now widely available on <a class="reference external" href="http://archive.org">archive.org</a>.</p></li>
+<li><p>Sterling, T., Becker, D., Savarese, D., Dorband, J., Ranawake, U. &amp; Packer, C. (1995). “BEOWULF: A parallel workstation for scientific computation”. <em>Proc. ICPP ‘95</em>. The peer-reviewed version.</p></li>
+<li><p>Top500 lists 1995–2005, in sequence. Watch the “architecture” column flip.</p></li>
+<li><p>Yoo, A. et al. (2003). “SLURM: Simple Linux Utility for Resource Management”. <em>JSSPP ‘03</em>. The original Slurm paper.</p></li>
+<li><p>Schwan, P. (2003). “Lustre: Building a file system for 1000-node clusters”. <em>Linux Symposium</em>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-09-mpi.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 9 — MPI: The Standard That Stuck</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-11-asci-bluegene.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-original-beowulf">The original Beowulf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-beowulf-won">Why Beowulf won</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-19952005-cluster-software-stack">The 1995–2005 cluster software stack</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-changed-when-interconnect-went-serious">What changed when interconnect went serious</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-mpi-source-looks-like-unchanged">What MPI source looks like — unchanged</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-beowulf-paper-in-retrospect">The Beowulf paper, in retrospect</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-build-a-real-cluster-on-your-laptop">Lab — Build a real cluster on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

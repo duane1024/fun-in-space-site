@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Assessment and Project Guide &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'assessment';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="References" href="references.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/assessment.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Assessment and Project Guide</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-completing-the-course-looks-like">What “completing the course” looks like</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-rubric-for-classroom-use">Suggested rubric for classroom use</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-project-portfolio">Final project portfolio</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-expectations">Reproducibility expectations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-reading-memos">Suggested reading memos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-hardware-access">A note on hardware access</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#free-educational-allocations-on-real-hpc-systems">Free educational allocations on real HPC systems</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="assessment-and-project-guide">
+<h1>Assessment and Project Guide<a class="headerlink" href="#assessment-and-project-guide" title="Link to this heading">#</a></h1>
+<p>This page is for two audiences:</p>
+<ul class="simple">
+<li><p><strong>Self-paced readers</strong> who want a rubric to know whether they’ve actually absorbed the course rather than skimmed it.</p></li>
+<li><p><strong>Instructors</strong> adapting the course to a classroom and needing a grading skeleton.</p></li>
+</ul>
+<p>There is no autograder. The course is structured so that the <em>artifacts you produce</em> (running code, measured numbers, written analysis) are the assessment. The point is to be able to defend an answer, not to chase points.</p>
+<section id="what-completing-the-course-looks-like">
+<h2>What “completing the course” looks like<a class="headerlink" href="#what-completing-the-course-looks-like" title="Link to this heading">#</a></h2>
+<p>A working engineer who has actually done this course should be able to do the following, ideally without consulting notes:</p>
+<ol class="arabic simple">
+<li><p><strong>Read any era’s code idiomatically.</strong> Given a CAL listing, a piece of vector Fortran with vendor directives, a <code class="docutils literal notranslate"><span class="pre">C*</span></code> whole-array assignment, an MPI halo-exchange function, a CUDA kernel, or a <code class="docutils literal notranslate"><span class="pre">std::execution::par_unseq</span></code> call — explain what abstraction the programmer is using, what the compiler/runtime is being asked to do, and where the parallelism actually lives at execution time.</p></li>
+<li><p><strong>Read a Top500 spec sheet.</strong> Given any current entry, decode the node configuration (CPU, accelerator, memory hierarchy, intra-node fabric), the inter-node interconnect (topology, bandwidth, latency), and reason about which workloads it will run well and badly.</p></li>
+<li><p><strong>Predict bottlenecks before measuring.</strong> Given a numerical kernel and a target architecture, predict whether it is compute-bound or memory-bound, what the achievable fraction of peak FLOPS is, and which programming-model decisions matter most. Roofline (Week 15) is the formal version of this skill.</p></li>
+<li><p><strong>Translate a kernel across eras.</strong> Take a single computation — SAXPY, a 5-point stencil, a sparse matrix-vector multiply — and write it in the idiom of any era from CDC 6600 scalar Fortran to modern standard parallelism. This is the explicit goal of the Week 16 capstone.</p></li>
+</ol>
+<p>If you can do these four things, you have the course.</p>
+</section>
+<section id="suggested-rubric-for-classroom-use">
+<h2>Suggested rubric for classroom use<a class="headerlink" href="#suggested-rubric-for-classroom-use" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Component</p></th>
+<th class="head text-right"><p>Weight</p></th>
+<th class="head"><p>What’s being measured</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Lab submissions (one per week, weeks 1–15)</p></td>
+<td class="text-right"><p>35%</p></td>
+<td><p>Code correctness, benchmark discipline, written interpretation of results</p></td>
+</tr>
+<tr class="row-odd"><td><p>Architecture comparison essay (mid-course)</p></td>
+<td class="text-right"><p>10%</p></td>
+<td><p>Defended argument about why one era’s architecture displaced another, with primary-source citations</p></td>
+</tr>
+<tr class="row-even"><td><p>Midterm take-home</p></td>
+<td class="text-right"><p>15%</p></td>
+<td><p>Performance reasoning across vector, shared-memory, and distributed-memory eras; one worked Roofline analysis</p></td>
+</tr>
+<tr class="row-odd"><td><p>Final project proposal</p></td>
+<td class="text-right"><p>5%</p></td>
+<td><p>Scoped comparison plus a reproducibility plan</p></td>
+</tr>
+<tr class="row-even"><td><p>Final project report and presentation</p></td>
+<td class="text-right"><p>25%</p></td>
+<td><p>Empirical comparison with documented methodology and reproducibility appendix</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reading discussion participation</p></td>
+<td class="text-right"><p>10%</p></td>
+<td><p>Engagement with the primary sources, not just summaries</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The rubric deliberately weights <em>measured claims with documented methodology</em> over <em>raw speed</em>. Students should not be punished for running on weaker hardware if their controls and analysis are sound.</p>
+</section>
+<section id="final-project-portfolio">
+<h2>Final project portfolio<a class="headerlink" href="#final-project-portfolio" title="Link to this heading">#</a></h2>
+<p>The Week 16 capstone (SAXPY across six eras) is the minimum-viable final project. Stronger projects make the same kind of cross-era comparison on a more interesting kernel, or add an empirical dimension (energy, scaling, portability) that the capstone treats lightly.</p>
+<p>A portfolio of project shapes that work well:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Theme</p></th>
+<th class="head"><p>Comparison</p></th>
+<th class="head"><p>Suggested kernel / dataset</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Vector then and now</p></td>
+<td><p>Scalar Fortran → OpenMP SIMD → ISPC → SVE intrinsics</p></td>
+<td><p>Synthetic DAXPY / triad</p></td>
+</tr>
+<tr class="row-odd"><td><p>From Cray loop to exascale</p></td>
+<td><p>Cray-era stencil → MPI → MPI + GPU offload</p></td>
+<td><p>Generated 2D/3D stencil grids; NPB-CG class</p></td>
+</tr>
+<tr class="row-even"><td><p>Bandwidth archaeology</p></td>
+<td><p>STREAM on a laptop, on AVX-512, on an Apple M-series, on a GPU</p></td>
+<td><p>STREAM-sized synthetic arrays</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sparse irregularity</p></td>
+<td><p>Scalar C → OpenMP → ISPC gather/scatter → MPI SpMV</p></td>
+<td><p>A small SuiteSparse matrix (e.g., <code class="docutils literal notranslate"><span class="pre">bcsstk32</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Climate mini-app port</p></td>
+<td><p>Same kernel in MPI-only, OpenACC, OpenMP target</p></td>
+<td><p><a class="reference external" href="https://github.com/mrnorman/miniWeather"><code class="docutils literal notranslate"><span class="pre">miniWeather</span></code></a> — designed for HPC training</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dense linear algebra longevity</p></td>
+<td><p>Naïve <code class="docutils literal notranslate"><span class="pre">dgemm</span></code> → tuned BLAS → cuBLAS / hipBLAS</p></td>
+<td><p>Generated dense matrices, 4K–32K</p></td>
+</tr>
+<tr class="row-even"><td><p>Roofline study</p></td>
+<td><p>Same kernel on two architectures, with measured arithmetic intensity placed on a roofline plot</p></td>
+<td><p>STREAM-derived bandwidth + HPCG kernel</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A publishable project includes a <em>short</em> historical framing section — one paragraph showing that the question being asked has roots earlier in the course. A project that begins with a Cray-era loop and ends with a measured SVE or CUDA result is a strong concrete argument about abstraction continuity, and is also a paper-shaped artifact.</p>
+</section>
+<section id="reproducibility-expectations">
+<h2>Reproducibility expectations<a class="headerlink" href="#reproducibility-expectations" title="Link to this heading">#</a></h2>
+<p>Every result submission — lab or final — should include:</p>
+<ul class="simple">
+<li><p>Compiler version and flags.</p></li>
+<li><p>Hardware: CPU model, GPU model if used, RAM size, interconnect if multi-node.</p></li>
+<li><p>Input size and problem class.</p></li>
+<li><p>Timing method (wall-clock, CPU time, event-based; warmups; repetitions; statistic reported).</p></li>
+<li><p>Software environment (Spack manifest, container hash, or <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">freeze</span></code> output for Python labs).</p></li>
+</ul>
+<p>These are not bureaucratic. They are how someone six months from now (including you) can tell whether a number you reported was real.</p>
+</section>
+<section id="suggested-reading-memos">
+<h2>Suggested reading memos<a class="headerlink" href="#suggested-reading-memos" title="Link to this heading">#</a></h2>
+<p>For instructors who want a discussion component: assign one of the primary sources from <code class="docutils literal notranslate"><span class="pre">references.md</span></code> per week and have students write a one-page memo answering three questions:</p>
+<ol class="arabic simple">
+<li><p>What architectural claim is the source making?</p></li>
+<li><p>What evidence is given for the claim, and what evidence is missing?</p></li>
+<li><p>Has the claim aged well? Cite something from a later week’s reading.</p></li>
+</ol>
+<p>Three questions, one page. The discipline is to engage directly with the primary text rather than summarize it.</p>
+</section>
+<section id="a-note-on-hardware-access">
+<h2>A note on hardware access<a class="headerlink" href="#a-note-on-hardware-access" title="Link to this heading">#</a></h2>
+<p>This course is designed to be runnable on a single laptop. Some labs benefit from real cluster or GPU access:</p>
+<ul class="simple">
+<li><p><strong>MPI labs (9, 10, 15)</strong>: a real multi-node cluster is nicer than Docker containers but not required.</p></li>
+<li><p><strong>CUDA lab (13)</strong>: an NVIDIA GPU is best. Apple Silicon has a Metal alternative we provide. Google Colab (free tier) suffices.</p></li>
+<li><p><strong>SVE-related discussion (14–16)</strong>: actual A64FX or Graviton3 hardware is available through AWS Hpc7g instances, or you can use Arm Instruction Emulator / QEMU under software emulation.</p></li>
+</ul>
+<p>Don’t let hardware access become the bottleneck. Methodology and analysis carry more pedagogical weight than peak FLOPS.</p>
+<section id="free-educational-allocations-on-real-hpc-systems">
+<h3>Free educational allocations on real HPC systems<a class="headerlink" href="#free-educational-allocations-on-real-hpc-systems" title="Link to this heading">#</a></h3>
+<p>For final projects that need real cluster scale, several US and European programs grant free or low-friction educational allocations:</p>
+<ul class="simple">
+<li><p><strong>NSF ACCESS</strong> (<a class="reference external" href="http://access-ci.org">access-ci.org</a>) — the successor to XSEDE. The “Explore ACCESS” tier provides immediate access for small projects; “Discover” and “Accelerate” for larger needs. Multi-site: TACC, SDSC, PSC, NCSA, Purdue, others. The lowest-friction path to real cluster time for US-based students and researchers.</p></li>
+<li><p><strong>OLCF Director’s Discretion</strong> (<a class="reference external" href="http://olcf.ornl.gov">olcf.ornl.gov</a>) — Frontier and Andes access for projects with a clear scientific or training case. Application is a short proposal.</p></li>
+<li><p><strong>ALCF Director’s Discretion</strong> (<a class="reference external" href="http://alcf.anl.gov">alcf.anl.gov</a>) — Polaris, Aurora, and AI Testbed access on similar terms.</p></li>
+<li><p><strong>LUMI</strong> (<a class="reference external" href="http://lumi-supercomputer.eu">lumi-supercomputer.eu</a>) — the EuroHPC pre-exascale system in Finland. Allocations through LUMI Consortium member countries; small “extreme scale” allocations are available to EU researchers via EuroHPC.</p></li>
+<li><p><strong>EuroHPC JUPITER</strong> — once fully production, will offer benchmark and development access under the EuroHPC JU’s standard allocation processes.</p></li>
+<li><p><strong>Google Colab</strong> (<a class="reference external" href="http://colab.research.google.com">colab.research.google.com</a>) — free-tier T4 GPU, paid tier for A100/L4. The lowest-friction GPU access anywhere.</p></li>
+<li><p><strong>AWS HPC educate</strong> credits and <strong>Azure for Research</strong> — academic credit programs for cloud HPC, useful for the Beowulf-style labs and for ParallelCluster work.</p></li>
+</ul>
+<p>Application processes vary from “submit a one-page form” (Colab, ACCESS Explore) to “write a five-page proposal with a science case” (OLCF DD, LUMI extreme scale). Plan ahead. Allocations on the real machines are competitive and worth practicing for, even if you don’t end up using them — the proposal-writing process is itself a useful HPC skill.</p>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="references.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">References</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-completing-the-course-looks-like">What “completing the course” looks like</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-rubric-for-classroom-use">Suggested rubric for classroom use</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#final-project-portfolio">Final project portfolio</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reproducibility-expectations">Reproducibility expectations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#suggested-reading-memos">Suggested reading memos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-hardware-access">A note on hardware access</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#free-educational-allocations-on-real-hpc-systems">Free educational allocations on real HPC systems</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

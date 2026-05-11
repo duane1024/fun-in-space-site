@@ -1,0 +1,691 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 3 — Vector Fortran and the Birth of Vectorization &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-03-vector-fortran';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing" href="week-04-shared-memory-vectors.html" />
+    <link rel="prev" title="Week 2 — The Cray-1 (1976): Vectors Become a Product" href="week-02-cray-1.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-03-vector-fortran.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 3 — Vector Fortran and the Birth of Vectorization</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cft-the-compiler-that-made-the-cray-1-a-product">CFT: the compiler that made the Cray-1 a product</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-compiler-programmer-collaboration">The compiler-programmer collaboration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-transformations-the-seven-big-moves">Loop transformations: the seven big moves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-interchange">Loop interchange</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strip-mining">Strip-mining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-distribution-fission">Loop distribution / fission</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-expansion">Scalar expansion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vectorizable-reductions">Vectorizable reductions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-worked-example-5-point-stencil">A worked example: 5-point stencil</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-directive-bridge-historical-to-modern">The directive bridge: historical to modern</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-compiler-vectorization-on-a-modern-laptop">Lab — Compiler vectorization on a modern laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-3-vector-fortran-and-the-birth-of-vectorization">
+<h1>Week 3 — Vector Fortran and the Birth of Vectorization<a class="headerlink" href="#week-3-vector-fortran-and-the-birth-of-vectorization" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>When you write a <code class="docutils literal notranslate"><span class="pre">for</span></code> loop and the compiler emits AVX-512 or NEON or SVE instructions, every concept it uses to decide what’s safe to vectorize — dependency analysis, alias analysis, loop interchange, strip-mining, scalar expansion, idiom recognition — was developed in the late 1970s and early 1980s for one purpose: getting Fortran to run fast on a Cray. The toolkit hasn’t really changed. The targets have.</p>
+<p>This week we look at the programming model, what the compiler had to do, and what you, the programmer, had to do when the compiler couldn’t.</p>
+</section>
+<section id="cft-the-compiler-that-made-the-cray-1-a-product">
+<h2>CFT: the compiler that made the Cray-1 a product<a class="headerlink" href="#cft-the-compiler-that-made-the-cray-1-a-product" title="Link to this heading">#</a></h2>
+<p>The Cray-1’s hardware was a marvel, but for it to <em>sell</em> the compiler had to be excellent. The first Cray-1 shipped without a vectorizing compiler at all — Los Alamos got a scalar Fortran compiler and Cray’s promise that vectorization was coming. CFT — Cray Fortran Translator — arrived shortly after and was the first production-quality auto-vectorizer in the world.</p>
+<p>CFT operated on stock Fortran-66 and Fortran-77 source. The contract was: write your loops as you always have, and we will turn them into vector instructions where it’s safe. “Where it’s safe” was the work. Consider:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p>This loop has a <strong>read-after-write dependency</strong> through <code class="docutils literal notranslate"><span class="pre">A</span></code>: iteration <code class="docutils literal notranslate"><span class="pre">I</span></code> reads what iteration <code class="docutils literal notranslate"><span class="pre">I-1</span></code> wrote. If you turn it into a vector instruction, all 64 elements are read at once, before any writes from previous iterations have happened. The result is wrong. CFT had to <em>not</em> vectorize this loop, despite it being structurally identical to:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p>which is perfectly safe.</p>
+<p>The dependency analysis required to make this distinction — figuring out when <code class="docutils literal notranslate"><span class="pre">A(I-1)</span></code> and <code class="docutils literal notranslate"><span class="pre">A(I)</span></code> alias, when they’re independent, when they alias only sometimes — is what’s now called <strong>iteration-space dependency testing</strong>. The classical algorithms (GCD test, Banerjee test, Omega test) were developed by David Kuck’s group at Illinois (Parafrase, KAP) and Randy Allen and Ken Kennedy at Rice during the late 1970s and 1980s, <em>specifically</em> to make CFT and competing vectorizing Fortran compilers smarter. Every modern C/C++ compiler’s loop optimizer is a direct descendant.</p>
+</section>
+<section id="the-compiler-programmer-collaboration">
+<h2>The compiler-programmer collaboration<a class="headerlink" href="#the-compiler-programmer-collaboration" title="Link to this heading">#</a></h2>
+<p>Auto-vectorization in the 1970s was, and remains today, <strong>conservative</strong>. When in doubt, the compiler must produce scalar code. So the Cray-Fortran ecosystem grew a vocabulary of programmer-supplied promises:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">!DIR$ IVDEP</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">K</span><span class="p">(</span><span class="n">I</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">IVDEP</span></code> — Ignore Vector Dependencies — tells the compiler “I, the programmer, promise no element of <code class="docutils literal notranslate"><span class="pre">A(K(I))</span></code> overlaps with <code class="docutils literal notranslate"><span class="pre">A(I)</span></code> for the iteration range I care about. Vectorize this loop.” If you lie, the answer is silently wrong. Modern OpenMP <code class="docutils literal notranslate"><span class="pre">#pragma</span> <span class="pre">omp</span> <span class="pre">simd</span></code> is the same idea.</p>
+<p>Other directives in the era:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">!DIR$</span> <span class="pre">VECTOR</span> <span class="pre">ALWAYS</span></code> — force vectorization even if cost model thinks it’s a loss.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">!DIR$</span> <span class="pre">NOVECTOR</span></code> — don’t even try.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">!DIR$</span> <span class="pre">SHORTLOOP</span></code> — promise the trip count fits in a single vector register, skip the strip-mine wrapper.</p></li>
+</ul>
+<p>Every one of these has a 2026 equivalent in the GCC, Clang, Intel ICX, NVHPC, and Cray (now HPE) compilers.</p>
+</section>
+<section id="loop-transformations-the-seven-big-moves">
+<h2>Loop transformations: the seven big moves<a class="headerlink" href="#loop-transformations-the-seven-big-moves" title="Link to this heading">#</a></h2>
+<p>CFT and its descendants relied on a small set of source-level transformations to expose vectorization. You should recognize all of these because they’re still in use:</p>
+<section id="loop-interchange">
+<h3>Loop interchange<a class="headerlink" href="#loop-interchange" title="Link to this heading">#</a></h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>      DO 10 J = 1, N        DO 10 I = 1, N
+        DO 20 I = 1, N    →   DO 20 J = 1, N
+          A(I,J) = ...          A(I,J) = ...
+   20   CONTINUE         20   CONTINUE
+   10 CONTINUE           10 CONTINUE
+</pre></div>
+</div>
+<p>In Fortran, <code class="docutils literal notranslate"><span class="pre">A(I,J)</span></code> is column-major: <code class="docutils literal notranslate"><span class="pre">I</span></code> is the fast-varying index. If your inner loop runs over <code class="docutils literal notranslate"><span class="pre">J</span></code>, you stride across columns and your vector loads have stride <code class="docutils literal notranslate"><span class="pre">N</span></code> rather than 1. Interchange the loops, and stride-1 access lights up the memory subsystem.</p>
+<p>This is exactly the same transformation a 2026 compiler does to convert <code class="docutils literal notranslate"><span class="pre">for(i){</span> <span class="pre">for(j){</span> <span class="pre">A[i][j]</span> <span class="pre">}}</span></code> into row-major-friendly form for AVX, and the same transformation NVIDIA’s <code class="docutils literal notranslate"><span class="pre">nvcc</span></code> does to coalesce global memory accesses on a GPU. Different machine, same problem: feed the vector unit at peak bandwidth.</p>
+</section>
+<section id="strip-mining">
+<h3>Strip-mining<a class="headerlink" href="#strip-mining" title="Link to this heading">#</a></h3>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="o">*</span><span class="w">       </span><span class="n">Original</span><span class="p">:</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+
+<span class="o">*</span><span class="w">       </span><span class="n">Strip</span><span class="o">-</span><span class="n">mined</span><span class="w"> </span><span class="n">for</span><span class="w"> </span><span class="n">vector</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="mi">64</span><span class="p">:</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">20</span><span class="w"> </span><span class="n">II</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span>
+<span class="w">        </span><span class="n">ILEN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">MIN</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">II</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="c">! Inner &#39;loop&#39; is one vector instruction sequence of length ILEN</span>
+<span class="w">        </span><span class="k">DO </span><span class="mi">30</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">II</span><span class="p">,</span><span class="w"> </span><span class="n">II</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ILEN</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">          </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">30</span><span class="w">   </span><span class="k">CONTINUE</span>
+<span class="k">   </span><span class="mi">20</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p>You don’t write strip-mining yourself in Fortran — the compiler does. But conceptually this is what every vector compiler must do for any loop trip count that isn’t statically the vector length. AVX-512 vectorizers do this; CUDA does it implicitly via thread block sizing.</p>
+</section>
+<section id="loop-distribution-fission">
+<h3>Loop distribution / fission<a class="headerlink" href="#loop-distribution-fission" title="Link to this heading">#</a></h3>
+<p>If a loop has both vectorizable and non-vectorizable parts, split it into two loops. The vectorizable one runs at full speed; the other stays scalar:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="o">*</span><span class="w">       </span><span class="n">Mixed</span><span class="p">:</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w">            </span><span class="c">! vectorizable</span>
+<span class="w">        </span><span class="k">IF</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="n">LT</span><span class="p">.</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">STOP</span><span class="w"> </span><span class="s1">&#39;BAD&#39;</span><span class="w">   </span><span class="c">! not vectorizable</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+
+<span class="o">*</span><span class="w">       </span><span class="n">After</span><span class="w"> </span><span class="n">fission</span><span class="p">:</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">20</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">C</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">20</span><span class="w"> </span><span class="k">CONTINUE</span>
+<span class="k">      DO </span><span class="mi">30</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="k">IF</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="p">.</span><span class="n">LT</span><span class="p">.</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">STOP</span><span class="w"> </span><span class="s1">&#39;BAD&#39;</span>
+<span class="w">   </span><span class="mi">30</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+</section>
+<section id="scalar-expansion">
+<h3>Scalar expansion<a class="headerlink" href="#scalar-expansion" title="Link to this heading">#</a></h3>
+<p>Eliminate a loop-carried dependency on a scalar by promoting it to a temporary array:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>      DO 10 I = 1, N           DO 10 I = 1, N
+        T = X(I)*X(I) + 1   →    T(I) = X(I)*X(I) + 1
+        Y(I) = T*A             Y(I) = T(I)*A
+   10 CONTINUE                10 CONTINUE
+</pre></div>
+</div>
+<p>The first loop has every iteration writing <code class="docutils literal notranslate"><span class="pre">T</span></code>, which a naïve dependency analyzer flags. The second has each iteration writing a different element. Auto-vectorizers do this implicitly today by recognizing that <code class="docutils literal notranslate"><span class="pre">T</span></code> is dead between iterations.</p>
+</section>
+<section id="vectorizable-reductions">
+<h3>Vectorizable reductions<a class="headerlink" href="#vectorizable-reductions" title="Link to this heading">#</a></h3>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">S</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="o">*</span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p>Loop-carried dependency on <code class="docutils literal notranslate"><span class="pre">S</span></code> — but the operation is associative (well, almost — floating-point addition is not strictly associative; you accept the rounding difference for performance). The compiler issues parallel partial sums in vector registers and reduces at the end. This is the exact same reduction every modern parallel framework supports.</p>
+</section>
+</section>
+<section id="a-worked-example-5-point-stencil">
+<h2>A worked example: 5-point stencil<a class="headerlink" href="#a-worked-example-5-point-stencil" title="Link to this heading">#</a></h2>
+<p>A 2D Laplacian update:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">DO </span><span class="mi">20</span><span class="w"> </span><span class="n">J</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">        </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">M</span><span class="o">-</span><span class="mi">1</span>
+<span class="w">          </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.25</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">J</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">J</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">J</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+<span class="w">   </span><span class="mi">10</span><span class="w">   </span><span class="k">CONTINUE</span>
+<span class="k">   </span><span class="mi">20</span><span class="w"> </span><span class="k">CONTINUE</span>
+</pre></div>
+</div>
+<p>The inner loop is over <code class="docutils literal notranslate"><span class="pre">I</span></code>, the fast-varying index — good, stride-1. There are no loop-carried dependencies in <code class="docutils literal notranslate"><span class="pre">I</span></code> (every <code class="docutils literal notranslate"><span class="pre">B(I,J)</span></code> is independent of every other; the read of <code class="docutils literal notranslate"><span class="pre">A</span></code> looks at a previous column <code class="docutils literal notranslate"><span class="pre">J-1</span></code> but never at <code class="docutils literal notranslate"><span class="pre">B</span></code>). CFT vectorizes the inner loop trivially. Strip-mined to vector length 64, the inner loop becomes:</p>
+<ul class="simple">
+<li><p>Load 64 elements of <code class="docutils literal notranslate"><span class="pre">A(I-1,J)</span></code> (vector load, stride 1, slightly offset)</p></li>
+<li><p>Load 64 elements of <code class="docutils literal notranslate"><span class="pre">A(I+1,J)</span></code> (vector load, stride 1, slightly offset the other way)</p></li>
+<li><p>Load 64 elements of <code class="docutils literal notranslate"><span class="pre">A(I,J-1)</span></code> (one column back, stride 1)</p></li>
+<li><p>Load 64 elements of <code class="docutils literal notranslate"><span class="pre">A(I,J+1)</span></code> (one column forward, stride 1)</p></li>
+<li><p>Vector add, vector add, vector add (chained)</p></li>
+<li><p>Vector multiply by 0.25 (chained — actually fused in via FMA-equivalent on later Crays)</p></li>
+<li><p>Vector store</p></li>
+</ul>
+<p>A dozen instructions per 64 grid points. This kernel was the standard demo of vector machines, and it’s still the standard demo of every SIMD ISA today.</p>
+</section>
+<section id="the-directive-bridge-historical-to-modern">
+<h2>The directive bridge: historical to modern<a class="headerlink" href="#the-directive-bridge-historical-to-modern" title="Link to this heading">#</a></h2>
+<p>One of the more pleasant features of the Cray-derived vector idiom is that almost all of it translates directly into modern code. Here is a Cray-style annotation alongside its 2026 equivalent:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="c">! Cray-style: vendor directives on a vector multiprocessor.</span>
+<span class="n">CMIC$</span><span class="w"> </span><span class="n">DOALL</span><span class="w"> </span><span class="n">SHARED</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="k">PRIVATE</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="c">!DIR$ IVDEP</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">C</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+
+<span class="c">! Modern equivalent, same semantics, same idiom:</span>
+<span class="c">!$OMP PARALLEL DO SHARED(A, B, C) PRIVATE(I)</span>
+<span class="c">!$OMP SIMD</span>
+<span class="w">      </span><span class="k">DO </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">C</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">      </span><span class="k">END DO</span>
+</pre></div>
+</div>
+<p>The directive language changed; the <em>contract between programmer and compiler</em> did not. <code class="docutils literal notranslate"><span class="pre">CMIC$</span> <span class="pre">DOALL</span></code> becomes <code class="docutils literal notranslate"><span class="pre">!$OMP</span> <span class="pre">PARALLEL</span> <span class="pre">DO</span></code>; <code class="docutils literal notranslate"><span class="pre">!DIR$</span> <span class="pre">IVDEP</span></code> becomes <code class="docutils literal notranslate"><span class="pre">!$OMP</span> <span class="pre">SIMD</span></code> (or the C99 <code class="docutils literal notranslate"><span class="pre">restrict</span></code> keyword in C); the body of the loop is identical. A working engineer reading 1985 Cray code should be able to mentally substitute the modern directive and run it under any current OpenMP-capable compiler. This is why HPC codebases survive across hardware generations: the <em>idiom</em> is durable even when the <em>syntax</em> turns over.</p>
+</section>
+<section id="lab-compiler-vectorization-on-a-modern-laptop">
+<h2>Lab — Compiler vectorization on a modern laptop<a class="headerlink" href="#lab-compiler-vectorization-on-a-modern-laptop" title="Link to this heading">#</a></h2>
+<p>Even though we don’t have a Cray-1, every modern compiler is essentially a souped-up CFT. In <code class="docutils literal notranslate"><span class="pre">labs/03-vectorize/</span></code> we work through six small loops in C — some easy to vectorize, some hard, some impossible — and read the compiler’s vectorization report:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>clang<span class="w"> </span>-O3<span class="w"> </span>-Rpass<span class="o">=</span>loop-vectorize<span class="w"> </span>-Rpass-missed<span class="o">=</span>loop-vectorize<span class="w"> </span><span class="se">\</span>
+<span class="w">      </span>-Rpass-analysis<span class="o">=</span>loop-vectorize<span class="w"> </span>loops.c<span class="w"> </span>-c
+</pre></div>
+</div>
+<p>You’ll see the compiler succeeding, failing, and asking for help. The point: the conversation between programmer and compiler that started in 1976 has not ended. You’re on the same side of it.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>The <code class="docutils literal notranslate"><span class="pre">IVDEP</span></code> directive lets the programmer override the compiler’s dependency analysis. What’s the equivalent in modern C? In modern C++? In Fortran 2008? Why have multiple equivalents emerged rather than one converging on a standard?</p></li>
+<li><p>CFT was conservative: when in doubt, generate scalar code. Modern auto-vectorizers are also conservative, but for <em>different</em> reasons (alias analysis through pointers, runtime trip counts, function calls inside loops). Pick one of those reasons and explain why it would not have applied to a Cray-1 Fortran program.</p></li>
+<li><p>Strip-mining produces a clean-up tail for the last <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">mod</span> <span class="pre">VL</span></code> elements. On the Cray-1, this was scalar. On AVX-512, it can be a masked vector instruction. What does the existence of <em>masked</em> vector instructions tell you about the architectural tradeoff between Cray-style fixed-length vectors and modern variable-length vectors (ARM SVE, RISC-V V)?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Allen, J.R. &amp; Kennedy, K. (1987). “Automatic translation of FORTRAN programs to vector form”. <em>ACM TOPLAS</em>. The canonical paper on what CFT-class compilers do.</p></li>
+<li><p>Padua, D.A. &amp; Wolfe, M.J. (1986). “Advanced compiler optimizations for supercomputers”. <em>CACM</em>. Wolfe later wrote the textbook <em>High Performance Compilers for Parallel Computing</em>; both are essential.</p></li>
+<li><p>Cray Research, <em>CFT Reference Manual</em>, publication SR-0009. On bitsavers.</p></li>
+<li><p>Modern counterpart: Maleki, Saeed et al. (2011). “An evaluation of vectorizing compilers”. <em>PACT</em>. Comparison of GCC, ICC, IBM XL on a 151-loop benchmark suite — sobering reading.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-02-cray-1.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 2 — The Cray-1 (1976): Vectors Become a Product</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-04-shared-memory-vectors.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cft-the-compiler-that-made-the-cray-1-a-product">CFT: the compiler that made the Cray-1 a product</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-compiler-programmer-collaboration">The compiler-programmer collaboration</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-transformations-the-seven-big-moves">Loop transformations: the seven big moves</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-interchange">Loop interchange</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#strip-mining">Strip-mining</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#loop-distribution-fission">Loop distribution / fission</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#scalar-expansion">Scalar expansion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vectorizable-reductions">Vectorizable reductions</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-worked-example-5-point-stencil">A worked example: 5-point stencil</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-directive-bridge-historical-to-modern">The directive bridge: historical to modern</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-compiler-vectorization-on-a-modern-laptop">Lab — Compiler vectorization on a modern laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,688 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 9 — MPI: The Standard That Stuck &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-09-mpi';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 10 — Beowulf and the Death of Bespoke" href="week-10-beowulf.html" />
+    <link rel="prev" title="Week 8 — MIMD MPP: The Killer Micros, Connected" href="week-08-mimd-mpp.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-09-mpi.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 9 — MPI: The Standard That Stuck</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mpi-forum-and-the-standardization-process">The MPI Forum and the standardization process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-conceptual-core">The conceptual core</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-first-program">A first program</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#point-to-point-send-and-receive">Point-to-point: send and receive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collectives-where-the-speed-lives">Collectives: where the speed lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#worked-example-1d-heat-equation">Worked example: 1D heat equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-performance-model-alpha-beta">The performance model: alpha-beta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-mpi-is-not">What MPI is <em>not</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-mpi-on-your-laptop">Lab — MPI on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-9-mpi-the-standard-that-stuck">
+<h1>Week 9 — MPI: The Standard That Stuck<a class="headerlink" href="#week-9-mpi-the-standard-that-stuck" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>The Message Passing Interface, MPI, has been the dominant programming model for distributed-memory parallel computing for more than thirty years. <em>Every</em> machine in the Top500 supports it. Every major scientific code uses it directly or indirectly. The current MPI standard is MPI-5.0, approved by the MPI Forum in 2025; it is hundreds of pages, with thousands of functions, but the core conceptual surface is the same six calls it had in 1994. This is the rare standardization success in HPC: a portable, vendor-neutral API that vendors actually implemented and users actually adopted.</p>
+<p>This week is about how MPI works, why it won, and how to write the code your grandparents would recognize.</p>
+</section>
+<section id="the-mpi-forum-and-the-standardization-process">
+<h2>The MPI Forum and the standardization process<a class="headerlink" href="#the-mpi-forum-and-the-standardization-process" title="Link to this heading">#</a></h2>
+<p>In April 1992, frustration with the proliferation of incompatible message-passing libraries (Intel NX, PVM, IBM MPL, Vendor X’s library, Vendor Y’s library) drove a workshop at Williamsburg, Virginia. Out of it came the <strong>MPI Forum</strong>: a working group of vendors (Intel, IBM, Cray, TMC), labs (LANL, ORNL, Argonne), academics (Mississippi State, Edinburgh, Rice). They met for two years.</p>
+<p><strong>MPI-1</strong> was published in May 1994. <strong>MPICH</strong> (Argonne and Mississippi State) and <strong>LAM/MPI</strong> (Ohio Supercomputer Center) were free reference implementations. Vendors built their own optimized versions. The standard worked because:</p>
+<ol class="arabic simple">
+<li><p>The Forum required two independent implementations before any feature was standardized — this killed unrealistic specifications.</p></li>
+<li><p>The Forum included both vendors and large customers — so neither side could write a standard the other refused to implement or use.</p></li>
+<li><p>The standard was substantially based on already-deployed designs (NX, PVM, Zipcode), not invented from scratch — it codified existing practice.</p></li>
+</ol>
+<p>It’s a good model. People should study it more than they do.</p>
+</section>
+<section id="the-conceptual-core">
+<h2>The conceptual core<a class="headerlink" href="#the-conceptual-core" title="Link to this heading">#</a></h2>
+<p>MPI is built on five concepts:</p>
+<ol class="arabic simple">
+<li><p><strong>Process group</strong>: a set of processes participating in computation. Static, set at job launch by <code class="docutils literal notranslate"><span class="pre">mpiexec</span></code>.</p></li>
+<li><p><strong>Rank</strong>: each process has a unique integer ID, 0 to N-1.</p></li>
+<li><p><strong>Communicator</strong>: a handle that wraps a process group and a context. <code class="docutils literal notranslate"><span class="pre">MPI_COMM_WORLD</span></code> includes all processes; you can create sub-communicators for collective operations on subsets.</p></li>
+<li><p><strong>Message</strong>: a buffer of typed data, plus a tag (integer used for matching) and source/dest ranks.</p></li>
+<li><p><strong>Collective operation</strong>: an operation involving all processes in a communicator (broadcast, reduce, scatter, gather, all-to-all). Collectives are highly optimized by MPI implementations and are usually faster than hand-written equivalents using point-to-point.</p></li>
+</ol>
+</section>
+<section id="a-first-program">
+<h2>A first program<a class="headerlink" href="#a-first-program" title="Link to this heading">#</a></h2>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">**</span><span class="w"> </span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Hello from rank %d of %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Compile and run:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpicc<span class="w"> </span>hello.c<span class="w"> </span>-o<span class="w"> </span>hello
+mpirun<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./hello
+</pre></div>
+</div>
+<p>Output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Hello</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rank</span> <span class="mi">2</span> <span class="n">of</span> <span class="mi">4</span>
+<span class="n">Hello</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rank</span> <span class="mi">0</span> <span class="n">of</span> <span class="mi">4</span>
+<span class="n">Hello</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rank</span> <span class="mi">1</span> <span class="n">of</span> <span class="mi">4</span>
+<span class="n">Hello</span> <span class="kn">from</span><span class="w"> </span><span class="nn">rank</span> <span class="mi">3</span> <span class="n">of</span> <span class="mi">4</span>
+</pre></div>
+</div>
+<p>(The order is unspecified — they’re concurrent processes, racing to stdout.)</p>
+</section>
+<section id="point-to-point-send-and-receive">
+<h2>Point-to-point: send and receive<a class="headerlink" href="#point-to-point-send-and-receive" title="Link to this heading">#</a></h2>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Send</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Status</span><span class="w"> </span><span class="n">status</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Recv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_INT</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">status</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;Got %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Six-argument send: buffer, count, type, destination, tag, communicator. Same shape for receive. The tag and types let MPI match heterogeneous sends with the right receives. The status object reports who actually sent (useful when you receive with <code class="docutils literal notranslate"><span class="pre">MPI_ANY_SOURCE</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">MPI_Send</span></code> is a <em>blocking</em> send. It returns when the buffer is safe to reuse — which may be after the message is copied to a system buffer (immediate), or after it’s actually delivered to the destination (deferred). The standard does not require either; the implementation chooses based on message size and resource availability. This subtlety bites everyone at least once.</p>
+<p>For known-async behavior, use <code class="docutils literal notranslate"><span class="pre">MPI_Isend</span></code> / <code class="docutils literal notranslate"><span class="pre">MPI_Irecv</span></code> (immediate, returns instantly with a handle you <code class="docutils literal notranslate"><span class="pre">MPI_Wait</span></code> on later).</p>
+</section>
+<section id="collectives-where-the-speed-lives">
+<h2>Collectives: where the speed lives<a class="headerlink" href="#collectives-where-the-speed-lives" title="Link to this heading">#</a></h2>
+<p>A common pattern: every process computes a partial sum, you want the global sum.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">double</span><span class="w"> </span><span class="n">local</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compute_partial</span><span class="p">();</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">total</span><span class="p">;</span>
+<span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">total</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="c1">// rank 0 now has total</span>
+</pre></div>
+</div>
+<p>MPI implementations turn this into a <span class="math notranslate nohighlight">\(O(\log P)\)</span> tree reduction, sometimes hardware-accelerated by network collectives such as Mellanox/NVIDIA SHARP or HPE Cray collective offload. Related GPU libraries such as NCCL do the same kind of topology-aware collective optimization inside accelerator-heavy nodes and clusters. Hand-rolling this with point-to-point is often much slower because you can’t see the topology of the network and the implementation can.</p>
+<p>Other essentials:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Bcast(buf,</span> <span class="pre">...,</span> <span class="pre">root,</span> <span class="pre">comm)</span></code> — root sends to all</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Scatter</span></code> — root distributes a array, each rank gets a slice</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Gather</span></code> — opposite of scatter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Allreduce</span></code> — reduce, but all ranks see the result</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MPI_Alltoall</span></code> — every-to-every transpose, the bandwidth-killer</p></li>
+</ul>
+</section>
+<section id="worked-example-1d-heat-equation">
+<h2>Worked example: 1D heat equation<a class="headerlink" href="#worked-example-1d-heat-equation" title="Link to this heading">#</a></h2>
+<p>Domain: 1D bar, length 1, divided into N grid points. Update rule: each step, every interior point becomes the average of itself and its two neighbors. Run T steps.</p>
+<p>The parallelization: divide the grid into P contiguous chunks, one per rank. Each step:</p>
+<ol class="arabic simple">
+<li><p>Exchange “halo” cells with left and right neighbors.</p></li>
+<li><p>Update interior of own chunk.</p></li>
+<li><p>Repeat T times.</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// pseudocode</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">local_n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">u</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">((</span><span class="n">local_n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span><span class="w">   </span><span class="c1">// +2 for halo cells</span>
+<span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">un</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">((</span><span class="n">local_n</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">T</span><span class="p">;</span><span class="w"> </span><span class="n">t</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Halo exchange</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">left</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Sendrecv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">u</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w">         </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w">  </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&amp;</span><span class="n">u</span><span class="p">[</span><span class="n">local_n</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Sendrecv</span><span class="p">(</span><span class="o">&amp;</span><span class="n">u</span><span class="p">[</span><span class="n">local_n</span><span class="p">],</span><span class="w">   </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">right</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&amp;</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w">         </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">left</span><span class="p">,</span><span class="w">  </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_STATUS_IGNORE</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Update interior</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">local_n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="n">un</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">0.25</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="mi">-1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">u</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]);</span>
+
+<span class="w">    </span><span class="c1">// Swap pointers</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">tmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span><span class="p">;</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">un</span><span class="p">;</span><span class="w"> </span><span class="n">un</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tmp</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This is the canonical MPI program. Halo exchange + local update + repeat. Three-quarters of every climate model, every CFD code, every reservoir simulator on Earth is doing some version of this, in 3D, with more variables, with more sophisticated communication overlap. But the bones are the same.</p>
+</section>
+<section id="the-performance-model-alpha-beta">
+<h2>The performance model: alpha-beta<a class="headerlink" href="#the-performance-model-alpha-beta" title="Link to this heading">#</a></h2>
+<p>A typical message passing cost model:</p>
+<div class="math notranslate nohighlight">
+\[T_{message}(n) = \alpha + n \cdot \beta\]</div>
+<p>where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\alpha\)</span> is the per-message latency (in seconds): bus traversals, software overheads, hardware tag matching. On a modern InfiniBand fabric, ~1 µs.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\beta\)</span> is the per-byte transfer cost (s/byte): inverse of bandwidth. At 200 Gb/s, ~40 ps/byte.</p></li>
+</ul>
+<p>For small messages, <span class="math notranslate nohighlight">\(\alpha\)</span> dominates. For large messages, <span class="math notranslate nohighlight">\(\beta\)</span> dominates. The crossover is at <span class="math notranslate nohighlight">\(n^* = \alpha/\beta\)</span>, in our example ~25 KB.</p>
+<p>This drives much of MPI program design: aggregate small messages, hide latency by overlapping computation with communication, choose collective patterns whose tree depth fits the cost model. A program that does <span class="math notranslate nohighlight">\(10^6\)</span> tiny messages per step will be ruined by <span class="math notranslate nohighlight">\(\alpha\)</span>; the same program restructured to do <span class="math notranslate nohighlight">\(10^3\)</span> medium messages per step will be limited by <span class="math notranslate nohighlight">\(\beta\)</span>, which is much closer to peak bandwidth.</p>
+</section>
+<section id="what-mpi-is-not">
+<h2>What MPI is <em>not</em><a class="headerlink" href="#what-mpi-is-not" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Not a thread library.</strong> Each MPI rank is typically a separate process. Threading inside a rank is your problem, usually with OpenMP. The hybrid “MPI + OpenMP” pattern is standard.</p></li>
+<li><p><strong>Not a runtime.</strong> MPI doesn’t dynamically schedule work, balance load, or handle failures gracefully. You do those.</p></li>
+<li><p><strong>Not opinionated about data layout.</strong> Every rank holds whatever arrays you tell it to. The <code class="docutils literal notranslate"><span class="pre">MPI_Type_*</span></code> machinery lets you describe non-contiguous data, but you have to do the describing.</p></li>
+</ul>
+<p>These omissions are why MPI has lasted thirty years and why it gets criticized regularly. The <em>minimal</em> design is the reason it worked across heterogeneous hardware. It’s also the reason that writing a fault-tolerant, dynamically-load-balanced MPI program is hard.</p>
+</section>
+<section id="lab-mpi-on-your-laptop">
+<h2>Lab — MPI on your laptop<a class="headerlink" href="#lab-mpi-on-your-laptop" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">labs/09-mpi-stencil/</span></code> contains a complete buildable 1D heat-equation solver in MPI. We use <strong>MPICH</strong> (free, easy to install on macOS via Homebrew or on Linux via package manager). On a laptop you typically run it as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpicc<span class="w"> </span>heat1d.c<span class="w"> </span>-O3<span class="w"> </span>-o<span class="w"> </span>heat1d
+mpirun<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>./heat1d<span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="m">1000</span>
+</pre></div>
+</div>
+<p>The lab walks you through:</p>
+<ol class="arabic simple">
+<li><p>Verifying that 1, 2, 4, 8 ranks all produce the same answer.</p></li>
+<li><p>Measuring strong scaling (fixed problem, more ranks).</p></li>
+<li><p>Measuring weak scaling (problem grows with ranks).</p></li>
+<li><p>Modifying the code to overlap halo exchange with interior computation using <code class="docutils literal notranslate"><span class="pre">MPI_Isend</span></code>/<code class="docutils literal notranslate"><span class="pre">MPI_Irecv</span></code>.</p></li>
+</ol>
+<p>Even on a laptop you’ll see real scaling effects — and you’ll see strong scaling break down at high rank counts as <span class="math notranslate nohighlight">\(\alpha\)</span> overwhelms the per-rank work.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>MPI has thousands of functions but a tiny conceptual core. Pick a <em>different</em> successful API standard (POSIX, OpenGL, S3) and identify <em>its</em> conceptual core. What’s similar? What’s different about HPC that justifies MPI’s particular shape?</p></li>
+<li><p>MPI requires explicit data marshalling — you say which buffers go where. Modern accelerator APIs (CUDA Unified Memory, SYCL USM) are moving toward implicit data movement. Is implicit data movement obviously better? What does it cost, and what does it gain?</p></li>
+<li><p>MPI is not fault-tolerant: if one rank dies, the whole job dies. At exascale, mean time between hardware failures can be hours. How does the HPC ecosystem currently work around this? (Hint: BLCR, DMTCP, application-level checkpoints, MPI ULFM.)</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Gropp, Lusk &amp; Skjellum (2014). <em>Using MPI: Portable Parallel Programming with the Message-Passing Interface</em>, 3rd ed. The textbook.</p></li>
+<li><p>The MPI Standard itself (<a class="reference external" href="http://mpi-forum.org">mpi-forum.org</a>). Free PDF. Treat it like a reference, not bedside reading.</p></li>
+<li><p>Snir, M. et al. (1996). <em>MPI: The Complete Reference</em>. The MPI-1 era reference, useful for understanding why things ended up the way they did.</p></li>
+<li><p>The MPI Forum minutes are public. The 1992–94 minutes are a fascinating record of how a successful standardization process actually negotiates trade-offs.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-08-mimd-mpp.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 8 — MIMD MPP: The Killer Micros, Connected</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-10-beowulf.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 10 — Beowulf and the Death of Bespoke</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mpi-forum-and-the-standardization-process">The MPI Forum and the standardization process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-conceptual-core">The conceptual core</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-first-program">A first program</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#point-to-point-send-and-receive">Point-to-point: send and receive</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#collectives-where-the-speed-lives">Collectives: where the speed lives</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#worked-example-1d-heat-equation">Worked example: 1D heat equation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-performance-model-alpha-beta">The performance model: alpha-beta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-mpi-is-not">What MPI is <em>not</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-mpi-on-your-laptop">Lab — MPI on your laptop</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

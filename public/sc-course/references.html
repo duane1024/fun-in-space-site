@@ -1,0 +1,738 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>References &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'references';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Assessment and Project Guide" href="assessment.html" />
+    <link rel="prev" title="Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster" href="appendix-hpc-vs-ai-cluster.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="weeks/week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/references.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>References</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-history">General history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-1-cdc-6600-and-pre-history">Week 1 — CDC 6600 and pre-history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-2-cray-1">Week 2 — Cray-1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-3-vector-fortran-and-vectorization">Week 3 — Vector Fortran and vectorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-4-x-mp-cray-2-y-mp">Week 4 — X-MP, Cray-2, Y-MP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-5-japanese-vector-machines">Week 5 — Japanese vector machines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-6-vector-wall-eta-10-cray-3">Week 6 — Vector wall, ETA-10, Cray-3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-7-connection-machine">Week 7 — Connection Machine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-8-mimd-mpp">Week 8 — MIMD MPP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-9-mpi">Week 9 — MPI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-10-beowulf">Week 10 — Beowulf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-11-asci-bluegene">Week 11 — ASCI / BlueGene</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-12-earth-simulator">Week 12 — Earth Simulator</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-13-cuda-simt">Week 13 — CUDA / SIMT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-14-exascale">Week 14 — Exascale</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-15-anatomy">Week 15 — Anatomy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capstone">Capstone</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-and-mini-apps-for-projects">Datasets and mini-apps for projects</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modern-long-form-essays-free-online-recommended">Modern long-form essays (free online, recommended)</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="references">
+<h1>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h1>
+<p>Annotated reading list, organized roughly by chapter. Items marked <strong>★</strong> are primary sources I’d consider essential for anyone wanting to go deeper.</p>
+<section id="general-history">
+<h2>General history<a class="headerlink" href="#general-history" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Murray, Charles J. (1997). <em>The Supermen: The Story of Seymour Cray and the Technical Wizards Behind the Supercomputer</em>. Wiley. The standard popular history. Especially good on Cray Research, ETA Systems, and the cultural texture of the era.</p></li>
+<li><p>August, David (ed.) (2010, ongoing). <em>Recollections of the History of HPC</em>. IEEE Computer Society’s oral-history project. Many of these are public on the IEEE TCHPC site.</p></li>
+<li><p><em>Top500 list</em>, <a class="reference external" href="http://top500.org">top500.org</a>. The list and its archive (June 1993 onward) is the single best primary source on which architectures shipped in volume and when. Do read it as a chronological sequence.</p></li>
+<li><p><em>HPCG benchmark list</em>, <a class="reference external" href="http://top500.org/lists/hpcg">top500.org/lists/hpcg</a>. Use alongside Top500 when comparing memory-bound and sparse-solver behavior.</p></li>
+<li><p><em>HPCwire</em> archive (<a class="reference external" href="http://hpcwire.com">hpcwire.com</a>), 1986–present. Trade-press coverage with technical depth.</p></li>
+<li><p><em>IEEE Annals of the History of Computing</em>. Multiple supercomputer-focused issues over the years, all peer-reviewed.</p></li>
+<li><p>★ Dongarra, J. (continuous, 1979–present). <em>Performance of Various Computers Using Standard Linear Equations Software</em>. Technical report, University of Tennessee / Oak Ridge / Argonne. Updated quarterly. PDF: <a class="reference external" href="http://netlib.org/benchmark/performance.ps">netlib.org/benchmark/performance.ps</a>. The canonical record of per-CPU and per-system LINPACK results over four decades; the primary source for cross-vendor performance comparisons from 1979 through the rise of Top500.</p></li>
+</ul>
+</section>
+<section id="week-1-cdc-6600-and-pre-history">
+<h2>Week 1 — CDC 6600 and pre-history<a class="headerlink" href="#week-1-cdc-6600-and-pre-history" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Thornton, J.E. (1970). <em>Design of a Computer: The Control Data 6600</em>. Scott Foresman. The primary source. Available as PDF on <a class="reference external" href="http://bitsavers.org">bitsavers.org</a>.</p></li>
+<li><p>Hennessy, J.L. &amp; Patterson, D.A. <em>Computer Architecture: A Quantitative Approach</em> (any modern edition). Appendix C has the canonical scoreboarding example.</p></li>
+<li><p>Bell, C.G., Mudge, J.C., &amp; McNamara, J.E. (1978). <em>Computer Engineering: A DEC View of Hardware Systems Design</em>. Includes the Watson memo and contemporary IBM-vs-CDC analysis.</p></li>
+</ul>
+</section>
+<section id="week-2-cray-1">
+<h2>Week 2 — Cray-1<a class="headerlink" href="#week-2-cray-1" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Russell, Richard M. (1978). “The CRAY-1 Computer System”. <em>Communications of the ACM</em> 21(1):63–72. The canonical primary source.</p></li>
+<li><p><em>Cray-1 Computer System Hardware Reference Manual</em>, Cray Research publication 2240004. On <a class="reference external" href="http://bitsavers.org">bitsavers.org</a>.</p></li>
+<li><p><em>Cray-1 Computer System Hardware Reference Manual</em>, online HTML mirror by Ed Thelen. Useful for instruction timing tables and register details.</p></li>
+<li><p>Hennessy &amp; Patterson, Appendix G. Vector processors, Cray-1 worked example.</p></li>
+</ul>
+</section>
+<section id="week-3-vector-fortran-and-vectorization">
+<h2>Week 3 — Vector Fortran and vectorization<a class="headerlink" href="#week-3-vector-fortran-and-vectorization" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Allen, J.R. &amp; Kennedy, K. (1987). “Automatic translation of FORTRAN programs to vector form”. <em>ACM TOPLAS</em> 9(4):491–542.</p></li>
+<li><p>Padua, D.A. &amp; Wolfe, M.J. (1986). “Advanced compiler optimizations for supercomputers”. <em>CACM</em> 29(12):1184–1201.</p></li>
+<li><p>★ Wolfe, M. (1996). <em>High Performance Compilers for Parallel Computing</em>. Addison-Wesley. The textbook.</p></li>
+<li><p><em>CFT Reference Manual</em>, Cray Research publication SR-0009. On <a class="reference external" href="http://bitsavers.org">bitsavers.org</a>.</p></li>
+<li><p>HPE/Cray Fortran <code class="docutils literal notranslate"><span class="pre">IVDEP</span></code> directive documentation. Useful for tracing the Cray-style directive vocabulary forward into the modern HPE compiler.</p></li>
+<li><p>Maleki, Saeed et al. (2011). “An evaluation of vectorizing compilers”. <em>PACT ‘11</em>. Empirical comparison of GCC, ICC, IBM XL on a 151-loop benchmark.</p></li>
+</ul>
+</section>
+<section id="week-4-x-mp-cray-2-y-mp">
+<h2>Week 4 — X-MP, Cray-2, Y-MP<a class="headerlink" href="#week-4-x-mp-cray-2-y-mp" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Chen, S.S. (1984). “Large-scale and high-speed multiprocessor system for scientific applications: Cray X-MP series”. In Hwang (ed.), <em>Supercomputers: Design and Applications</em>.</p></li>
+<li><p>Cray Research (1989). <em>Multitasking Programmer’s Manual</em>, publication SR-0222.</p></li>
+<li><p>Bailey, D.H. et al. (1991). “The NAS Parallel Benchmarks”. <em>Int’l J. Supercomputing Applications</em> 5(3):63–73.</p></li>
+</ul>
+</section>
+<section id="week-5-japanese-vector-machines">
+<h2>Week 5 — Japanese vector machines<a class="headerlink" href="#week-5-japanese-vector-machines" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Watanabe, T. (1987). “Architecture and performance of the NEC SX-2”. <em>IEEE Computer</em> 20(4):3–13.</p></li>
+<li><p>Miura, K. &amp; Uchida, K. (1983). “Fujitsu VP-100/200: Vector machines for scientific computation”. <em>Proc. Supercomputing ‘83</em>.</p></li>
+<li><p>Habata, S., Yokokawa, M. &amp; Kitawaki, S. (2003). “The Earth Simulator system”. <em>NEC Research &amp; Development</em> 44(1):3–8.</p></li>
+<li><p>Reed, D. &amp; Dongarra, J. (2015). “Exascale computing and big data”. <em>CACM</em> 58(7):56–68.</p></li>
+<li><p>Top500 June 1993 and November 1993 lists. Use these to check early Top500 #1 claims; the first Japanese #1 was Fujitsu’s Numerical Wind Tunnel in November 1993.</p></li>
+<li><p>Top500 June 2002 list. Primary source for the Earth Simulator’s 35.86 TFLOPS Rmax and ASCI White comparison.</p></li>
+</ul>
+</section>
+<section id="week-6-vector-wall-eta-10-cray-3">
+<h2>Week 6 — Vector wall, ETA-10, Cray-3<a class="headerlink" href="#week-6-vector-wall-eta-10-cray-3" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Brooks, E. (1989). “Attack of the killer micros”. Lawrence Livermore National Laboratory. Widely circulated; reprinted in <em>HPCwire</em> 2009 retrospective.</p></li>
+<li><p>Schneck, P. (1987). <em>Supercomputer Architecture</em>. Kluwer. Contemporary analysis of Cyber 205, Cray X-MP, ETA-10.</p></li>
+<li><p>Wadsworth, A. (1996). “Cray Computer Corporation Chronology”. Personal record of CCC engineer.</p></li>
+<li><p>Markoff, J. (1996). “Seymour Cray, computer industry pioneer and father of supercomputer, dies at 71”. <em>NYT</em>, October 6.</p></li>
+</ul>
+</section>
+<section id="week-7-connection-machine">
+<h2>Week 7 — Connection Machine<a class="headerlink" href="#week-7-connection-machine" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Hillis, W.D. (1985). <em>The Connection Machine</em>. MIT Press. Available as PDF from Hillis’s website.</p></li>
+<li><p>Hillis, W.D. &amp; Steele, G.L. (1986). “Data parallel algorithms”. <em>CACM</em> 29(12):1170–1183.</p></li>
+<li><p>Steele, G.L. &amp; Hillis, W.D. (1986). “Connection Machine Lisp”. <em>Proc. LFP ‘86</em>.</p></li>
+<li><p>Thinking Machines Corp. (1987). <em>Connection Machine Model CM-2 Technical Summary</em>. Primary source for CM-2 memory and FPU organization.</p></li>
+<li><p>Thinking Machines Corp. (1991). <em>Programming the Connection Machine in C* and CM-Fortran</em>. Manuals on <a class="reference external" href="http://archive.org">archive.org</a>.</p></li>
+<li><p>High Performance Fortran Forum (1993, 1997). <em>High Performance Fortran Language Specification</em>, versions 1.0 and 2.0. <a class="reference external" href="http://crpc.rice.edu/HPFF/">crpc.rice.edu/HPFF/</a>. The standard.</p></li>
+<li><p>Kennedy, K., Koelbel, C. &amp; Zima, H. (2007). “The rise and fall of High Performance Fortran: An historical object lesson”. <em>Proc. HOPL III</em>. The retrospective by three principals in the HPF Forum; required reading on why HPF failed.</p></li>
+<li><p>Chamberlain, B.L., Callahan, D. &amp; Zima, H.P. (2007). “Parallel programmability and the Chapel language”. <em>Int’l J. HPC Applications</em> 21(3):291–312. The Chapel paper; Chapel is the most direct surviving HPF descendant.</p></li>
+</ul>
+</section>
+<section id="week-8-mimd-mpp">
+<h2>Week 8 — MIMD MPP<a class="headerlink" href="#week-8-mimd-mpp" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Pierce, P. (1988). “The NX/2 Operating System”. <em>Proc. Hypercube Concurrent Computers and Applications Conf.</em>.</p></li>
+<li><p>Cray Research (1995). <em>Cray T3E Programming Environment</em>, publication SR-2017. Defines SHMEM.</p></li>
+<li><p>Cray Research (1993). <em>Cray T3D System Architecture Overview</em>. Vendor architecture documentation; available via <a class="reference external" href="http://bitsavers.org">bitsavers.org</a> and Cray user-group archives.</p></li>
+<li><p>Scott, S.L. &amp; Thorson, G.M. (1996). “The Cray T3E network: Adaptive routing in a high-performance 3D torus”. <em>Hot Interconnects IV</em>. T3E interconnect design and routing.</p></li>
+<li><p>Mattson, T.G. (1995). <em>Programming with the Intel Paragon</em>.</p></li>
+<li><p>Intel SSD (1992). <em>Paragon XP/S Product Overview</em>. Vendor specification for the mesh interconnect and node layout.</p></li>
+<li><p>Mattson, T.G. &amp; Henderson, G. (1997). “ASCI Red: Experiences and lessons learned with a massively parallel teraFLOP supercomputer”. <em>Proc. SC97</em>. The first sustained-TFLOPS retrospective.</p></li>
+<li><p>Agerwala, T., Martin, J.L., Mirza, J.H., Sadler, D.C., Dias, D.M. &amp; Snir, M. (1995). “SP2 System Architecture”. <em>IBM Systems Journal</em> 34(2):152–184. The canonical SP2 hardware reference.</p></li>
+<li><p>Geist, A. et al. (1994). <em>PVM: Parallel Virtual Machine</em>. MIT Press.</p></li>
+<li><p>Reed, D. (2003). “ASCI Red: A history”. <em>HPCwire</em>.</p></li>
+</ul>
+</section>
+<section id="week-9-mpi">
+<h2>Week 9 — MPI<a class="headerlink" href="#week-9-mpi" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Gropp, W., Lusk, E. &amp; Skjellum, A. (2014). <em>Using MPI: Portable Parallel Programming with the Message-Passing Interface</em>, 3rd ed. The textbook.</p></li>
+<li><p><em>MPI Standard</em>, current version on <a class="reference external" href="http://mpi-forum.org">mpi-forum.org</a>. Free PDF.</p></li>
+<li><p>MPI Forum, <em>MPI 5.0 Standard</em> (2025), <a class="reference external" href="http://mpi-forum.org/docs/">mpi-forum.org/docs/</a>.</p></li>
+<li><p>Snir, M. et al. (1996). <em>MPI: The Complete Reference</em>.</p></li>
+<li><p>MPI Forum minutes (1992–94), public on <a class="reference external" href="http://mpi-forum.org">mpi-forum.org</a>. The standardization process is itself worth studying.</p></li>
+</ul>
+</section>
+<section id="week-10-beowulf">
+<h2>Week 10 — Beowulf<a class="headerlink" href="#week-10-beowulf" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Sterling, T. &amp; Becker, D. (1995). <em>How to Build a Beowulf</em>. Goddard Space Flight Center. <a class="reference external" href="http://archive.org">archive.org</a>.</p></li>
+<li><p>Sterling, T. et al. (1995). “BEOWULF: A parallel workstation for scientific computation”. <em>Proc. ICPP ‘95</em>.</p></li>
+<li><p>Yoo, A. et al. (2003). “SLURM: Simple Linux Utility for Resource Management”. <em>JSSPP ‘03</em>.</p></li>
+<li><p>Schwan, P. (2003). “Lustre: Building a file system for 1000-node clusters”. <em>Linux Symposium</em>.</p></li>
+<li><p>Boden, N.J., Cohen, D., Felderman, R.E., Kulawik, A.E., Seitz, C.L., Seizovic, J.N. &amp; Su, W. (1995). “Myrinet: A gigabit-per-second local area network”. <em>IEEE Micro</em> 15(1):29–36. The original Myrinet design.</p></li>
+<li><p>Petrini, F., Feng, W., Hoisie, A., Coll, S. &amp; Frachtenberg, E. (2002). “The Quadrics network: high-performance clustering technology”. <em>IEEE Micro</em> 22(1):46–57. QsNet architecture and performance.</p></li>
+<li><p>InfiniBand Trade Association. <em>InfiniBand Architecture Specification</em>. <a class="reference external" href="http://ibta.org">ibta.org</a>. The standards body governing HDR, NDR, and XDR rates.</p></li>
+<li><p>NVIDIA Networking, current InfiniBand adapter and switch product documentation. Use for HDR/NDR/XDR line-rate claims.</p></li>
+</ul>
+</section>
+<section id="week-11-asci-bluegene">
+<h2>Week 11 — ASCI / BlueGene<a class="headerlink" href="#week-11-asci-bluegene" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Adiga, N.R. et al. (2002). “An overview of the BlueGene/L supercomputer”. <em>Proc. SC02</em>.</p></li>
+<li><p>LLNL, “BlueGene/L” historic machine page. Useful for installed node/processor counts and delivered system context.</p></li>
+<li><p>IBM Research, “Overview of the BlueGene/L system architecture”. Primary architecture overview.</p></li>
+<li><p>Barker, K.J., Davis, K., Hoisie, A., Kerbyson, D.J., Lang, M., Pakin, S. &amp; Sancho, J.C. (2008). “Entering the petaflop era: The architecture and performance of Roadrunner”. <em>Proc. SC08</em>. The Roadrunner Cell + Opteron design paper; primary source for the first sustained-petaflop system.</p></li>
+<li><p>Haring, R.A. et al. (2012). “The IBM Blue Gene/Q compute chip”. <em>IEEE Micro</em> 32(2):48–60. BG/Q architecture, including the A2 core and hardware transactional memory.</p></li>
+<li><p>LLNL Computing, ASCI Blue Pacific, Blue Mountain, White, Q, Purple historic machine pages (<a class="reference external" href="http://hpc.llnl.gov">hpc.llnl.gov</a> / <a class="reference external" href="http://lanl.gov">lanl.gov</a> ASCI archives). System summaries with installed configurations.</p></li>
+<li><p>Bhatele, A. et al. (2013). “Identifying the culprits behind network congestion”. <em>Proc. SC13</em>.</p></li>
+<li><p>Foster, I. et al. (2005). “ASCI Red: The first TFLOPS computer at Sandia”. <em>IEEE Computer</em> 38(8):54–62.</p></li>
+<li><p>DOE Exascale Computing Project, final report (2023). <a class="reference external" href="http://exascaleproject.org/final-report">exascaleproject.org/final-report</a>.</p></li>
+</ul>
+</section>
+<section id="week-12-earth-simulator">
+<h2>Week 12 — Earth Simulator<a class="headerlink" href="#week-12-earth-simulator" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Habata, S. et al. (2003). “The Earth Simulator system”. <em>NEC Research &amp; Development</em> 44(1):3–8.</p></li>
+<li><p>Yokokawa, M. et al. (2002). “Performance evaluation of the Earth Simulator”. <em>Proc. SC02</em>.</p></li>
+<li><p>Dongarra, J. (2002). “The Earth Simulator system: A wake-up call”. Widely circulated commentary.</p></li>
+<li><p>Lazowska, E. &amp; Patterson, D. (2005). “Computing research: A looming crisis”. <em>CACM</em> 48(3):27–30.</p></li>
+<li><p>DARPA, <em>High Productivity Computing Systems</em> program materials and final reports. Use for HPCS phase/vendor claims.</p></li>
+</ul>
+</section>
+<section id="week-13-cuda-simt">
+<h2>Week 13 — CUDA / SIMT<a class="headerlink" href="#week-13-cuda-simt" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>★ Lindholm, E. et al. (2008). “NVIDIA Tesla: A unified graphics and computing architecture”. <em>IEEE Micro</em> 28(2):39–55.</p></li>
+<li><p>Nickolls, J. &amp; Dally, W. (2010). “The GPU computing era”. <em>IEEE Micro</em> 30(2):56–69.</p></li>
+<li><p>Owens, J.D. et al. (2007). “A survey of general-purpose computation on graphics hardware”. <em>Computer Graphics Forum</em> 26(1):80–113.</p></li>
+<li><p>★ NVIDIA, <em>CUDA Programming Guide</em>, current. <a class="reference external" href="http://docs.nvidia.com/cuda/">docs.nvidia.com/cuda/</a>.</p></li>
+<li><p>NVIDIA H100 and Blackwell product briefs. Use for FP64, HBM capacity, and current GPU spec claims.</p></li>
+<li><p>Yang, X. et al. (2011). “MilkyWay-2 (and TianHe-1A) supercomputer: A technical perspective”. Documents the design and Top500 #1 history of NUDT’s GPU-accelerated systems.</p></li>
+<li><p>Vazhkudai, S.S. et al. (2018). “The design, deployment, and evaluation of the CORAL pre-exascale systems”. <em>Proc. SC18</em>. The Summit (ORNL) and Sierra (LLNL) architecture paper.</p></li>
+<li><p>Volkov, V. (2010). “Better performance at lower occupancy”. <em>GTC ‘10</em>.</p></li>
+<li><p>★ Pharr, M. &amp; Mark, W.R. (2012). “ISPC: A SPMD compiler for high-performance CPU programming”. <em>InPar ‘12</em>. <a class="reference external" href="http://llvm.org/pubs/2012-05-13-InPar-ispc.html">llvm.org/pubs/2012-05-13-InPar-ispc.html</a>. The argument for SPMD-on-SIMD as the right model for CPU vectorization. Required reading for the Week 13 sidebar.</p></li>
+<li><p>ISPC documentation, <a class="reference external" href="http://ispc.github.io">ispc.github.io</a>. The compiler is open source (BSD).</p></li>
+<li><p>OpenACC standard, <a class="reference external" href="http://openacc.org">openacc.org</a>. Current version (3.4) covers directive-based accelerator offload. The historically important alternative to OpenMP target offload.</p></li>
+</ul>
+</section>
+<section id="week-14-exascale">
+<h2>Week 14 — Exascale<a class="headerlink" href="#week-14-exascale" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Atchley, S. et al. (2023). “Frontier: Exploring exascale”. <em>Proc. SC23</em>.</p></li>
+<li><p>Sato, M. et al. (2020). “Co-design for A64FX manycore processor and Fugaku”. <em>Proc. SC20</em>.</p></li>
+<li><p>★ Stephens, N., Biles, S., Boettcher, M., Eapen, J., Eyole, M. et al. (2017). “The ARM Scalable Vector Extension”. <em>IEEE Micro</em> 37(2):26–39. The canonical SVE design paper; introduces vector-length-agnostic programming.</p></li>
+<li><p>ARM, <em>SVE and SVE2 Programmer’s Guide</em>, <a class="reference external" href="http://developer.arm.com">developer.arm.com</a>. Practical reference for the intrinsics.</p></li>
+<li><p>Garcia, K. et al. (2022). “El Capitan: An advanced architecture exascale system at LLNL”. <em>Proc. SC22</em>.</p></li>
+<li><p>RIKEN R-CCS, “About Fugaku”. Current public system specifications.</p></li>
+<li><p>LLNL Livermore Computing, <em>El Capitan</em> platform documentation (<a class="reference external" href="http://hpc.llnl.gov/hardware/compute-platforms/el-capitan">hpc.llnl.gov/hardware/compute-platforms/el-capitan</a>). Primary public source for the as-deployed node count and on-site configuration.</p></li>
+<li><p>Forschungszentrum Jülich, <em>JUPITER</em> platform documentation (<a class="reference external" href="http://fz-juelich.de/jupiter">fz-juelich.de/jupiter</a>). Primary public source for the EuroHPC JU exascale system: Booster (NVIDIA GH200) and Cluster (SiPearl Rhea1) module configurations.</p></li>
+<li><p>EuroHPC Joint Undertaking, <em>EuroHPC supercomputer announcements</em> (<a class="reference external" href="http://eurohpc-ju.europa.eu">eurohpc-ju.europa.eu</a>). Procurement and policy framing for JUPITER, LUMI, Leonardo, MareNostrum 5.</p></li>
+<li><p>Dongarra, J. &amp; Luszczek, P. (2024–). <em>HPL-MxP Mixed-Precision Benchmark</em>. <a class="reference external" href="http://icl.utk.edu/hpl-mxp/">icl.utk.edu/hpl-mxp/</a>. The mixed-precision LINPACK companion benchmark; rationale and current rankings.</p></li>
+<li><p><em>Top500 HPL-MxP list</em>, <a class="reference external" href="http://top500.org">top500.org</a>. The mixed-precision ranking that, alongside HPCG, bounds the achievable performance of leadership-class machines.</p></li>
+<li><p>Mudigere, D. et al. (2022). “Software-hardware co-design for fast and scalable training of deep learning recommendation models”. <em>Proc. MLSys ‘22</em>. Representative of how hyperscaler AI clusters are documented in the literature, useful for framing the “is this a supercomputer?” question.</p></li>
+<li><p>Cerebras Systems (2024). <em>CS-3 architecture white paper</em>. <a class="reference external" href="http://cerebras.ai">cerebras.ai</a>. Wafer-scale-engine architecture reference for the “alternative supercomputers” discussion.</p></li>
+<li><p>Top500 and HPCG current lists, plus the Top500 archive (<a class="reference external" href="http://top500.org/lists">top500.org/lists</a>). Use dated list entries for Frontier, Aurora, El Capitan, and Fugaku rankings; these values change twice per year and the archive preserves every June/November list since 1993.</p></li>
+<li><p>ECP Software Technology Capability Assessment Reports (multi-year). <a class="reference external" href="http://exascaleproject.org">exascaleproject.org</a>.</p></li>
+</ul>
+</section>
+<section id="week-15-anatomy">
+<h2>Week 15 — Anatomy<a class="headerlink" href="#week-15-anatomy" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>ORNL OLCF documentation (<a class="reference external" href="http://olcf.ornl.gov/frontier">olcf.ornl.gov/frontier</a>).</p></li>
+<li><p>ORNL OLCF, <em>Frontier User Guide</em>. Primary public source for node count, memory per node, and storage details.</p></li>
+<li><p>Argonne ALCF documentation (<a class="reference external" href="http://alcf.anl.gov/aurora">alcf.anl.gov/aurora</a>).</p></li>
+<li><p>Argonne ALCF, Aurora user documentation. Primary public source for PBS/DAOS/Aurora operational details.</p></li>
+<li><p>LLNL Livermore Computing documentation (<a class="reference external" href="http://hpc.llnl.gov">hpc.llnl.gov</a>).</p></li>
+<li><p>HPE (2021). <em>Slingshot Architecture White Paper</em>.</p></li>
+<li><p><em>HPC User Reports</em> from NERSC (<a class="reference external" href="http://nersc.gov">nersc.gov</a>), updated annually. Real-world operational experience.</p></li>
+<li><p>★ Williams, S., Waterman, A. &amp; Patterson, D. (2009). “Roofline: An insightful visual performance model for multicore architectures”. <em>CACM</em> 52(4):65–76. The canonical Roofline paper. The single best one-page tool for reasoning about kernel performance across architectures.</p></li>
+<li><p>★ McCalpin, J.D. (1995, ongoing). <em>STREAM: Sustainable Memory Bandwidth in High Performance Computers</em>. University of Virginia. <a class="reference external" href="http://cs.virginia.edu/stream">cs.virginia.edu/stream</a>. The canonical memory-bandwidth microbenchmark.</p></li>
+<li><p>HPCG benchmark project, <a class="reference external" href="http://hpcg-benchmark.org">hpcg-benchmark.org</a>. The complement to HPL for memory- and communication-bound applications.</p></li>
+</ul>
+</section>
+<section id="capstone">
+<h2>Capstone<a class="headerlink" href="#capstone" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Reinders, J. et al. (2024). <em>Data Parallel C++: Mastering DPC++ for Programming of Heterogeneous Systems Using C++ and SYCL</em>. Apress (free PDF).</p></li>
+<li><p>Trott, C.R. et al. (2022). “Kokkos 3: Programming model extensions for the exascale era”. <em>IEEE TPDS</em> 33(4):805–817.</p></li>
+<li><p>Reed, D., Gannon, D. &amp; Dongarra, J. (2022). “Reinventing high performance computing: Challenges and opportunities”. arXiv:2203.02544.</p></li>
+</ul>
+<section id="datasets-and-mini-apps-for-projects">
+<h3>Datasets and mini-apps for projects<a class="headerlink" href="#datasets-and-mini-apps-for-projects" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Bailey, D.H. et al. (1991, ongoing). <em>NAS Parallel Benchmarks</em>. <a class="reference external" href="http://nas.nasa.gov/publications/npb.html">nas.nasa.gov/publications/npb.html</a>. The canonical benchmark suite for CFD-adjacent parallel work; eight kernels and pseudo-applications across multiple problem-size classes.</p></li>
+<li><p>Norman, M. <em>miniWeather</em>. <a class="reference external" href="http://github.com/mrnorman/miniWeather">github.com/mrnorman/miniWeather</a>. A miniature climate-modeling proxy app explicitly designed for HPC training, with reference implementations in MPI, OpenMP, OpenACC, CUDA, SYCL, and Kokkos. The single best capstone mini-app.</p></li>
+<li><p>LLNL. <em>LULESH</em>: Livermore Unstructured Lagrangian Explicit Shock Hydrodynamics. <a class="reference external" href="http://github.com/LLNL/LULESH">github.com/LLNL/LULESH</a>. A widely cited proxy application for shock-physics workloads; used in many HPC performance papers.</p></li>
+<li><p>Davis, T. &amp; Hu, Y. (2011). “The University of Florida sparse matrix collection”. <em>ACM TOMS</em> 38(1):1–25. The SuiteSparse Matrix Collection at <a class="reference external" href="http://sparse.tamu.edu">sparse.tamu.edu</a> — primary source of real-world sparse matrices for SpMV benchmarking.</p></li>
+<li><p>Matrix Market, <a class="reference external" href="http://math.nist.gov/MatrixMarket">math.nist.gov/MatrixMarket</a>. Older companion sparse-matrix archive, still useful.</p></li>
+</ul>
+</section>
+</section>
+<section id="modern-long-form-essays-free-online-recommended">
+<h2>Modern long-form essays (free online, recommended)<a class="headerlink" href="#modern-long-form-essays-free-online-recommended" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Patterson, D. (2012). “The trouble with multicore”. <em>IEEE Spectrum</em>. The post-Dennard dynamics, lay reader.</p></li>
+<li><p>Hennessy, J.L. &amp; Patterson, D.A. (2019). “A new golden age for computer architecture”. <em>CACM</em> 62(2):48–60. Their Turing lecture.</p></li>
+<li><p>Kim, S. (2019). “Computational Fluid Dynamics on Modern HPC Systems”. DOE INCITE introduction. Good plain-language picture of why bandwidth and topology matter for real workloads.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="appendix-hpc-vs-ai-cluster.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="assessment.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Assessment and Project Guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-history">General history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-1-cdc-6600-and-pre-history">Week 1 — CDC 6600 and pre-history</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-2-cray-1">Week 2 — Cray-1</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-3-vector-fortran-and-vectorization">Week 3 — Vector Fortran and vectorization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-4-x-mp-cray-2-y-mp">Week 4 — X-MP, Cray-2, Y-MP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-5-japanese-vector-machines">Week 5 — Japanese vector machines</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-6-vector-wall-eta-10-cray-3">Week 6 — Vector wall, ETA-10, Cray-3</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-7-connection-machine">Week 7 — Connection Machine</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-8-mimd-mpp">Week 8 — MIMD MPP</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-9-mpi">Week 9 — MPI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-10-beowulf">Week 10 — Beowulf</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-11-asci-bluegene">Week 11 — ASCI / BlueGene</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-12-earth-simulator">Week 12 — Earth Simulator</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-13-cuda-simt">Week 13 — CUDA / SIMT</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-14-exascale">Week 14 — Exascale</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#week-15-anatomy">Week 15 — Anatomy</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#capstone">Capstone</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#datasets-and-mini-apps-for-projects">Datasets and mini-apps for projects</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#modern-long-form-essays-free-online-recommended">Modern long-form essays (free online, recommended)</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

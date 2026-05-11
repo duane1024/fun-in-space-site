@@ -1,0 +1,626 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-06-vector-wall';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 7 — The Connection Machine: SIMD Massively Parallel" href="week-07-connection-machine.html" />
+    <link rel="prev" title="Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series" href="week-05-japanese-vectors.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-06-vector-wall.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-the-trend-lines-crossing">Background: the trend lines crossing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eta-10-1987-liquid-nitrogen-wasn-t-enough">ETA-10 (1987): liquid nitrogen wasn’t enough</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-3-1993-gaas-at-any-cost">Cray-3 (1993): GaAs at any cost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-gaas-and-exotic-cooling-lost">Why GaAs and exotic cooling lost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-architectural-epitaph">The architectural epitaph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-didn-t-change">What the code didn’t change</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-replay-the-killer-micro-crossover">Lab — Replay the killer-micro crossover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-6-the-vector-wall-eta-10-cray-3-and-the-death-of-bespoke">
+<h1>Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke<a class="headerlink" href="#week-6-the-vector-wall-eta-10-cray-3-and-the-death-of-bespoke" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Around 1990, the bespoke-ECL-vector-supercomputer business model — the model Seymour Cray invented and that ran the industry for fifteen years — broke. It did not break because vector computing was wrong (we use vector computing more than ever), and not because Cray’s engineering was deficient (the Cray-3 was a technical marvel). It broke because <em>commodity microprocessor economics</em> outran custom logic. Knowing the precise mechanics of that break is necessary to understand every architectural decision since.</p>
+<p>This week is the autopsy.</p>
+</section>
+<section id="background-the-trend-lines-crossing">
+<h2>Background: the trend lines crossing<a class="headerlink" href="#background-the-trend-lines-crossing" title="Link to this heading">#</a></h2>
+<p>In 1976, a Cray-1 at 80 MHz was about 80× faster on scientific code than a contemporary minicomputer. By 1989, the gap had narrowed dramatically. A few data points:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Year</p></th>
+<th class="head"><p>Top vector machine</p></th>
+<th class="head"><p>Top microprocessor</p></th>
+<th class="head"><p>Vector / micro ratio</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1976</p></td>
+<td><p>Cray-1 &#64; 80 MHz, 160 MFLOPS</p></td>
+<td><p>Intel 8080 &#64; 2 MHz, ~0.05 MFLOPS</p></td>
+<td><p>~3000×</p></td>
+</tr>
+<tr class="row-odd"><td><p>1985</p></td>
+<td><p>Cray X-MP/4 &#64; ~940 MFLOPS</p></td>
+<td><p>Motorola 68020 &#64; 16 MHz, ~0.5 MFLOPS</p></td>
+<td><p>~1900×</p></td>
+</tr>
+<tr class="row-even"><td><p>1990</p></td>
+<td><p>Cray Y-MP/8 &#64; ~2.7 GFLOPS</p></td>
+<td><p>MIPS R3000 &#64; 33 MHz, ~10 MFLOPS</p></td>
+<td><p>~270×</p></td>
+</tr>
+<tr class="row-odd"><td><p>1993</p></td>
+<td><p>Cray C90/16 &#64; ~16 GFLOPS</p></td>
+<td><p>DEC Alpha 21064 &#64; 200 MHz, ~120 MFLOPS</p></td>
+<td><p>~133×</p></td>
+</tr>
+<tr class="row-even"><td><p>1996</p></td>
+<td><p>Cray T90/32 &#64; ~58 GFLOPS</p></td>
+<td><p>DEC Alpha 21164 &#64; 500 MHz, ~1 GFLOPS</p></td>
+<td><p>~58×</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Sources for the table.</strong> Cray peak FP64 figures are from Cray Research product literature, collected with Russell (1978) for the Cray-1, Chen (1984) for the X-MP, and the Y-MP/C90/T90 hardware reference manuals on <a class="reference external" href="http://bitsavers.org">bitsavers.org</a>. Microprocessor LINPACK and peak-FLOPS estimates are from Dongarra’s <em>Performance of Various Computers Using Standard Linear Equations Software</em> report (continuous since 1979; <a class="reference external" href="http://netlib.org/benchmark/performance.ps">netlib.org/benchmark/performance.ps</a>), the canonical source for per-CPU performance comparisons in this era. Per-microprocessor numbers are LINPACK <em>n</em> = 100 results where available, peak FP throughput otherwise; the 8080 figure is software-emulated single-precision throughput (the 8080 had no FPU) and is included for shape, not precision. The right-hand “ratio” column compares aggregate vector-machine throughput to single-microprocessor performance and should be read as an order-of-magnitude indicator, not a head-to-head benchmark.</p>
+<p>The ratio is collapsing because microprocessors are doubling every 18 months (Moore’s Law plus Dennard scaling) while bespoke ECL vector machines are improving by maybe 50% per generation, and shipping new generations only every 3–4 years. The arithmetic is pitiless: an exponential beats a slow exponential, and the gap is closing.</p>
+<p>In 1989 Eugene Brooks of Lawrence Livermore wrote an essay titled <strong>“Attack of the Killer Micros”</strong>. The argument: in five years, microprocessor performance will catch up with bespoke supercomputer per-CPU performance, and once it does, the per-FLOP cost advantage of clusters of micros is overwhelming. Bespoke vector machines will be reduced to a niche product.</p>
+<p>He was right. The argument was, by then, already widely shared inside the industry. The two bespoke-vector-supercomputer attempts of 1987–1995 — ETA Systems and Cray Computer Corporation — were the last attempts to outrun the trend, and both failed for reasons baked into the architecture choice.</p>
+</section>
+<section id="eta-10-1987-liquid-nitrogen-wasn-t-enough">
+<h2>ETA-10 (1987): liquid nitrogen wasn’t enough<a class="headerlink" href="#eta-10-1987-liquid-nitrogen-wasn-t-enough" title="Link to this heading">#</a></h2>
+<p>ETA Systems was a 1983 spinoff of Control Data Corporation, with a brief to build the successor to the <strong>CDC Cyber 205</strong> (1981). The Cyber 205 itself was the successor to the <strong>CDC STAR-100</strong> — both memory-to-memory vector machines that Cray had bested with the Cray-1.</p>
+<p>The ETA-10 (1987) was their answer: a multi-CPU vector machine using <strong>CMOS</strong> (not ECL!), cooled to 77 K with <strong>liquid nitrogen</strong> (not Freon, not Fluorinert) to reduce CMOS gate delays.</p>
+<ul class="simple">
+<li><p><strong>8 vector CPUs</strong>, shared memory.</p></li>
+<li><p><strong>Clock</strong>: 7 ns (143 MHz) at 77 K.</p></li>
+<li><p><strong>Peak</strong>: 10 GFLOPS aggregate — the fastest machine of its era at announcement.</p></li>
+<li><p><strong>Memory</strong>: 256 MW (2 GB).</p></li>
+</ul>
+<p>CMOS at 77 K was a fascinating bet. CMOS dissipates much less power than ECL, scales better with feature size, and has natural manufacturing volume from the rest of the chip industry. Cooling it cryogenically (instead of pushing ECL with Freon) was elegant.</p>
+<p>It didn’t work. The ETA-10 had three killing problems:</p>
+<ol class="arabic simple">
+<li><p><strong>Software immaturity</strong>. ETA shipped its own variant of UNIX called EOS, which was buggy and incompatible with anything customers had. The Cyber 205’s compilers and software were not reused. Big customers (NASA, the labs) wanted Cray-compatible tools and got something else.</p></li>
+<li><p><strong>Low yield on the cryogenic cooling</strong>. The cryogenic units were complex, prone to failure, and hard to service.</p></li>
+<li><p><strong>The benchmarks didn’t reflect real applications</strong>. ETA’s published benchmarks were peak-oriented and short-vector codes ran nowhere near peak.</p></li>
+</ol>
+<p>Control Data shut down ETA Systems in <strong>April 1989</strong>, eighteen months after first delivery, having shipped fewer than 30 units. CDC itself spiraled out of the supercomputer business shortly after.</p>
+</section>
+<section id="cray-3-1993-gaas-at-any-cost">
+<h2>Cray-3 (1993): GaAs at any cost<a class="headerlink" href="#cray-3-1993-gaas-at-any-cost" title="Link to this heading">#</a></h2>
+<p>After the X-MP shipped in 1982, Seymour Cray was eased out of the X-MP/Y-MP development path inside Cray Research. By 1989, his Cray-3 effort was so different from the company’s mainstream that he split off to form <strong>Cray Computer Corporation</strong> (CCC) in Colorado Springs, taking the Cray-3 and Cray-4 projects with him.</p>
+<p>The Cray-3 was Seymour Cray’s bet that <strong>gallium arsenide</strong> (GaAs), not silicon, was the future of fast computing.</p>
+<ul class="simple">
+<li><p><strong>Logic technology</strong>: GaAs gate arrays, custom-designed.</p></li>
+<li><p><strong>Clock</strong>: 2 ns (500 MHz) — <em>six times</em> faster than the Y-MP.</p></li>
+<li><p><strong>CPUs</strong>: up to 16 vector processors sharing memory.</p></li>
+<li><p><strong>Memory</strong>: 128–256 MW.</p></li>
+<li><p><strong>Peak</strong>: ~16 GFLOPS aggregate.</p></li>
+<li><p><strong>Cooling</strong>: Fluorinert immersion, like the Cray-2, but more so.</p></li>
+</ul>
+<p>The Cray-3 was a <em>real machine</em>. It worked. One was delivered, in 1993, to the National Center for Atmospheric Research (NCAR), which used it for some months and then sent it back when funding for it disappeared. NCAR was the only Cray-3 customer. Cray Computer Corporation declared bankruptcy in <strong>March 1995</strong>. There was a Cray-4 design (4 GFLOPS per CPU at 1 GHz) that never shipped. Seymour Cray died in October 1996 in a car accident in Colorado Springs, age 71.</p>
+</section>
+<section id="why-gaas-and-exotic-cooling-lost">
+<h2>Why GaAs and exotic cooling lost<a class="headerlink" href="#why-gaas-and-exotic-cooling-lost" title="Link to this heading">#</a></h2>
+<p>The Cray-3 was technically successful. It was also obsolete the day it shipped, and not because Cray Computer Corporation managed it badly. The reasons were structural:</p>
+<ol class="arabic simple">
+<li><p><strong>GaAs lost the volume war.</strong> GaAs was real, and faster than silicon at gate level, but it had no manufacturing ecosystem outside of military and RF chips. CMOS had millions of unit volumes from PCs, workstations, and the mainframe industry. Tooling, design rules, and yield improvements compounded for CMOS for thirty years. By 1993 CMOS at 0.6 µm beat GaAs at the gate-delay numbers Seymour had bet on.</p></li>
+<li><p><strong>The clock advantage was illusory at the system level.</strong> A Cray-3 at 500 MHz had to feed 16 CPUs from a shared memory. The memory subsystem couldn’t keep up at the clock rate the processor wanted. Sustained performance on real applications was <em>not</em> 6× the Y-MP — often it was 1.5×, while costing 4× as much.</p></li>
+<li><p><strong>Microprocessors were closing.</strong> A single 200 MHz DEC Alpha 21064 in 1993 hit ~120 MFLOPS sustained. A Cray-3 CPU hit maybe 600 MFLOPS sustained. So one Cray-3 CPU was 5× a single Alpha — but a 1024-node cluster of Alphas (totally feasible by 1995) was 60× a Cray-3 in aggregate, for half the price. Customers who needed throughput, not single-job latency, did the math.</p></li>
+</ol>
+</section>
+<section id="the-architectural-epitaph">
+<h2>The architectural epitaph<a class="headerlink" href="#the-architectural-epitaph" title="Link to this heading">#</a></h2>
+<p>Looking back, the bespoke-ECL/GaAs vector supercomputer era ended because <strong>performance per dollar drove the market more than performance per CPU</strong>. Once microprocessors got within an order of magnitude per-CPU, the volume cost advantage of clusters became insurmountable for any workload that could be parallelized.</p>
+<p>Workloads that could <em>not</em> be parallelized — and there are real ones, mostly the fluid simulations and climate models we discussed last week — kept buying NEC SX vector machines into the 2010s. NEC could afford to keep going because they had a captive home market and an integrated chip-design-to-system pipeline. Cray Research (which became part of SGI in 1996, then independent again, then HPE in 2019) pivoted to clusters of commodity processors tied together with custom interconnect — a different business and a different architecture.</p>
+</section>
+<section id="what-the-code-didn-t-change">
+<h2>What the code didn’t change<a class="headerlink" href="#what-the-code-didn-t-change" title="Link to this heading">#</a></h2>
+<p>A peculiar thing: nothing about the <strong>Fortran source code</strong> of a typical scientific application changed during this transition. A weather model written for a Cray X-MP in 1985 could be (and was) recompiled for an SGI Origin 2000 in 1998, and recompiled again for a Cray T3E, and recompiled again for an IBM SP2 cluster, and recompiled <em>yet again</em> for a Beowulf-style commodity cluster. The hardware revolution at the bottom of the stack was largely invisible at the source level — the <em>programming model</em> was preserved.</p>
+<p>What changed was <em>between</em> the Fortran source and the machine: the compiler stopped emitting CAL-style chained vector instructions and started emitting microprocessor SIMD instructions, while the parallelism model shifted from microtasking directives to MPI message passing (Week 9). This is a recurring theme: programming models persist longer than hardware, and the <em>job</em> of compilers gets harder every era.</p>
+</section>
+<section id="lab-replay-the-killer-micro-crossover">
+<h2>Lab — Replay the killer-micro crossover<a class="headerlink" href="#lab-replay-the-killer-micro-crossover" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/06-killer-micros/</span></code>, you build a small benchmark harness that runs SAXPY-of-different-sizes on:</p>
+<ul class="simple">
+<li><p>A pure-Python loop (proxy for unoptimized scalar code).</p></li>
+<li><p>NumPy (proxy for compiled scalar code with auto-vectorization).</p></li>
+<li><p>NumPy with explicit BLAS calls (proxy for hand-tuned vector library).</p></li>
+<li><p>An optional compiled C/SIMD comparison using the Era 2 vectorized C example.</p></li>
+</ul>
+<p>Then plot the trend the same way Eugene Brooks would have in 1989. The point: the “killer micro” effect is happening <em>again</em> right now between CPU and GPU, and the curves look the same.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Eugene Brooks predicted the killer micros would win five years before they did. What current architectural prediction (e.g., “GPU dominance will end at exascale”, “RISC-V will displace x86 in HPC”, “optical interconnects will replace electrical at the rack level”) has the same shape — observable trend lines, contested timing, technical and economic causality intertwined?</p></li>
+<li><p>Cray-3 used GaAs for one reason: gate delay. Modern chips use silicon for ten reasons: gate delay, density, power, manufacturing volume, yield, thermal, SRAM compatibility, FinFET physics, EUV lithography, design tooling. What does the <em>count</em> of reasons tell you about why exotic device technologies (carbon nanotubes, spintronics, photonic compute) keep failing to displace silicon despite being technically superior on one or two axes?</p></li>
+<li><p>The Cray-3 shipped functional but commercially dead. Find another example in the history of computing of a “technically working but economically obsolete” system. What’s the common thread?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Brooks, E. (1989). “Attack of the killer micros”. Lawrence Livermore National Laboratory. The original talk transcript is widely circulated as a memo; see also coverage in <em>HPCwire</em>’s 2009 retrospective.</p></li>
+<li><p>Schneck, P. (1987). <em>Supercomputer Architecture</em>. Includes contemporary analysis of the Cyber 205, Cray X-MP, and ETA-10.</p></li>
+<li><p>Wadsworth, A. (1996). “Cray Computer Corporation Chronology”. Personal account by a former CCC engineer; widely referenced.</p></li>
+<li><p>Markoff, J. (1996). “Seymour Cray, Computer Industry Pioneer And Father of Supercomputer, Dies at 71”. <em>NYT</em>, October 6.</p></li>
+<li><p>For the macro picture: Hennessy &amp; Patterson, “The Quantitative Approach”, chapter 1 (“Trends in Technology”) in any edition since 1995, where the killer-micros argument is given quantitative form.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-05-japanese-vectors.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-07-connection-machine.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 7 — The Connection Machine: SIMD Massively Parallel</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-the-trend-lines-crossing">Background: the trend lines crossing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#eta-10-1987-liquid-nitrogen-wasn-t-enough">ETA-10 (1987): liquid nitrogen wasn’t enough</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#cray-3-1993-gaas-at-any-cost">Cray-3 (1993): GaAs at any cost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-gaas-and-exotic-cooling-lost">Why GaAs and exotic cooling lost</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-architectural-epitaph">The architectural epitaph</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-didn-t-change">What the code didn’t change</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-replay-the-killer-micro-crossover">Lab — Replay the killer-micro crossover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

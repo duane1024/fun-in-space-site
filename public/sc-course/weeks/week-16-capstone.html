@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 16 — Capstone: SAXPY Across the Eras &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-16-capstone';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster" href="../appendix-hpc-vs-ai-cluster.html" />
+    <link rel="prev" title="Week 15 — Anatomy of a 2025 Supercomputer" href="week-15-anatomy-2025.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-11-asci-bluegene.html">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-16-capstone.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 16 — Capstone: SAXPY Across the Eras</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-exercise">The exercise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-six-eras">The six eras</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-1-cdc-6600-scalar-fortran-1964">Era 1 — CDC 6600, scalar Fortran (1964)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-2-cray-1-vector-fortran-1976">Era 2 — Cray-1, vector Fortran (1976)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-3-cray-y-mp-microtasking-vector-1988">Era 3 — Cray Y-MP, microtasking + vector (1988)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-4-distributed-memory-mpi-1994">Era 4 — Distributed memory, MPI (1994)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-5-gpu-cuda-hip-2007">Era 5 — GPU, CUDA / HIP (2007)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-6-2025-modern-c-with-standard-parallelism">Era 6 — 2025 Modern C++ with Standard Parallelism</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-measure">What you measure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-write">What you write</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission">Submission</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-contested-definition-of-supercomputer">The contested definition of “supercomputer”</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#going-further-capstone-variants">Going further: capstone variants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-comes-next">What comes next</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-16-capstone-saxpy-across-the-eras">
+<h1>Week 16 — Capstone: SAXPY Across the Eras<a class="headerlink" href="#week-16-capstone-saxpy-across-the-eras" title="Link to this heading">#</a></h1>
+<section id="the-exercise">
+<h2>The exercise<a class="headerlink" href="#the-exercise" title="Link to this heading">#</a></h2>
+<p>The same computational kernel — <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">a*x</span> <span class="pre">+</span> <span class="pre">y</span></code>, on vectors of one million double-precision floats — implemented in the idiom of every architectural era we’ve covered. You write the implementations, run them on your laptop where possible (and on Colab where a GPU is required), measure performance, count lines of code, and write a final essay reflecting on what each abstraction reveals and hides.</p>
+<p>The scaffold is in <code class="docutils literal notranslate"><span class="pre">labs/16-capstone/</span></code>. We provide reference implementations; your job is to read them carefully, run them, modify them, and <em>understand</em> them.</p>
+</section>
+<section id="the-six-eras">
+<h2>The six eras<a class="headerlink" href="#the-six-eras" title="Link to this heading">#</a></h2>
+<section id="era-1-cdc-6600-scalar-fortran-1964">
+<h3>Era 1 — CDC 6600, scalar Fortran (1964)<a class="headerlink" href="#era-1-cdc-6600-scalar-fortran-1964" title="Link to this heading">#</a></h3>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">SUBROUTINE </span><span class="n">SAXPY</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">INTEGER </span><span class="n">N</span>
+<span class="w">      </span><span class="kt">DOUBLE PRECISION </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">INTEGER </span><span class="n">I</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+<span class="k">      RETURN</span>
+<span class="k">      END</span>
+</pre></div>
+</div>
+<p>What’s happening: a sequential loop, one iteration at a time. On the 6600, the scoreboard found instruction-level parallelism between the multiply (issued to the multiplier unit) and the add (issued to the adder unit) of consecutive iterations. The programmer wrote sequential code; the hardware found the parallelism.</p>
+<p>Modern relevance: this loop, compiled with <code class="docutils literal notranslate"><span class="pre">gfortran</span> <span class="pre">-O3</span></code>, gets auto-vectorized and produces nearly identical machine code to the Era 2 hand-vectorized version below. The 1964 compiler couldn’t do that. The 2026 compiler can.</p>
+</section>
+<section id="era-2-cray-1-vector-fortran-1976">
+<h3>Era 2 — Cray-1, vector Fortran (1976)<a class="headerlink" href="#era-2-cray-1-vector-fortran-1976" title="Link to this heading">#</a></h3>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">SUBROUTINE </span><span class="n">SAXPY</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">INTEGER </span><span class="n">N</span>
+<span class="w">      </span><span class="kt">DOUBLE PRECISION </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="o">*</span><span class="w">       </span><span class="n">Compiler</span><span class="w"> </span><span class="n">will</span><span class="w"> </span><span class="n">vectorize</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="n">loop</span><span class="w"> </span><span class="n">into</span><span class="w"> </span><span class="mi">64</span><span class="o">-</span><span class="n">element</span><span class="w"> </span><span class="n">strip</span><span class="o">-</span><span class="n">mines</span><span class="p">.</span>
+<span class="o">*</span><span class="w">       </span><span class="n">No</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="n">change</span><span class="w"> </span><span class="n">needed</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">loop</span><span class="w"> </span><span class="k">is </span><span class="n">dependence</span><span class="o">-</span><span class="n">free</span><span class="p">.</span>
+<span class="c">!DIR$ IVDEP</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+<span class="k">      RETURN</span>
+<span class="k">      END</span>
+</pre></div>
+</div>
+<p>The source is the same (!) — but the compiler is now expected to emit chained vector multiply-add instructions, with a strip-mine wrapper for <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">mod</span> <span class="pre">64</span></code>. The <code class="docutils literal notranslate"><span class="pre">!DIR$</span> <span class="pre">IVDEP</span></code> directive is the programmer’s promise that the loop is free of carried dependencies, allowing the compiler to vectorize without trying to prove it.</p>
+<p>Lab task: compile this (or its modern equivalent in C) with <code class="docutils literal notranslate"><span class="pre">clang</span> <span class="pre">-O3</span> <span class="pre">-march=native</span> <span class="pre">-Rpass=loop-vectorize</span></code> and observe that the modern compiler does what CFT did in 1978.</p>
+</section>
+<section id="era-3-cray-y-mp-microtasking-vector-1988">
+<h3>Era 3 — Cray Y-MP, microtasking + vector (1988)<a class="headerlink" href="#era-3-cray-y-mp-microtasking-vector-1988" title="Link to this heading">#</a></h3>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="w">      </span><span class="k">SUBROUTINE </span><span class="n">SAXPY</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">)</span>
+<span class="w">      </span><span class="kt">INTEGER </span><span class="n">N</span>
+<span class="w">      </span><span class="kt">DOUBLE PRECISION </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">CMIC$</span><span class="w"> </span><span class="n">DOALL</span><span class="w"> </span><span class="n">SHARED</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">Y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">)</span><span class="w"> </span><span class="k">PRIVATE</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="n">VECTOR</span>
+<span class="w">      </span><span class="k">DO </span><span class="mi">10</span><span class="w"> </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span>
+<span class="w">        </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">X</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Y</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">10</span><span class="w"> </span><span class="k">CONTINUE</span>
+<span class="k">      RETURN</span>
+<span class="k">      END</span>
+</pre></div>
+</div>
+<p>Modern equivalent in C with OpenMP:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">saxpy</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#pragma omp parallel for simd</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The microtasking directive splits the loop’s iterations across the Y-MP’s 8 CPUs; each CPU’s chunk is then vectorized for a 64-element vector register. Two-level parallelism, source-level annotation. The OpenMP version on a modern multi-core CPU does the <em>exact</em> same thing: parallelize across cores, vectorize within each core’s chunk.</p>
+</section>
+<section id="era-4-distributed-memory-mpi-1994">
+<h3>Era 4 — Distributed memory, MPI (1994)<a class="headerlink" href="#era-4-distributed-memory-mpi-1994" title="Link to this heading">#</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mpi.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">**</span><span class="n">argv</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MPI_Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">argv</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rank</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Comm_rank</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rank</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Comm_size</span><span class="p">(</span><span class="n">MPI_COMM_WORLD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1L</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">local_n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">local_n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="n">local_n</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">local_n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* No communication needed — element-wise, no neighbors. */</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">local_n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="w">        </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+<span class="w">    </span><span class="cm">/* Reduce to verify */</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">local_sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">long</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">local_n</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="n">local_sum</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">global_sum</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MPI_Reduce</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_sum</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">global_sum</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_DOUBLE</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_SUM</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">MPI_COMM_WORLD</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;global sum = %g</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">global_sum</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">free</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="n">free</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MPI_Finalize</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>SAXPY is “embarrassingly parallel” — no communication needed during the kernel. The MPI complexity here is mostly <em>boilerplate</em> (init/finalize, ranks, allocation by rank). The reduction at the end is the only place ranks talk to each other. <em>Real</em> applications spend most of their MPI complexity on halo exchanges and collectives that SAXPY doesn’t need; we kept this minimal so the code stays readable.</p>
+<p>Run it: <code class="docutils literal notranslate"><span class="pre">mpirun</span> <span class="pre">-n</span> <span class="pre">4</span> <span class="pre">./saxpy_mpi</span></code>.</p>
+</section>
+<section id="era-5-gpu-cuda-hip-2007">
+<h3>Era 5 — GPU, CUDA / HIP (2007)<a class="headerlink" href="#era-5-gpu-cuda-hip-2007" title="Link to this heading">#</a></h3>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">saxpy</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="o">&lt;&lt;</span><span class="mi">20</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">y</span><span class="p">;</span>
+<span class="w">    </span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">    </span><span class="n">cudaMallocManaged</span><span class="p">(</span><span class="o">&amp;</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">*</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span><span class="w"> </span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">block</span><span class="p">;</span>
+<span class="w">    </span><span class="n">saxpy</span><span class="o">&lt;&lt;&lt;</span><span class="n">grid</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span>
+<span class="w">    </span><span class="n">cudaDeviceSynchronize</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="n">cudaFree</span><span class="p">(</span><span class="n">y</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The kernel is per-thread. The runtime grids 1,048,576 threads, organizes them into warps of 32, and schedules them onto the GPU’s streaming multiprocessors. Each warp executes one 32-wide SIMD instruction at a time — making this, beneath the abstraction, <em>the same vector instruction the Cray-1 issued for SAXPY in 1976</em>, just much wider and at a higher clock with vastly more memory bandwidth.</p>
+<p>The HIP equivalent is character-identical except for <code class="docutils literal notranslate"><span class="pre">cuda</span></code> → <code class="docutils literal notranslate"><span class="pre">hip</span></code> namespace renames.</p>
+</section>
+<section id="era-6-2025-modern-c-with-standard-parallelism">
+<h3>Era 6 — 2025 Modern C++ with Standard Parallelism<a class="headerlink" href="#era-6-2025-modern-c-with-standard-parallelism" title="Link to this heading">#</a></h3>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;execution&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;numeric&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">long</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1L</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">24</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mf">1.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">iota</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">transform</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">execution</span><span class="o">::</span><span class="n">par_unseq</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">x</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="n">y</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">y</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span>
+<span class="w">                   </span><span class="p">[</span><span class="n">a</span><span class="p">](</span><span class="kt">double</span><span class="w"> </span><span class="n">xi</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="n">yi</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="o">*</span><span class="n">xi</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">yi</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">reduce</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">execution</span><span class="o">::</span><span class="n">par_unseq</span><span class="p">,</span>
+<span class="w">                             </span><span class="n">y</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">y</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="mf">0.0</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;sum = &quot;</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sum</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">std::execution::par_unseq</span></code> tells the implementation: “you may parallelize <em>and</em> vectorize <em>and</em> reorder the work”. Compiled with NVHPC’s <code class="docutils literal notranslate"><span class="pre">nvc++</span> <span class="pre">-stdpar=gpu</span></code>, this <strong>runs on a GPU</strong> — the standard library implementation generates CUDA kernels under the hood. With stock g++ or clang, behavior depends on the standard-library implementation and how it was built; some configurations vectorize, some use a CPU thread pool through a backend such as oneTBB, and some effectively run serial. The same source can target multiple backends, but the guarantee is semantic permission, not a portable performance promise.</p>
+<p>Equivalent in Fortran 2018:</p>
+<div class="highlight-fortran notranslate"><div class="highlight"><pre><span></span><span class="k">program </span><span class="n">saxpy</span>
+<span class="w">  </span><span class="k">implicit none</span>
+<span class="k">  </span><span class="kt">integer</span><span class="p">,</span><span class="w"> </span><span class="k">parameter</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="o">**</span><span class="mi">24</span>
+<span class="w">  </span><span class="kt">real</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="n">N</span><span class="p">),</span><span class="w"> </span><span class="n">a</span>
+<span class="w">  </span><span class="kt">integer</span><span class="w"> </span><span class="kd">::</span><span class="w"> </span><span class="n">i</span>
+<span class="w">  </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0d0</span>
+<span class="w">  </span><span class="k">do</span><span class="w"> </span><span class="k">concurrent</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
+<span class="w">    </span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">real</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<span class="w">    </span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0d0</span>
+<span class="w">  </span><span class="k">end do</span>
+<span class="k">  do</span><span class="w"> </span><span class="k">concurrent</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">:</span><span class="n">N</span><span class="p">)</span>
+<span class="w">    </span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">y</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+<span class="w">  </span><span class="k">end do</span>
+<span class="k">  print</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="nb">sum</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+<span class="k">end program</span>
+</pre></div>
+</div>
+<p>Compiled with NVHPC’s <code class="docutils literal notranslate"><span class="pre">nvfortran</span> <span class="pre">-stdpar=gpu</span></code>, again, runs on a GPU.</p>
+<p>This is the <em>most direct</em> lineage of the 1976 vector Fortran source: the <em>programmer’s</em> code is barely longer than the Era 2 version, the compiler is doing all the parallelization and vectorization and offloading. Cray-style “write a vector-friendly loop and let the compiler handle the rest” — taken to its logical 50-year conclusion.</p>
+</section>
+</section>
+<section id="what-you-measure">
+<h2>What you measure<a class="headerlink" href="#what-you-measure" title="Link to this heading">#</a></h2>
+<p>For each era’s implementation, on a problem size of <code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">=</span> <span class="pre">2^24</span></code>:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Era</p></th>
+<th class="head"><p>LOC</p></th>
+<th class="head"><p>Single-thread time</p></th>
+<th class="head"><p>Best-config time</p></th>
+<th class="head"><p>Speedup vs Era 1</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1. Scalar Fortran</p></td>
+<td><p>~5</p></td>
+<td><p>(baseline)</p></td>
+<td><p>(same)</p></td>
+<td><p>1×</p></td>
+</tr>
+<tr class="row-odd"><td><p>2. Vector (auto)</p></td>
+<td><p>~5 + dir</p></td>
+<td><p>(same compile)</p></td>
+<td><p>(auto-vec)</p></td>
+<td><p>4–8×</p></td>
+</tr>
+<tr class="row-even"><td><p>3. OpenMP</p></td>
+<td><p>~7</p></td>
+<td><p>—</p></td>
+<td><p>× cores × vec</p></td>
+<td><p>30–60×</p></td>
+</tr>
+<tr class="row-odd"><td><p>4. MPI</p></td>
+<td><p>~25</p></td>
+<td><p>—</p></td>
+<td><p>× ranks</p></td>
+<td><p>similar to OMP</p></td>
+</tr>
+<tr class="row-even"><td><p>5. CUDA</p></td>
+<td><p>~20</p></td>
+<td><p>—</p></td>
+<td><p>× GPU SMs</p></td>
+<td><p>100–500×</p></td>
+</tr>
+<tr class="row-odd"><td><p>6. par_unseq</p></td>
+<td><p>~10</p></td>
+<td><p>—</p></td>
+<td><p>× GPU SMs</p></td>
+<td><p>100–500× (with nvc++)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>(Your numbers will vary considerably with hardware. The qualitative pattern won’t.)</p>
+</section>
+<section id="what-you-write">
+<h2>What you write<a class="headerlink" href="#what-you-write" title="Link to this heading">#</a></h2>
+<p>A 1,500–2,500 word essay with these sections:</p>
+<ol class="arabic simple">
+<li><p><strong>What did each abstraction make easy?</strong> Pick one operation that’s clearer in each idiom (e.g., MPI made distributed-memory boundaries explicit; SIMT made per-thread reasoning natural; standard parallelism made offloading transparent).</p></li>
+<li><p><strong>What did each abstraction hide?</strong> Pick one bug or performance pathology each idiom is prone to (e.g., MPI deadlocks when send/recv don’t pair; CUDA branch divergence; standard parallelism’s opaque cost model).</p></li>
+<li><p><strong>The ratio of source effort to peak performance</strong> has gone in a U-shape: Era 1 was minimal effort but minimal performance. Era 4 (MPI) was maximum effort. Era 6 is approaching minimal effort <em>and</em> near-peak performance, but only if the compiler is good. What does this say about where compiler R&amp;D should focus next?</p></li>
+<li><p><strong>Your final argument</strong>: is the modern supercomputer the <em>successor</em> of the Cray-1 (a continuous lineage of “one fast machine, generalized”), or is it a <em>different kind of object</em> that happens to share the name? Defend your answer with at least three architectural specifics from the course.</p></li>
+</ol>
+</section>
+<section id="submission">
+<h2>Submission<a class="headerlink" href="#submission" title="Link to this heading">#</a></h2>
+<p>If you’re auditing this course online, no one will grade you. The point of the essay is to make the synthesis explicit to yourself. If you want feedback, post your essay as a discussion in the course repo’s GitHub Discussions, link your code, and the maintainers (and other students) will respond.</p>
+</section>
+<section id="the-contested-definition-of-supercomputer">
+<h2>The contested definition of “supercomputer”<a class="headerlink" href="#the-contested-definition-of-supercomputer" title="Link to this heading">#</a></h2>
+<p>In 1976, the word was unambiguous: a supercomputer was the machine at LANL. Singular, identifiable, paid for by the federal government, FORTRAN-programmed, FP64. The question “is <em>that</em> a supercomputer?” did not arise.</p>
+<p>In 2026 the word is genuinely contested, and the answer depends on what you measure:</p>
+<ul class="simple">
+<li><p><strong>By HPL FP64 Rmax</strong>: the Top500 list. El Capitan, Frontier, Aurora, JUPITER, Fugaku, Eagle (Microsoft), LUMI, Leonardo, MareNostrum 5, Tuolumne. A 30-PFLOPS floor for the top 10. This is the <em>traditional</em> definition.</p></li>
+<li><p><strong>By delivered FP16 throughput</strong>: hyperscaler AI-training clusters. Microsoft Eagle (publicly listed), Meta Research SuperCluster, xAI Colossus (~100,000+ H100s), the Anthropic and OpenAI training pods, Google TPU v5p and v6 superpods. Most of these exceed exascale in FP16 but do not submit HPL and are not on Top500.</p></li>
+<li><p><strong>By novelty of substrate</strong>: Cerebras CS-3 wafer-scale (one chip, 900,000 cores, exascale-class on specific workloads). Tenstorrent Grayskull. Groq LPU. Graphcore Bow. None resemble a traditional supercomputer; some out-perform the Top500 on the workloads they were designed for.</p></li>
+<li><p><strong>By organizational shape</strong>: shared, programmable, FP64-capable, scientific-infrastructure-shaped, run as multi-tenant capacity by a national lab or university consortium. This is the <em>practitioner’s</em> working definition. Microsoft Eagle qualifies (it submits HPL, accepts external workloads under contract); xAI Colossus does not, even though Colossus is plausibly bigger.</p></li>
+</ul>
+<p>These definitions are diverging fast. The pre-2020 consensus that “the Top500 measures the world’s most powerful computers” no longer holds — the list now measures the world’s most powerful computers <em>that submit to a particular benchmark, at a particular precision, under a particular organizational form</em>. AI-training clusters built by single companies are plausibly bigger; they are not run as scientific infrastructure and they do not submit.</p>
+<p>When you write the final essay, this is a <em>real</em> question to take a position on: what should “supercomputer” mean in 2026? Defend a definition with at least three architectural specifics from the course, and explain which currently-existing machines your definition includes and excludes. There is no wrong answer here — but there are weak ones, and the weakest ones avoid the question.</p>
+</section>
+<section id="going-further-capstone-variants">
+<h2>Going further: capstone variants<a class="headerlink" href="#going-further-capstone-variants" title="Link to this heading">#</a></h2>
+<p>SAXPY-across-eras is the minimum-viable capstone — it isolates the <em>programming-model</em> dimension while keeping the kernel trivial. If you want a stronger project, swap in a more interesting kernel and keep the cross-era framing. Some directions that work:</p>
+<ul class="simple">
+<li><p><strong>Sparse matrix-vector multiply</strong> on a matrix from the <a class="reference external" href="https://sparse.tamu.edu">SuiteSparse Matrix Collection</a>. The kernel is <em>irregular</em>, so the abstractions that hid SAXPY’s costs cleanly are forced to confront gather/scatter, load imbalance, and (on MPI) communication patterns that aren’t pure halo exchange.</p></li>
+<li><p><strong>3D 7-point stencil</strong> with a domain that spans multiple nodes. Closer to real climate / CFD codes; the MPI version has actual halo exchange (revisit Lab 9); the GPU version exercises shared-memory tiling.</p></li>
+<li><p><strong>Climate mini-app</strong>, specifically <a class="reference external" href="https://github.com/mrnorman/miniWeather"><code class="docutils literal notranslate"><span class="pre">miniWeather</span></code></a> — explicitly designed as an HPC training proxy. Has reference implementations in MPI, OpenMP, OpenACC, CUDA, and Kokkos; doing a comparative Roofline analysis across these is paper-quality work.</p></li>
+<li><p><strong>Dense <code class="docutils literal notranslate"><span class="pre">dgemm</span></code></strong> comparing naïve, blocked, threaded, and tuned-BLAS implementations. The point is that one library call (Week 7’s lesson) hides four decades of vector and parallel optimization.</p></li>
+</ul>
+<p>Each of these gives you the same cross-era structure as the canonical capstone with more analytical surface area. See <code class="docutils literal notranslate"><span class="pre">assessment.md</span></code> for the full project portfolio and reproducibility expectations.</p>
+</section>
+<section id="what-comes-next">
+<h2>What comes next<a class="headerlink" href="#what-comes-next" title="Link to this heading">#</a></h2>
+<p>This course covered the past sixty years. The next decade — from now through ~2035 — is being shaped by:</p>
+<ul class="simple">
+<li><p><strong>AI training as the dominant high-end workload.</strong> AI-specialized chips (Cerebras, Groq, Tenstorrent, custom hyperscaler silicon like TPU and Trainium) are starting to compete with traditional HPC accelerators. Frontier and El Capitan are dual-use: weapons simulation <em>and</em> AI training.</p></li>
+<li><p><strong>Disaggregated memory.</strong> CXL is permitting memory pools shared across servers. The “what is a node” question is becoming harder.</p></li>
+<li><p><strong>Photonic interconnects.</strong> Co-packaged optics, ribbon-fiber inside chips. The bandwidth-distance trade-off shifts.</p></li>
+<li><p><strong>Quantum + classical hybrid systems.</strong> A coprocessor model — a quantum chip handed problems by a classical supercomputer. Not because anyone has solved a useful problem on a current quantum machine, but because the systems integration work has to start somewhere.</p></li>
+<li><p><strong>Energy-bounded scaling.</strong> Few public HPC sites can allocate 100 MW to a single machine. A 5 EFLOPS machine in 2030 must be much more efficient than today’s if it is to fit normal facility budgets. This is currently a research problem with no clear solution.</p></li>
+</ul>
+<p>You now have the historical foundation to read each of these as they unfold and tell whether they’re new ideas, recurring ideas, or recurring ideas with a new name.</p>
+<p>Cray died in 1996. The architecture he built has been continuously rebuilt, redirected, and renewed by people he never met, on machines he would not have recognized, doing work he made possible. That’s not a unique pattern in computing history — but he was unusually clear-eyed about what mattered. We’ve spent fifteen weeks taking him seriously.</p>
+<p>Good luck.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-15-anatomy-2025.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 15 — Anatomy of a 2025 Supercomputer</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../appendix-hpc-vs-ai-cluster.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-exercise">The exercise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-six-eras">The six eras</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-1-cdc-6600-scalar-fortran-1964">Era 1 — CDC 6600, scalar Fortran (1964)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-2-cray-1-vector-fortran-1976">Era 2 — Cray-1, vector Fortran (1976)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-3-cray-y-mp-microtasking-vector-1988">Era 3 — Cray Y-MP, microtasking + vector (1988)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-4-distributed-memory-mpi-1994">Era 4 — Distributed memory, MPI (1994)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-5-gpu-cuda-hip-2007">Era 5 — GPU, CUDA / HIP (2007)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#era-6-2025-modern-c-with-standard-parallelism">Era 6 — 2025 Modern C++ with Standard Parallelism</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-measure">What you measure</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-write">What you write</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submission">Submission</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-contested-definition-of-supercomputer">The contested definition of “supercomputer”</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#going-further-capstone-variants">Going further: capstone variants</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-comes-next">What comes next</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

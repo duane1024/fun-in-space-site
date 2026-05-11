@@ -1,0 +1,685 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css?v=8cd3d715" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=c73c0f3e"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'weeks/week-11-asci-bluegene';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Week 12 — The Earth Simulator: When Vectors Briefly Won Again" href="week-12-earth-simulator.html" />
+    <link rel="prev" title="Week 10 — Beowulf and the Death of Bespoke" href="week-10-beowulf.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">From Cray-1 to Frontier: A working engineer's history of supercomputer architecture</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I — What 'supercomputer' meant</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-01-prehistory.html">Week 1 — Before the Word: CDC 6600 and the Idea of “Fast”</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-02-cray-1.html">Week 2 — The Cray-1 (1976): Vectors Become a Product</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-03-vector-fortran.html">Week 3 — Vector Fortran and the Birth of Vectorization</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II — The vector era</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-04-shared-memory-vectors.html">Week 4 — X-MP, Cray-2, Y-MP: When Vectors Met Multiprocessing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-05-japanese-vectors.html">Week 5 — Japan: NEC SX, Fujitsu VP, Hitachi S-Series</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-06-vector-wall.html">Week 6 — The Vector Wall: ETA-10, Cray-3, and the Death of Bespoke</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III — The parallel revolution</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-07-connection-machine.html">Week 7 — The Connection Machine: SIMD Massively Parallel</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-08-mimd-mpp.html">Week 8 — MIMD MPP: The Killer Micros, Connected</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-09-mpi.html">Week 9 — MPI: The Standard That Stuck</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV — Commodity and cluster</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-10-beowulf.html">Week 10 — Beowulf and the Death of Bespoke</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-12-earth-simulator.html">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V — Modern heterogeneous</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-13-cuda-simt.html">Week 13 — CUDA and SIMT: Vectors Reborn as Threads</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-14-exascale.html">Week 14 — Exascale: Frontier, Aurora, El Capitan, Fugaku</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week-15-anatomy-2025.html">Week 15 — Anatomy of a 2025 Supercomputer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Capstone</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="week-16-capstone.html">Week 16 — Capstone: SAXPY Across the Eras</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix-hpc-vs-ai-cluster.html">Appendix A — The Modern Supercomputer vs. the Frontier-LLM Training Cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Reference</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../references.html">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../assessment.html">Assessment and Project Guide</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/weeks/week-11-asci-bluegene.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asci-asc-simulating-what-we-no-longer-test">ASCI / ASC: simulating what we no longer test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-scale-ran-into-power-around-2004">Why scale ran into power around 2004</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bluegene-l-2004-the-response">BlueGene/L (2004): the response</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-programming-a-bluegene-was-like">What programming a BlueGene was like</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-bg-line-ended">Why the BG line ended</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#power-as-the-design-driver-post-bg">Power as the design driver, post-BG</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-profile-your-laptop-s-power">Lab — Profile your laptop’s power</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="week-11-asci-asc-and-bluegene-when-power-became-the-constraint">
+<h1>Week 11 — ASCI, ASC, and BlueGene: When Power Became the Constraint<a class="headerlink" href="#week-11-asci-asc-and-bluegene-when-power-became-the-constraint" title="Link to this heading">#</a></h1>
+<section id="where-we-are-in-2026">
+<h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
+<p>Modern supercomputers are power-limited. The capital cost of a Frontier-class machine is still enormous, but site power and lifetime operating cost now shape the architecture as strongly as procurement price does. Site selection is driven by access to cheap and reliable electrical power. Cooling design — direct liquid cooling, immersion, two-phase fluorocarbon — is the active research front. The reason all of this is true is a structural cliff that arrived around 2004 and was first navigated, brilliantly, by IBM’s BlueGene project. Before that, the DOE’s ASCI program drove the scale; after BlueGene, every supercomputer designer learned to count joules first and FLOPS second.</p>
+<p>This week is the story of those two arcs — how the labs drove scale up, and how power forced architecture to change.</p>
+</section>
+<section id="asci-asc-simulating-what-we-no-longer-test">
+<h2>ASCI / ASC: simulating what we no longer test<a class="headerlink" href="#asci-asc-simulating-what-we-no-longer-test" title="Link to this heading">#</a></h2>
+<p>The <strong>Comprehensive Test Ban Treaty</strong> (signed 1996, never ratified by the US Senate but observed in practice) ended underground nuclear testing in the United States after September 1992. The US weapons complex needed an alternative way to certify the safety, security, and reliability of the stockpile: large-scale physical simulation. The DOE’s response was the <strong>Accelerated Strategic Computing Initiative</strong> (ASCI, 1995–2005, renamed the <strong>Advanced Simulation and Computing program</strong> (ASC) thereafter).</p>
+<p>ASCI’s premise was that to credibly simulate weapons physics with the resolution required for stockpile certification, you needed compute scale increases of multiple orders of magnitude over what existed in 1995, on a roughly five-year cadence. That meant funding the construction of machines that did not yet exist, with explicit DOE/lab/vendor co-design. ASCI is the most consequential procurement program in HPC history.</p>
+<p>The roster:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Year</p></th>
+<th class="head"><p>Machine</p></th>
+<th class="head"><p>Site</p></th>
+<th class="head"><p>Architecture</p></th>
+<th class="head"><p>Peak</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>1997</p></td>
+<td><p>ASCI Red</p></td>
+<td><p>Sandia</p></td>
+<td><p>Intel Pentium Pro/II MPP</p></td>
+<td><p>1.8 TFLOPS</p></td>
+</tr>
+<tr class="row-odd"><td><p>1998</p></td>
+<td><p>ASCI Blue Pacific</p></td>
+<td><p>LLNL</p></td>
+<td><p>IBM SP2 (PowerPC 604e)</p></td>
+<td><p>3.9 TFLOPS</p></td>
+</tr>
+<tr class="row-even"><td><p>1998</p></td>
+<td><p>ASCI Blue Mountain</p></td>
+<td><p>LANL</p></td>
+<td><p>SGI Origin 2000</p></td>
+<td><p>3 TFLOPS</p></td>
+</tr>
+<tr class="row-odd"><td><p>2000</p></td>
+<td><p>ASCI White</p></td>
+<td><p>LLNL</p></td>
+<td><p>IBM SP (Power3)</p></td>
+<td><p>12.3 TFLOPS</p></td>
+</tr>
+<tr class="row-even"><td><p>2002</p></td>
+<td><p>ASCI Q</p></td>
+<td><p>LANL</p></td>
+<td><p>HP AlphaServer SC</p></td>
+<td><p>20 TFLOPS</p></td>
+</tr>
+<tr class="row-odd"><td><p>2005</p></td>
+<td><p>ASC Purple</p></td>
+<td><p>LLNL</p></td>
+<td><p>IBM SP (Power5)</p></td>
+<td><p>92 TFLOPS</p></td>
+</tr>
+<tr class="row-even"><td><p>2005</p></td>
+<td><p>BlueGene/L</p></td>
+<td><p>LLNL</p></td>
+<td><p>IBM BG/L</p></td>
+<td><p>596 TFLOPS</p></td>
+</tr>
+<tr class="row-odd"><td><p>2008</p></td>
+<td><p>Roadrunner</p></td>
+<td><p>LANL</p></td>
+<td><p>AMD + Cell BE</p></td>
+<td><p>1.45 PFLOPS</p></td>
+</tr>
+<tr class="row-even"><td><p>2012</p></td>
+<td><p>Sequoia</p></td>
+<td><p>LLNL</p></td>
+<td><p>IBM BG/Q</p></td>
+<td><p>20 PFLOPS</p></td>
+</tr>
+<tr class="row-odd"><td><p>2018</p></td>
+<td><p>Sierra</p></td>
+<td><p>LLNL</p></td>
+<td><p>IBM Power9 + NVIDIA Volta</p></td>
+<td><p>125 PFLOPS</p></td>
+</tr>
+<tr class="row-even"><td><p>2024</p></td>
+<td><p>El Capitan</p></td>
+<td><p>LLNL</p></td>
+<td><p>AMD MI300A APUs</p></td>
+<td><p>1.74 EFLOPS</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>Sources for the table.</strong> Peak figures are <em>Rpeak</em> from the Top500 list of the relevant June or November (whichever was closest to acceptance), except where noted. Per-machine primary citations:</p>
+<ul class="simple">
+<li><p><strong>ASCI Red</strong> (Sandia, 1997): Mattson &amp; Henderson, “ASCI Red: Experiences and lessons learned” (SC97); Foster et al. (2005).</p></li>
+<li><p><strong>ASCI Blue Pacific</strong> (LLNL, 1998): LLNL Computing user documentation; Top500 November 1998.</p></li>
+<li><p><strong>ASCI Blue Mountain</strong> (LANL, 1998): LANL ASCI program reports; Top500 November 1998.</p></li>
+<li><p><strong>ASCI White</strong> (LLNL, 2000): Top500 November 2000.</p></li>
+<li><p><strong>ASCI Q</strong> (LANL, 2002): Top500 November 2002; HP AlphaServer SC product documentation.</p></li>
+<li><p><strong>ASC Purple</strong> (LLNL, 2005): IBM Power5 system documentation; Top500 November 2005.</p></li>
+<li><p><strong>BlueGene/L</strong> (LLNL, 2005): Adiga et al. (2002) for the architecture overview; Top500 November 2005 for the 596 TFLOPS Rmax/Rpeak figures.</p></li>
+<li><p><strong>Roadrunner</strong> (LANL, 2008): Barker, K. et al. (2008), “Entering the petaflop era: The architecture and performance of Roadrunner” (SC08); Top500 June 2008 for the 1.026 PFLOPS Rmax.</p></li>
+<li><p><strong>Sequoia</strong> (LLNL, 2012): IBM BG/Q architecture papers; Top500 June 2012.</p></li>
+<li><p><strong>Sierra</strong> (LLNL, 2018): IBM POWER9 + NVIDIA Volta system documentation; Top500 November 2018.</p></li>
+<li><p><strong>El Capitan</strong> (LLNL, 2024): Garcia et al. (2022), “El Capitan: An advanced architecture exascale system at LLNL” (SC22); Top500 November 2024 list for the debut figures, November 2025 list for updated HPL numbers.</p></li>
+</ul>
+<p>The ASC roster reads as a cross-section of the architectural evolution we’re tracking in this course. The labs paid for, helped design, and ran every major architectural shift: pure MIMD MPP (Red), big SMP node clusters (White, Purple), low-power MPP at extreme scale (BlueGene), the first heterogeneous-accelerated supercomputer (Roadrunner), GPU-accelerated nodes (Sierra), APU-integrated exascale (El Capitan).</p>
+</section>
+<section id="why-scale-ran-into-power-around-2004">
+<h2>Why scale ran into power around 2004<a class="headerlink" href="#why-scale-ran-into-power-around-2004" title="Link to this heading">#</a></h2>
+<p>For three decades, <strong>Dennard scaling</strong> had given the industry a free lunch: as CMOS feature size shrank, voltage and current per transistor scaled down with it, so power per transistor shrank. Doubling transistor count per generation didn’t double power. You got more compute <em>and</em> it ran cooler.</p>
+<p>Around 2004, Dennard scaling collapsed. Voltage stopped scaling because of leakage current — at smaller feature sizes, sub-threshold leakage became significant, and dropping voltage further made transistors unreliable. From ~2004 onward, doubling transistor count <em>did</em> roughly double power. Frequency scaling stopped — chip clocks plateaued near 3–4 GHz. (Look at any single-core CPU clock chart: 2004 is the inflection point.)</p>
+<p>This was the end of the “free lunch”. In one decade you went from “buy a faster CPU and your code gets faster” to “buy a wider/parallel CPU and rewrite your code to use it”. The HPC industry felt this first because it was already at the bleeding edge of power and cooling.</p>
+</section>
+<section id="bluegene-l-2004-the-response">
+<h2>BlueGene/L (2004): the response<a class="headerlink" href="#bluegene-l-2004-the-response" title="Link to this heading">#</a></h2>
+<p>IBM’s response to the power cliff, designed at Yorktown Heights and Rochester from ~1999, productized at Lawrence Livermore from 2004. The design philosophy was a deliberate inversion:</p>
+<blockquote>
+<div><p>Instead of fewer, faster, hotter cores, build <em>vastly more, slower, cooler</em> cores.</p>
+</div></blockquote>
+<ul class="simple">
+<li><p><strong>Compute nodes / processors</strong>: 65,536 compute nodes, each with two 700 MHz PowerPC 440 processors: 131,072 processors total. Compare to ASCI Q’s 8,192 1.25 GHz Alpha processors — <em>many more processors, half the clock</em>.</p></li>
+<li><p><strong>Per-node power</strong>: about 17 watts per node (with 2 cores). Total system: ~1.5 MW for 596 TFLOPS peak.</p></li>
+<li><p><strong>Compare to ASCI White</strong>: 12.3 TFLOPS peak at 1.7 MW (~7 MFLOPS/W). BlueGene/L: roughly 596 TFLOPS peak at 1.5 MW (~400 MFLOPS/W). <strong>About a 50× efficiency improvement.</strong></p></li>
+<li><p><strong>Interconnect</strong>: a 3D torus for nearest-neighbor (the natural fit for physics codes), plus a separate global tree network for collectives, plus a separate barrier network for synchronization. <em>Three</em> dedicated networks, each optimized for its workload.</p></li>
+<li><p><strong>OS</strong>: Compute Node Kernel (CNK), a stripped microkernel — only 5 MB of memory footprint. No demand paging, no signals, no fork. (Echo of Paragon.)</p></li>
+</ul>
+<p>BlueGene/L was Top500 #1 from November 2004 to June 2008, the longest reign of any single architecture. It also dominated the <strong>Green500</strong> (the “FLOPS per watt” ranking) — at the time, BG/L systems were 5× more efficient than runners-up. <em>Sources for the BG/L specifications above: Adiga et al. (2002), “An overview of the BlueGene/L supercomputer,” Proc. SC02; LLNL “BlueGene/L” historic machine page; Top500 and Green500 lists, November 2004 – June 2008.</em></p>
+<p>The BG line continued: <strong>BlueGene/P</strong> (2007, 850 MHz, 4-core PowerPC 450), and <strong>BlueGene/Q</strong> (2012, IBM A2 cores, 16-core, 1.6 GHz, with hardware transactional memory — Sequoia at LLNL hit 20 PFLOPS at 7.9 MW). <em>Sources: IBM BG/P and BG/Q system architecture papers; Top500 entries for Intrepid (ANL, BG/P) and Sequoia/Mira (LLNL/ANL, BG/Q).</em></p>
+</section>
+<section id="what-programming-a-bluegene-was-like">
+<h2>What programming a BlueGene was like<a class="headerlink" href="#what-programming-a-bluegene-was-like" title="Link to this heading">#</a></h2>
+<p>If you knew MPI, you could program BlueGene. The compute-node OS exposed enough of POSIX to run MPI programs directly. The complications were:</p>
+<ol class="arabic simple">
+<li><p><strong>Node memory was small.</strong> BG/L had 256 MB or 512 MB per node (two cores sharing). You could not fit a fat code onto a single node. <em>Domain decomposition was forced</em> — you had to split your problem across many nodes because no single node had enough memory to hold it.</p></li>
+<li><p><strong>Node single-thread performance was modest.</strong> A 700 MHz PPC 440 was about as fast as a Pentium III. If your code didn’t scale to many ranks, you were sad.</p></li>
+<li><p><strong>Virtual node mode.</strong> On BG/Q (and back-ported to BG/P) you could run more MPI ranks than physical CPU cores by oversubscribing, exposing the chip’s hardware multithreading.</p></li>
+</ol>
+<p>The BlueGene project also pushed early adoption of <strong>MPI + OpenMP hybrid</strong> — one MPI rank per node, OpenMP threads inside the node sharing memory. This pattern then became standard on every multi-core HPC system in the 2010s.</p>
+<p>The <strong>MPI source code</strong> of an LLNL stockpile-stewardship simulation didn’t change much going from ASCI White to BG/L to Sequoia. The configuration changed (more ranks, smaller per-rank chunks), some on-node parallelism was added with OpenMP, but the algorithmic structure was preserved. This is why ASCI’s enormous investments in physics codes paid off: the codes outlived the machines.</p>
+</section>
+<section id="why-the-bg-line-ended">
+<h2>Why the BG line ended<a class="headerlink" href="#why-the-bg-line-ended" title="Link to this heading">#</a></h2>
+<p>IBM stopped the BlueGene line after BG/Q in 2012. The reasons:</p>
+<ol class="arabic simple">
+<li><p><strong>GPUs ate the FLOPS-per-watt crown.</strong> A 2012 NVIDIA Kepler K20X delivered roughly 5–6 GFLOPS/W in FP64 by peak-spec arithmetic, while BG/Q systems were around 2–3 GFLOPS/W at the system level. The custom-low-power-PowerPC bet stopped being competitive once general-purpose accelerators reached comparable or better efficiency at much higher node throughput.</p></li>
+<li><p><strong>Single-thread performance mattered for the codes that didn’t parallelize.</strong> Some workloads, especially in materials science and graph analytics, didn’t have the embarrassingly-parallel structure that BG was tuned for. Those workloads needed faster cores.</p></li>
+<li><p><strong>Aurora</strong>, originally planned as an Intel Xeon Phi BlueGene successor, was delayed and redesigned several times.</p></li>
+<li><p><strong>Internal IBM strategy</strong> moved toward POWER + GPU, which became Summit (ORNL, 2018) and Sierra (LLNL, 2018).</p></li>
+</ol>
+<p>But the BG architectural lessons stuck. <em>Fugaku</em> (RIKEN, 2020), built around the Fujitsu A64FX ARM chip, is a spiritual descendant — many simple cores, vector units, no GPUs, designed for power efficiency and tight system integration. It hit Top500 #1 in 2020.</p>
+</section>
+<section id="power-as-the-design-driver-post-bg">
+<h2>Power as the design driver, post-BG<a class="headerlink" href="#power-as-the-design-driver-post-bg" title="Link to this heading">#</a></h2>
+<p>After BG, every major supercomputer design starts with a power budget — typically 20–40 MW for an exascale system — and works backward to architecture. <em>That</em> is the structural shift. Compare:</p>
+<ul class="simple">
+<li><p><strong>Cray X-MP/4</strong> (1985): 800 MFLOPS at ~125 kW. ~6 MFLOPS/W.</p></li>
+<li><p><strong>ASCI White</strong> (2000): 12 TFLOPS at 1.7 MW. ~7 MFLOPS/W. (A modest improvement over Cray-era system-level efficiency, but at much larger scale.)</p></li>
+<li><p><strong>BlueGene/Q Sequoia</strong> (2012): 20 PFLOPS at 7.9 MW. ~2.5 GFLOPS/W. (Factor of 350× over ASCI White — the slope is dramatic.)</p></li>
+<li><p><strong>Frontier</strong> (2022): 1.1 EFLOPS at 21 MW. <strong>52 GFLOPS/W</strong>.</p></li>
+<li><p><strong>El Capitan</strong> (2024): 1.8 EFLOPS-class HPL performance at about 30 MW. Roughly <strong>60 GFLOPS/W</strong> on the current Top500/Green500-style HPL metric.</p></li>
+</ul>
+<p>Power efficiency improvement, on the curve, has been <em>faster</em> than raw FLOPS improvement for the past two decades — because raw FLOPS isn’t the constraint, joules are. Every architectural decision in a modern HPC system is in service of this constraint.</p>
+<p>The same dynamic also reshaped what “performance” meant. From the mid-2000s on, the field needed a benchmark that measured <em>delivered</em> memory bandwidth, not peak FLOPS. The canonical answer is <strong>STREAM</strong> (McCalpin, 1995, University of Virginia) — four tiny kernels (copy, scale, add, triad) sized far beyond any cache, reporting sustained bytes-per-second. STREAM is the bandwidth equivalent of LINPACK and is the right number to look at first when reasoning about post-Dennard architectures. We’ll see it return in the Roofline discussion in Week 15.</p>
+</section>
+<section id="lab-profile-your-laptop-s-power">
+<h2>Lab — Profile your laptop’s power<a class="headerlink" href="#lab-profile-your-laptop-s-power" title="Link to this heading">#</a></h2>
+<p>In <code class="docutils literal notranslate"><span class="pre">labs/11-power-profile/</span></code>, you measure the energy cost of three SAXPY implementations on your laptop:</p>
+<ol class="arabic simple">
+<li><p>Naïve Python loop.</p></li>
+<li><p>NumPy.</p></li>
+<li><p>C with OpenMP and AVX.</p></li>
+</ol>
+<p>You time them, then read your laptop’s power draw (via <code class="docutils literal notranslate"><span class="pre">powermetrics</span></code> on macOS, <code class="docutils literal notranslate"><span class="pre">powerstat</span></code> or <code class="docutils literal notranslate"><span class="pre">s-tui</span></code> on Linux, or <code class="docutils literal notranslate"><span class="pre">intel-power-gadget</span></code> on older systems). You compute joules per FLOP for each. The ratios you see — typically 2–3 orders of magnitude across the three implementations — are the same ratios driving every architectural decision in modern HPC.</p>
+</section>
+<section id="discussion-questions">
+<h2>Discussion questions<a class="headerlink" href="#discussion-questions" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>BlueGene/L’s design philosophy — many small cores, slow clock, integrated network — is broadly the same as a modern data-parallel GPU. Both are responses to the post-Dennard power cliff. What did BG do that GPUs didn’t? Why did GPU-style win for general-purpose HPC while BG-style stayed at the labs?</p></li>
+<li><p>The DOE’s ASCI program <em>paid for</em> architectural development that benefited the whole industry: every major HPC vendor’s codebase has DOE-funded improvements in it. Is this a healthy industrial policy? Compare to Japan’s Earth Simulator (next week) or China’s exascale program (Sunway, Tianhe).</p></li>
+<li><p>ASCI codes have lifespans of decades. The hardware they run on has lifespans of years. The ratio is roughly 10:1. What does this tell you about the tradeoff between optimizing for current hardware (e.g., writing CUDA-specific code) and writing portable code (e.g., MPI + OpenMP + standard C++)?</p></li>
+</ol>
+</section>
+<section id="further-reading">
+<h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Adiga, N.R. et al. (2002). “An overview of the BlueGene/L supercomputer”. <em>Proc. SC02</em>. The IBM design overview.</p></li>
+<li><p>Bhatele, A. et al. (2013). “Identifying the culprits behind network congestion”. <em>Proc. SC13</em>. Real-world experience with BG/Q networks; teaches a lot about why interconnect matters.</p></li>
+<li><p>Top500 lists 2004–2012, watching the Green500 emerge alongside.</p></li>
+<li><p>Foster, I. et al. (2005). “ASCI Red: The first TFLOPS computer at Sandia”. <em>IEEE Computer</em>. Includes the full history of the program through ASC Purple.</p></li>
+<li><p>The DOE’s “Exascale Computing Project” (ECP) reports, 2016 onward — the formal successor to ASCI/ASC.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./weeks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="week-10-beowulf.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Week 10 — Beowulf and the Death of Bespoke</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="week-12-earth-simulator.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Week 12 — The Earth Simulator: When Vectors Briefly Won Again</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-we-are-in-2026">Where we are in 2026</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#asci-asc-simulating-what-we-no-longer-test">ASCI / ASC: simulating what we no longer test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-scale-ran-into-power-around-2004">Why scale ran into power around 2004</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bluegene-l-2004-the-response">BlueGene/L (2004): the response</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-programming-a-bluegene-was-like">What programming a BlueGene was like</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-bg-line-ended">Why the BG line ended</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#power-as-the-design-driver-post-bg">Power as the design driver, post-BG</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-profile-your-laptop-s-power">Lab — Profile your laptop’s power</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#discussion-questions">Discussion questions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-reading">Further reading</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2026 Duane Moore.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

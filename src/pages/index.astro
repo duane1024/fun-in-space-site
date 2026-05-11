@@ -55,11 +55,11 @@ const tweetTimestampFormatter = new Intl.DateTimeFormat('en-US', {
   </section>
 
   <Section title="Featured projects">
-    <CardGrid>
+    <div class="featured-projects">
       {projects.map((entry) => (
         <Card title={entry.data.title} icon={entry.data.icon} subtitle={entry.data.status} body={entry.data.summary} links={entry.data.links} />
       ))}
-    </CardGrid>
+    </div>
   </Section>
 
   <Section title="Companies and ventures" intro="Startups, consulting, and product bets — not just places worked, but things built from the inside.">
@@ -143,6 +143,24 @@ const tweetTimestampFormatter = new Intl.DateTimeFormat('en-US', {
 <style>
   .hero {
     padding: 2rem 0 1.5rem;
+  }
+
+  .featured-projects {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 560px) {
+    .featured-projects {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 960px) {
+    .featured-projects {
+      grid-template-columns: repeat(4, 1fr);
+    }
   }
 
   .brand-banner {
