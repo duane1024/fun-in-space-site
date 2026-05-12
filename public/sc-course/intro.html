@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Introduction &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
+    <title>From Cray-1 to Frontier: A working engineer’s history of supercomputer architecture &#8212; From Cray-1 to Frontier: A working engineer&#39;s history of supercomputer architecture</title>
   
   
   
@@ -334,7 +334,7 @@
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Introduction</h1>
+    <h1>From Cray-1 to Frontier: A working engineer’s history of supercomputer architecture</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -344,6 +344,7 @@
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-the-code-doing-the-labs">Getting the code, doing the labs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-course-is-structured">How this course is structured</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-getting-it-right">A note on getting it right</a></li>
@@ -360,8 +361,10 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="from-cray-1-to-frontier-a-working-engineer-s-history-of-supercomputer-architecture">
+<h1>From Cray-1 to Frontier: A working engineer’s history of supercomputer architecture<a class="headerlink" href="#from-cray-1-to-frontier-a-working-engineer-s-history-of-supercomputer-architecture" title="Link to this heading">#</a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">#</a></h2>
 <figure class="align-right" id="id1">
 <a class="reference internal image-reference" href="_images/cray1-1976-lanl.png"><img alt="A Cray-1 supercomputer installed at Los Alamos National Laboratory, 1976" src="_images/cray1-1976-lanl.png" style="width: 320px;" />
 </a>
@@ -380,6 +383,7 @@
 </ol>
 <p>Vector processing — the thing the Cray-1 made famous — won, then lost, then won again in disguise. Today every laptop CPU has SIMD vector units (<a class="reference external" href="https://www.intel.com/content/www/us/en/architecture-and-technology/avx-512-overview.html">AVX</a>, <a class="reference external" href="https://developer.arm.com/Architectures/Neon">NEON</a>, <a class="reference external" href="https://developer.arm.com/Architectures/Scalable%20Vector%20Extensions">SVE</a>), every GPU is essentially a wide vector machine with branch-divergence handling, and the workloads that drive the Top500 are matrix multiplies — which is to say, <em>exactly the workload Cray designed for in 1972</em>. But the hardware running those workloads is not what Cray would have built. Understanding why is the whole point.</p>
 <p>The central thesis of this course, stated once: <strong>vector thinking migrates from era to era; it never disappears.</strong> It moves from Cray-1 vector registers (1976) into vectorizing Fortran compilers (1978) into shared-memory vector multiprocessors (1982) into massively-parallel SIMD machines (1985) into multimedia SIMD instructions on commodity CPUs (1996) into GPU SIMT (2006) into AVX-512 and ARM SVE (2010s) and finally into the wide vector lanes of every exascale node. The <em>abstractions</em> over vector hardware change — vector registers, vector intrinsics, SIMT threads, predicated vector-length-agnostic loops, standard-library parallel algorithms — but the underlying engineering bet stays the same: <em>amortize instruction control over many elements, and engineer the memory subsystem hard enough to keep those elements arriving.</em> Everything else in this course is a variation on that one bet.</p>
+</section>
 <section id="getting-the-code-doing-the-labs">
 <h2>Getting the code, doing the labs<a class="headerlink" href="#getting-the-code-doing-the-labs" title="Link to this heading">#</a></h2>
 <p>This course lives in two places:</p>
@@ -520,6 +524,7 @@
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-the-code-doing-the-labs">Getting the code, doing the labs</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-this-course-is-structured">How this course is structured</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-note-on-getting-it-right">A note on getting it right</a></li>
