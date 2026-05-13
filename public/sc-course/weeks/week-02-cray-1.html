@@ -352,7 +352,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ruthless-simplicity">4. Ruthless simplicity</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like-cal">What the code looked like — CAL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like-cray-assembly-language">What the code looked like — Cray Assembly Language</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-it-won">Why it won</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-it-eventually-lost">Why it eventually lost</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-read-a-cal-listing">Lab — Read a CAL listing</a></li>
@@ -373,7 +373,7 @@
 <h1>Week 2 — The Cray-1 (1976): Vectors Become a Product<a class="headerlink" href="#week-2-the-cray-1-1976-vectors-become-a-product" title="Link to this heading">#</a></h1>
 <section id="where-we-are-in-2026">
 <h2>Where we are in 2026<a class="headerlink" href="#where-we-are-in-2026" title="Link to this heading">#</a></h2>
-<p>Open the assembly listing for any modern numerical kernel — a SAXPY loop compiled with <code class="docutils literal notranslate"><span class="pre">clang</span> <span class="pre">-O3</span></code> on an Apple M3, a CUDA kernel running on an H100, a chunk of NumPy’s BLAS path. You will see the same architectural concept: a single instruction operating on a register that holds many values at once, fed by a memory subsystem deliberately designed to keep that register full.</p>
+<p>Open the assembly listing for any modern numerical kernel — a SAXPY (Single-Precision A·X Plus Y) loop compiled with <code class="docutils literal notranslate"><span class="pre">clang</span> <span class="pre">-O3</span></code> on an Apple M3, a CUDA kernel running on an H100, a chunk of NumPy’s BLAS path. You will see the same architectural concept: a single instruction operating on a register that holds many values at once, fed by a memory subsystem deliberately designed to keep that register full.</p>
 <p>The Cray-1 did not invent vector processing, but it made register-to-register vector execution the dominant commercial form.</p>
 </section>
 <section id="the-cray-1-in-one-breath">
@@ -423,8 +423,8 @@
 <p>When asked years later about the C-shape, Cray said: “The bookcases worked out the right shape, and we built around them.” That was probably a joke. Probably.</p>
 </section>
 </section>
-<section id="what-the-code-looked-like-cal">
-<h2>What the code looked like — CAL<a class="headerlink" href="#what-the-code-looked-like-cal" title="Link to this heading">#</a></h2>
+<section id="what-the-code-looked-like-cray-assembly-language">
+<h2>What the code looked like — Cray Assembly Language<a class="headerlink" href="#what-the-code-looked-like-cray-assembly-language" title="Link to this heading">#</a></h2>
 <p>CAL is the Cray Assembly Language. Here is SAXPY (<code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">=</span> <span class="pre">a*x</span> <span class="pre">+</span> <span class="pre">y</span></code>) for vectors of 64 elements, register-to-register:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>        VL      A1            ; vector length := scalar A1 (= 64)
         V0      ,A2,1         ; load V0 from memory starting at A2, stride 1  (this is x)
@@ -474,6 +474,7 @@
 <li><p><a class="reference external" href="https://bitsavers.org/pdf/cray/CRAY-1/2240004C_CRAY-1_Hardware_Reference_Nov77.pdf"><em>Cray-1 Computer System Hardware Reference Manual</em></a>, publication 2240004.</p></li>
 <li><p>Murray, Charles J. (1997). <a class="reference external" href="https://archive.org/details/supermenstory00murr"><em>The Supermen: The Story of Seymour Cray and the Technical Wizards Behind the Supercomputer</em></a>, chapters 6–8.</p></li>
 <li><p>Hennessy &amp; Patterson, <a class="reference external" href="https://shop.elsevier.com/books/computer-architecture/hennessy/978-0-443-15406-5"><em>Computer Architecture: A Quantitative Approach</em></a>, Appendix G (Vector Processors). Cray-1 and CDC STAR-100 are the worked examples.</p></li>
+<li><p>Six Ways to SAXPY (NVIDIA Technical Blog) - <a class="reference external" href="https://developer.nvidia.com/blog/six-ways-saxpy/">https://developer.nvidia.com/blog/six-ways-saxpy/</a></p></li>
 </ul>
 </section>
 </section>
@@ -553,7 +554,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#ruthless-simplicity">4. Ruthless simplicity</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like-cal">What the code looked like — CAL</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-code-looked-like-cray-assembly-language">What the code looked like — Cray Assembly Language</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-it-won">Why it won</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-it-eventually-lost">Why it eventually lost</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lab-read-a-cal-listing">Lab — Read a CAL listing</a></li>

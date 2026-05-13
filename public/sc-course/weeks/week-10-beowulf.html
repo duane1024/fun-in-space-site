@@ -374,7 +374,7 @@
 <section id="the-original-beowulf">
 <h2>The original Beowulf<a class="headerlink" href="#the-original-beowulf" title="Link to this heading">#</a></h2>
 <p>In summer 1994, <strong>Thomas Sterling</strong> (at NASA’s Center of Excellence in Space Data and Information Sciences, NASA Goddard) and <strong>Donald Becker</strong> (in the same group, primarily a Linux kernel developer who wrote most of the early Ethernet drivers) had a problem: their group needed compute for satellite data processing, the budget was tiny, and there was no path to a Cray.</p>
-<p>So they bought 16 Intel DX4 (a 100 MHz 486) PCs, each with 16 MB of RAM, connected them with two stock 10 Mbps Ethernet networks (one for application traffic, one for I/O), put <strong>Linux</strong> on them, installed <strong>PVM</strong>, and called it Beowulf. ~$50,000 total. ~74 MFLOPS sustained on LINPACK. <em>Forty times slower per CPU</em> than the contemporary Cray Y-MP, but at 1/2,000 the cost. <em>Source: Sterling &amp; Becker (1995), “How to Build a Beowulf,” NASA Goddard Space Flight Center; Sterling et al. (1995), “BEOWULF: A parallel workstation for scientific computation,” Proc. ICPP ‘95 — both report the same configuration, sustained LINPACK number, and price.</em></p>
+<p>So they bought 16 Intel DX4 (a 100 MHz 486) PCs, each with 16 MB of RAM, connected them with two stock 10 Mbps Ethernet networks (one for application traffic, one for I/O), put <strong>Linux</strong> on them, installed <strong>PVM</strong>, and called it Beowulf. ~$50,000 total. ~74 MFLOPS sustained on LINPACK. <em>Forty times slower per CPU</em> than the contemporary Cray Y-MP, but at 1/2,000 the cost. <em>Source: Sterling et al. (1995), “BEOWULF: A parallel workstation for scientific computation,” Proc. ICPP ‘95.</em></p>
 <p>Three things made Beowulf interesting beyond the obvious cost win:</p>
 <ol class="arabic simple">
 <li><p><strong>Linux</strong>. In 1994 Linux was three years old and not yet trusted by anyone. Becker wrote (or patched) the network drivers Beowulf needed, contributed them upstream, and made Linux a credible scientific OS in the process. The work flowed back: every Linux user since 1995 has been running Becker’s network drivers.</p></li>
@@ -449,11 +449,10 @@
 <section id="further-reading">
 <h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Sterling, T. &amp; Becker, D. (1995). <em>How to Build a Beowulf</em>. Initial paper, Goddard Space Flight Center. Now widely available on <a class="reference external" href="http://archive.org">archive.org</a>.</p></li>
-<li><p>Sterling, T., Becker, D., Savarese, D., Dorband, J., Ranawake, U. &amp; Packer, C. (1995). “BEOWULF: A parallel workstation for scientific computation”. <em>Proc. ICPP ‘95</em>. The peer-reviewed version.</p></li>
-<li><p>Top500 lists 1995–2005, in sequence. Watch the “architecture” column flip.</p></li>
-<li><p>Yoo, A. et al. (2003). “SLURM: Simple Linux Utility for Resource Management”. <em>JSSPP ‘03</em>. The original Slurm paper.</p></li>
-<li><p>Schwan, P. (2003). “Lustre: Building a file system for 1000-node clusters”. <em>Linux Symposium</em>.</p></li>
+<li><p>Sterling, T., Becker, D., Savarese, D., Dorband, J., Ranawake, U. &amp; Packer, C. (1995). <a class="reference external" href="https://webhome.phy.duke.edu/~rgb/brahma/Resources/beowulf/papers/ICPP95/icpp95.html">“BEOWULF: A parallel workstation for scientific computation”</a>. <em>Proc. ICPP ‘95</em>.</p></li>
+<li><p><a class="reference external" href="https://www.top500.org/lists/top500/">Top500 lists</a> 1995–2005, in sequence. Watch the “architecture” column flip.</p></li>
+<li><p>Yoo, A. et al. (2003). <a class="reference external" href="https://doi.org/10.1007/10968987_3">“SLURM: Simple Linux Utility for Resource Management”</a>. <em>JSSPP ‘03</em>. The original Slurm paper.</p></li>
+<li><p>Schwan, P. (2003). <a class="reference external" href="https://www.kernel.org/doc/ols/2003/ols2003-pages-380-386.pdf">“Lustre: Building a file system for 1000-node clusters”</a>. <em>Linux Symposium</em>.</p></li>
 </ul>
 </section>
 </section>

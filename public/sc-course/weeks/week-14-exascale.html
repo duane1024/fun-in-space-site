@@ -418,7 +418,7 @@
 <li><p><strong>Power</strong>: ~30 MW. Roughly 60 GFLOPS/W on HPL in current public list results, ahead of Frontier on the same metric.</p></li>
 <li><p><strong>Cooling</strong>: direct liquid cooling.</p></li>
 </ul>
-<p><em>Sources for El Capitan specifications: Garcia et al. (2022), “El Capitan: An advanced architecture exascale system at LLNL” (SC22), for the planned MI300A node design; LLNL Livermore Computing El Capitan platform pages (<a class="reference external" href="http://hpc.llnl.gov">hpc.llnl.gov</a>) for the as-deployed node count; Top500 November 2024 list for the debut 1.742 EFLOPS HPL Rmax; Top500 November 2025 list for the updated ~1.81 EFLOPS figure.</em></p>
+<p><em>Sources for El Capitan specifications: LLNL Livermore Computing El Capitan platform pages (<a class="reference external" href="http://hpc.llnl.gov">hpc.llnl.gov</a>) for node design and as-deployed node count; Top500 November 2024 list for the debut 1.742 EFLOPS HPL Rmax; Top500 November 2025 list for the updated ~1.81 EFLOPS figure.</em></p>
 <p>The architectural innovation in El Capitan is the <strong>APU</strong>. The MI300A integrates CPU and GPU dies on the same package, sharing a coherent address space and HBM stacks. There is no PCIe between the CPU and GPU on the same package — they share memory at memory-bus speed. This eliminates a huge category of CPU-GPU data-movement headaches that have plagued every accelerated HPC system since Roadrunner.</p>
 <p>The MI300A is, in some sense, where the industry has been heading since heterogeneous systems began: collapse the host-and-accelerator distinction into a single coherent compute substrate. NVIDIA’s response is the Grace-Hopper Superchip (a Grace CPU and a Hopper GPU on a single board, connected by NVLink-C2C, with a unified memory abstraction); the next-generation Grace-Blackwell continues the pattern. The lines are blurring.</p>
 </section>
@@ -557,12 +557,12 @@
 <section id="further-reading">
 <h2>Further reading<a class="headerlink" href="#further-reading" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>Atchley, S. et al. (2023). “Frontier: Exploring exascale”. <em>Proc. SC23</em>.</p></li>
+<li><p>Atchley, S. et al. (2023). <a class="reference external" href="https://doi.org/10.1145/3581784.3607089">“Frontier: Exploring exascale”</a>. <em>Proc. SC23</em>.</p></li>
 <li><p>Sato, M. et al. (2020). “Co-design for A64FX manycore processor and Fugaku”. <em>Proc. SC20</em>.</p></li>
-<li><p>Argonne ALCF documentation (<a class="reference external" href="http://alcf.anl.gov/aurora">alcf.anl.gov/aurora</a>) for Aurora architecture.</p></li>
-<li><p>LLNL HPC Center documentation (<a class="reference external" href="http://hpc.llnl.gov/hardware/compute-platforms/el-capitan">hpc.llnl.gov/hardware/compute-platforms/el-capitan</a>) for El Capitan architecture.</p></li>
-<li><p>Top500 / HPCG list, current. Watch Fugaku’s HPCG ranking versus its HPL ranking.</p></li>
-<li><p>ECP Software Technology Capability Assessment Reports (ECP, multi-year). Honest discussion of how well real codes are running on exascale machines.</p></li>
+<li><p><a class="reference external" href="https://www.alcf.anl.gov/aurora">Argonne ALCF documentation</a> for Aurora architecture.</p></li>
+<li><p><a class="reference external" href="https://hpc.llnl.gov/hardware/compute-platforms/el-capitan">LLNL HPC Center documentation</a> for El Capitan architecture.</p></li>
+<li><p><a class="reference external" href="https://www.top500.org/lists/hpcg/">Top500 / HPCG list</a>, current. Watch Fugaku’s HPCG ranking versus its HPL ranking.</p></li>
+<li><p><a class="reference external" href="https://www.exascaleproject.org/">ECP Software Technology Capability Assessment Reports</a> (multi-year). Honest discussion of how well real codes are running on exascale machines.</p></li>
 </ul>
 </section>
 </section>
