@@ -3,7 +3,7 @@ title: Zarkov Technologies
 icon: /icons/sites/zarkov-card.png
 role: Founder / Consultant
 timeframe: 2019–Present
-summary: Consulting and product work spanning payment systems, architecture modernization, AI-agent workflows, and the messy reality of partner-facing technical delivery.
+summary: Consulting and product work spanning payment systems, architecture modernization, AI-native research platforms for investment teams, AI-agent workflows, and the messy reality of partner-facing technical delivery.
 featured: true
 order: 1
 links:
