@@ -1,6 +1,6 @@
 ---
 title: AI-Native Investment Research Platform
-summary: "Built for an investment firm and in production after four months (Jun–Sep 2026): live market data and consensus estimates on thousands of companies, a searchable, cited corpus of 200,000+ documents, a live valuation engine in Rust, and research agents that answer in the web app, in Slack, and inside Claude."
+summary: "Built for an investment team and in production after four months (Jun–Sep 2026): live market data and consensus estimates on thousands of companies, a searchable, cited corpus of 200,000+ documents, a live valuation engine in Rust, and research agents that answer in the web app, in Slack, and inside Claude."
 status: "Client work · In production"
 featured: true
 order: 2
@@ -14,7 +14,7 @@ tech:
   - AWS
 ---
 
-A research platform for a buy-side team, built by Duane through Zarkov Technologies. It replaces a patchwork of spreadsheets and vendor terminals with one governed data model, one research corpus, and one valuation engine behind a single typed API. It went from an empty repository to live data in under a month and has run in production on AWS since August.
+A research platform for an investment team, built by Duane through Zarkov Technologies. It replaces a patchwork of spreadsheets and vendor terminals with one governed data model, one research corpus, and one valuation engine behind a single typed API. It went from an empty repository to live data in under a month and has run in production on AWS since August.
 
 - **Coverage:** thousands of public companies plus a bounded tier of private ones, with a comps grid, automated screens, and a configurable composite score.
 - **Research corpus:** 200,000+ filings, transcripts, expert calls, and internal documents, with hybrid keyword and semantic search and answers that cite their sources.
