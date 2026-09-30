@@ -18,6 +18,6 @@ A research platform for an investment team, built by Duane through Zarkov Techno
 
 - **Coverage:** thousands of public companies plus a bounded tier of private ones, with a comps grid, automated screens, and a configurable composite score.
 - **Research corpus:** 200,000+ filings, transcripts, expert calls, and internal documents, with hybrid keyword and semantic search and answers that cite their sources.
-- **Valuation engine:** a Rust service on IronCalc (the spreadsheet engine behind l123) that builds a live, formula-driven Excel model for any company and hosts the analysts' own workbooks, versioned and mapped, with the firm's estimates shown next to consensus.
+- **Valuation engine:** a Rust service on IronCalc (the spreadsheet engine behind l123) that builds a live, formula-driven Excel model for any company and hosts the analysts' own workbooks, versioned and mapped, with the team's own estimates shown next to consensus.
 - **Agents where the team works:** a research agent that quotes sources verbatim with attribution, earnings summaries delivered to Slack as companies report, and 80+ tools exposed to Claude over MCP.
 - **Provenance on everything:** every number and document records its source, fetch time, and author. AI outputs also record the model, prompt version, and traced call behind them.
