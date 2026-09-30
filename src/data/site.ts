@@ -63,7 +63,12 @@ export const site = {
             text: 'residential real estate',
             href: 'https://atlascdt.com/'
         },
-        ', and AI-native products, including a ',
+        ', and AI-native products, including an ',
+        {
+            text: 'investment research platform for a hedge fund',
+            href: '/projects/'
+        },
+        ' and a ',
         {
             text: 'modern language learning app',
             href: 'https://cantito.ai/'
