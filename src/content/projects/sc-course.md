@@ -3,7 +3,7 @@ title: A Supercomputing Primer
 summary: A primer on the history of supercomputing for modern engineers — tracing the architectures, ideas, and tradeoffs from early vector machines through today's HPC and AI clusters.
 status: Course
 featured: true
-order: 4
+order: 5
 links:
   - label: Start the course
     url: /sc-course/
