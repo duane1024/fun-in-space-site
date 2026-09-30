@@ -2,7 +2,7 @@
 tweetId: '2052102602205081657'
 url: https://x.com/Duane1024/status/2052102602205081657
 featured: true
-order: 3
+order: 5
 published: 2026-05-06T19:06:01Z
 ---
 
