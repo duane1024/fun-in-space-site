@@ -24,6 +24,13 @@ const tweets = (await getCollection('tweets'))
   .filter((entry) => entry.data.featured)
   .sort((a, b) => a.data.order - b.data.order);
 
+const quotedDateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
 const tweetTimestampFormatter = new Intl.DateTimeFormat('en-US', {
   month: 'short',
   day: 'numeric',
@@ -133,6 +140,25 @@ const tweetTimestampFormatter = new Intl.DateTimeFormat('en-US', {
             </p>
           )}
           <p>{entry.body}</p>
+          {entry.data.quoted && (
+            <blockquote class="quoted-tweet" cite={entry.data.quoted.url}>
+              <p class="quoted-label">{entry.data.quoted.kind === 'reply' ? 'Replying to' : 'Quoting'}</p>
+              <p class="quoted-author">
+                <span class="quoted-name">{entry.data.quoted.author}</span>
+                <span class="quoted-handle">@{entry.data.quoted.handle}</span>
+                {entry.data.quoted.published && (
+                  <time datetime={entry.data.quoted.published.toISOString()}>
+                    · {quotedDateFormatter.format(entry.data.quoted.published)}
+                  </time>
+                )}
+              </p>
+              <p class="quoted-text">{entry.data.quoted.text}</p>
+              {entry.data.quoted.image && (
+                <img class="quoted-image" src={entry.data.quoted.image} alt={entry.data.quoted.imageAlt ?? ''} loading="lazy" />
+              )}
+              <a class="quoted-link" href={entry.data.quoted.url}>View original post</a>
+            </blockquote>
+          )}
           <a href={entry.data.url}>View on X / Twitter</a>
         </article>
       ))}
@@ -341,5 +367,69 @@ const tweetTimestampFormatter = new Intl.DateTimeFormat('en-US', {
     height: 22px;
     object-fit: contain;
     flex: 0 0 auto;
+  }
+  .quoted-tweet {
+    margin: 0 0 1rem;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.03);
+    font-size: 0.92rem;
+  }
+
+  .tweet .quoted-tweet p {
+    margin: 0;
+  }
+
+  .tweet .quoted-label {
+    color: var(--accent);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.35rem;
+  }
+
+  .tweet .quoted-author {
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.4;
+    margin-bottom: 0.4rem;
+  }
+
+  .quoted-name {
+    color: var(--text);
+    font-weight: 600;
+    margin-right: 0.35rem;
+  }
+
+  .quoted-handle {
+    margin-right: 0.25rem;
+  }
+
+  .tweet .quoted-text {
+    white-space: pre-line;
+    line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 9;
+    line-clamp: 9;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .quoted-image {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    object-position: top;
+    margin-top: 0.7rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+
+  .quoted-link {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
   }
 </style>
