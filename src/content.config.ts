@@ -79,6 +79,18 @@ const tweets = defineCollection({
     featured: z.boolean().default(false),
     order: z.number().default(999),
     published: z.date().optional(),
+    quoted: z
+      .object({
+        kind: z.enum(['quote', 'reply']).default('quote'),
+        author: z.string(),
+        handle: z.string(),
+        url: z.string(),
+        published: z.coerce.date().optional(),
+        text: z.string(),
+        image: z.string().optional(),
+        imageAlt: z.string().optional(),
+      })
+      .optional(),
   }),
 });
 
