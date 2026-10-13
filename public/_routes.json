@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "include": ["/*"],
+  "exclude": [
+    "/_astro/*",
+    "/images/*",
+    "/icons/*",
+    "/sc-course/_images/*",
+    "/sc-course/_sources/*",
+    "/sc-course/_sphinx_design_static/*",
+    "/sc-course/_static/*",
+    "/favicon.ico",
+    "/favicon.svg",
+    "/apple-touch-icon.png",
+    "/robots.txt",
+    "/sitemap*"
+  ]
+}
