@@ -28,6 +28,9 @@ const cases = [
   { name: 'internal navigation (skip)', url: 'https://fun-in-space.com/about/', ua: macChrome, ref: 'https://fun-in-space.com/', cf: {}, expect: 0 },
   { name: 'Twitterbot preview (skip)', url: 'https://fun-in-space.com/', ua: 'Twitterbot/1.0', ref: '', cf: {}, expect: 0 },
   { name: 'AWS datacenter (skip)', url: 'https://fun-in-space.com/', ua: macChrome, ref: '', cf: { asn: 16509, asOrganization: 'Amazon.com' }, expect: 0 },
+  { name: 'iCloud Private Relay (Cloudflare ASN) pings', url: 'https://fun-in-space.com/?r=test', ua: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.0 Mobile/15E148 Safari/604.1', ref: '', cf: { city: 'New York', country: 'US', asn: 13335, asOrganization: 'Cloudflare, Inc.' }, expect: 1 },
+  { name: 'Telegram Android in-app browser pings', url: 'https://fun-in-space.com/', ua: 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Mobile Safari/537.36 Telegram-Android/11.0', ref: '', cf: { asn: 21928, asOrganization: 'T-Mobile USA' }, expect: 1 },
+  { name: 'TelegramBot preview (skip)', url: 'https://fun-in-space.com/', ua: 'TelegramBot (like TwitterBot)', ref: '', cf: {}, expect: 0 },
   { name: 'CSS asset (skip)', url: 'https://fun-in-space.com/_astro/index.css', ua: macChrome, ref: '', cf: {}, accept: 'text/css', expect: 0 },
   { name: 'ignored IP (skip)', url: 'https://fun-in-space.com/', ua: macChrome, ref: '', cf: {}, ip: '9.9.9.9', expect: 0 },
   { name: '404 (skip)', url: 'https://fun-in-space.com/nope/', ua: macChrome, ref: '', cf: {}, status: 404, expect: 0 },
@@ -53,6 +56,18 @@ for (const c of (real ? cases.slice(0, 1) : cases)) {
   } else {
     console.log('real ping sent for:', c.name);
   }
+}
+if (!real) {
+  // Diagnostics endpoint: returns JSON, sends no message, never leaks the token.
+  const before = sent.length;
+  globalThis.fetch = async (u) => new Response(JSON.stringify(String(u).includes('getMe') ? { ok: true, result: { username: 'testbot' } } : { ok: true }));
+  const request = new Request('https://fun-in-space.com/__visit-ping', { headers: { 'user-agent': macChrome } });
+  Object.defineProperty(request, 'cf', { value: { asn: 16509, asOrganization: 'Amazon.com' } });
+  const res = await onRequest({ request, env, next: async () => { throw new Error('should not reach site'); }, waitUntil: () => {} });
+  const body = await res.text(); const j = JSON.parse(body);
+  const ok = j.function && j.tg_bot_token_set && j.bot_ok && j.chat_ok && j.would_ping_reason_skipped === 'datacenter network AS16509' && !body.includes(env.TG_BOT_TOKEN === 'x' ? 'NOPE' : env.TG_BOT_TOKEN) && sent.length === before;
+  if (!ok) fails++;
+  console.log(`${ok ? 'PASS' : 'FAIL'}  diagnostics endpoint`, ok ? '' : body);
 }
 globalThis.fetch = realFetch;
 console.log(fails ? `${fails} failure(s)` : 'all checks passed');
