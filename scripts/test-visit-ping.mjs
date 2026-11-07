@@ -34,19 +34,32 @@ const cases = [
   { name: 'CSS asset (skip)', url: 'https://fun-in-space.com/_astro/index.css', ua: macChrome, ref: '', cf: {}, accept: 'text/css', expect: 0 },
   { name: 'ignored IP (skip)', url: 'https://fun-in-space.com/', ua: macChrome, ref: '', cf: {}, ip: '9.9.9.9', expect: 0 },
   { name: '404 (skip)', url: 'https://fun-in-space.com/nope/', ua: macChrome, ref: '', cf: {}, status: 404, expect: 0 },
+  // New noise filters
+  { name: 'scanner w/ browser UA, no fetch metadata (skip)', url: 'https://fun-in-space.com/wp-admin/', ua: macChrome, ref: '', cf: { asn: 4134 }, nav: false, expect: 0 },
+  { name: 'prefetch (skip)', url: 'https://fun-in-space.com/about/', ua: macChrome, ref: '', cf: {}, extra: { 'sec-purpose': 'prefetch' }, expect: 0 },
+  { name: 'returning visitor within 12h (skip)', url: 'https://fun-in-space.com/', ua: macChrome, ref: '', cf: {}, cookie: 'fis_v=1', expect: 0 },
+  { name: 'returning visitor opens NEW tagged link (pings)', url: 'https://fun-in-space.com/?r=stripe', ua: macChrome, ref: '', cf: {}, cookie: 'fis_v=amp', expect: 1 },
+  { name: 'returning visitor reopens SAME tag (skip)', url: 'https://fun-in-space.com/?r=amp', ua: macChrome, ref: '', cf: {}, cookie: 'fis_v=amp', expect: 0 },
+  { name: 'mode=tagged drops untagged visit', url: 'https://fun-in-space.com/', ua: macChrome, ref: '', cf: {}, env: { VISIT_PING_MODE: 'tagged' }, expect: 0 },
+  { name: 'mode=tagged keeps tagged visit', url: 'https://fun-in-space.com/?r=acme', ua: macChrome, ref: '', cf: {}, env: { VISIT_PING_MODE: 'tagged' }, expect: 1 },
+  { name: 'mode=off', url: 'https://fun-in-space.com/?r=acme', ua: macChrome, ref: '', cf: {}, env: { VISIT_PING_MODE: 'off' }, expect: 0 },
 ];
 
 let fails = 0;
 for (const c of (real ? cases.slice(0, 1) : cases)) {
   const before = sent.length;
   const headers = new Headers({ 'user-agent': c.ua, accept: c.accept || 'text/html,application/xhtml+xml', 'cf-connecting-ip': c.ip || '1.2.3.4' });
+  if (c.nav !== false && !c.accept) { headers.set('sec-fetch-mode', 'navigate'); headers.set('sec-fetch-dest', 'document'); }
+  for (const [k, v] of Object.entries(c.extra || {})) headers.set(k, v);
+  if (c.cookie) headers.set('cookie', c.cookie);
   if (c.ref) headers.set('referer', c.ref);
   const request = new Request(c.url, { headers });
   Object.defineProperty(request, 'cf', { value: c.cf });
   const waits = [];
-  const res = await onRequest({ request, env, next: async () => new Response('ok', { status: c.status || 200 }), waitUntil: (p) => waits.push(p) });
+  const res = await onRequest({ request, env: { ...env, ...(c.env || {}) }, next: async () => new Response('ok', { status: c.status || 200 }), waitUntil: (p) => waits.push(p) });
   await Promise.all(waits);
-  if (res.status !== (c.status || 200)) { console.log('FAIL response changed', c.name); fails++; }
+  if (res.status !== (c.status || 200) || (await res.text()) !== 'ok') { console.log('FAIL response changed', c.name); fails++; }
+  if (c.expect && !res.headers.get('set-cookie')?.startsWith('fis_v=')) { console.log('FAIL no visitor cookie set', c.name); fails++; }
   if (!real) {
     const got = sent.length - before;
     const ok = got === c.expect;
