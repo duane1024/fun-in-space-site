@@ -8,11 +8,12 @@
 // Optional:
 //   VISIT_PING_IGNORE_IPS  comma-separated IPs to skip (e.g. your home IP)
 
-const BOT_UA = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|quora link|pinterest|vkshare|whatsapp|telegram|discord|slack|skype|bitly|curl|wget|python|go-http|java\/|okhttp|axios|node-fetch|headless|lighthouse|pingdom|uptime|monitor|scan|ahrefs|semrush|mj12|dotbot|petal|bytespider|gptbot|claude|perplexity|ccbot|chatgpt|amazonbot|applebot|bingpreview|google-inspectiontool|feedfetcher|rss|validator/i;
+const BOT_UA = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|quora link|pinterest|vkshare|whatsapp|telegrambot|discord|slack|skype|bitly|curl|wget|python|go-http|java\/|okhttp|axios|node-fetch|headless|lighthouse|pingdom|uptime|monitor|scan|ahrefs|semrush|mj12|dotbot|petal|bytespider|gptbot|claude|perplexity|ccbot|chatgpt|amazonbot|applebot|bingpreview|google-inspectiontool|feedfetcher|rss|validator/i;
 
 // Hosting/cloud networks: almost always bots, scanners or link-preview fetchers.
+// Cloudflare's own ASN is deliberately NOT listed: iCloud Private Relay and WARP users egress
+// through it, so blocking it silently drops real iPhone/Safari visitors.
 const DATACENTER_ASN = new Set([
-  13335, 209242, // Cloudflare
   16509, 14618, 8987, // AWS
   15169, 396982, 19527, // Google / GCP
   8075, 8068, // Microsoft / Azure
@@ -69,19 +70,58 @@ function esc(s) {
   return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
 
-async function ping(env, request, url) {
+// Returns why a request would NOT ping, or null if it would.
+function skipReason(env, request, url) {
   const ua = request.headers.get('user-agent') || '';
-  if (!ua || BOT_UA.test(ua)) return;
+  if (!ua) return 'no user-agent';
+  if (BOT_UA.test(ua)) return 'bot/preview user-agent';
   const cf = request.cf || {};
-  if (cf.asn && DATACENTER_ASN.has(Number(cf.asn))) return;
-  if (cf.botManagement && cf.botManagement.verifiedBot) return;
-
+  if (cf.asn && DATACENTER_ASN.has(Number(cf.asn))) return `datacenter network AS${cf.asn}`;
+  if (cf.botManagement && cf.botManagement.verifiedBot) return 'verified bot';
   const ip = request.headers.get('cf-connecting-ip') || '';
   const ignore = (env.VISIT_PING_IGNORE_IPS || '').split(',').map((s) => s.trim()).filter(Boolean);
-  if (ip && ignore.includes(ip)) return;
+  if (ip && ignore.includes(ip)) return 'ignored IP';
+  if (referrerLabel(request.headers.get('referer'), url.hostname) === null) return 'internal navigation';
+  return null;
+}
 
+// GET /__visit-ping : health check. Reports whether the Function is deployed, whether the
+// env vars are set and the bot can reach the chat (via getMe/getChat, which send nothing),
+// and whether *this* request would have pinged. Never returns the token or chat id.
+async function diagnostics(env, request, url) {
+  const cf = request.cf || {};
+  const out = {
+    function: 'visit-ping v2',
+    commit: env.CF_PAGES_COMMIT_SHA || null,
+    tg_bot_token_set: Boolean(env.TG_BOT_TOKEN),
+    tg_chat_id_set: Boolean(env.TG_CHAT_ID),
+    bot_ok: null,
+    chat_ok: null,
+    you: { asn: cf.asn || null, network: cf.asOrganization || null, country: cf.country || null },
+    would_ping_reason_skipped: skipReason(env, request, url),
+  };
+  if (env.TG_BOT_TOKEN) {
+    try {
+      const me = await (await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/getMe`)).json();
+      out.bot_ok = Boolean(me.ok);
+      if (me.ok) out.bot = me.result.username;
+      if (me.ok && env.TG_CHAT_ID) {
+        const ch = await (await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/getChat?chat_id=${encodeURIComponent(env.TG_CHAT_ID)}`)).json();
+        out.chat_ok = Boolean(ch.ok);
+        if (!ch.ok) out.chat_error = ch.description || 'unknown';
+      }
+    } catch (e) { out.bot_ok = false; out.error = String(e).slice(0, 120); }
+  }
+  return new Response(JSON.stringify(out, null, 2), {
+    headers: { 'content-type': 'application/json', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' },
+  });
+}
+
+async function ping(env, request, url) {
+  if (skipReason(env, request, url)) return;
+  const ua = request.headers.get('user-agent') || '';
+  const cf = request.cf || {};
   const ref = referrerLabel(request.headers.get('referer'), url.hostname);
-  if (ref === null) return; // clicking around inside the site: only ping the landing page
 
   // ?r=<tag> marks personalised links (e.g. ?r=amp). Also show utm_source if present.
   const tag = url.searchParams.get('r') || url.searchParams.get('ref') || url.searchParams.get('utm_source');
@@ -110,6 +150,10 @@ async function ping(env, request, url) {
 
 export async function onRequest(context) {
   const { request, env } = context;
+  try {
+    const u = new URL(request.url);
+    if (u.pathname === '/__visit-ping') return await diagnostics(env, request, u);
+  } catch { /* fall through to the site */ }
   const response = await context.next();
   try {
     const url = new URL(request.url);
