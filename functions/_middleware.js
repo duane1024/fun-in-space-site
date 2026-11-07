@@ -70,6 +70,9 @@ function esc(s) {
   return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
 
+// Accept the old name too, in case the secret was saved as TELEGRAM_BOT_TOKEN.
+const botToken = (env) => env.TG_BOT_TOKEN || env.TELEGRAM_BOT_TOKEN || '';
+
 // Returns why a request would NOT ping, or null if it would.
 function skipReason(env, request, url) {
   const ua = request.headers.get('user-agent') || '';
@@ -93,20 +96,22 @@ async function diagnostics(env, request, url) {
   const out = {
     function: 'visit-ping v2',
     commit: env.CF_PAGES_COMMIT_SHA || null,
-    tg_bot_token_set: Boolean(env.TG_BOT_TOKEN),
+    tg_bot_token_set: Boolean(botToken(env)),
+    // Names only (never values) of non-system env vars, JSON-quoted so stray spaces show up.
+    env_var_names: Object.keys(env).filter((k) => !k.startsWith('CF_') && k !== 'ASSETS').map((k) => JSON.stringify(k)),
     tg_chat_id_set: Boolean(env.TG_CHAT_ID),
     bot_ok: null,
     chat_ok: null,
     you: { asn: cf.asn || null, network: cf.asOrganization || null, country: cf.country || null },
     would_ping_reason_skipped: skipReason(env, request, url),
   };
-  if (env.TG_BOT_TOKEN) {
+  if (botToken(env)) {
     try {
-      const me = await (await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/getMe`)).json();
+      const me = await (await fetch(`https://api.telegram.org/bot${botToken(env)}/getMe`)).json();
       out.bot_ok = Boolean(me.ok);
       if (me.ok) out.bot = me.result.username;
       if (me.ok && env.TG_CHAT_ID) {
-        const ch = await (await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/getChat?chat_id=${encodeURIComponent(env.TG_CHAT_ID)}`)).json();
+        const ch = await (await fetch(`https://api.telegram.org/bot${botToken(env)}/getChat?chat_id=${encodeURIComponent(env.TG_CHAT_ID)}`)).json();
         out.chat_ok = Boolean(ch.ok);
         if (!ch.ok) out.chat_error = ch.description || 'unknown';
       }
@@ -141,7 +146,7 @@ async function ping(env, request, url) {
     `<b>When:</b> ${esc(when)} ET`,
   ];
 
-  await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage`, {
+  await fetch(`https://api.telegram.org/bot${botToken(env)}/sendMessage`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ chat_id: env.TG_CHAT_ID, text: lines.join('\n'), parse_mode: 'HTML', disable_web_page_preview: true }),
@@ -157,7 +162,7 @@ export async function onRequest(context) {
   const response = await context.next();
   try {
     const url = new URL(request.url);
-    if (env.TG_BOT_TOKEN && env.TG_CHAT_ID && response.status < 400 && isPageView(request, url)) {
+    if (botToken(env) && env.TG_CHAT_ID && response.status < 400 && isPageView(request, url)) {
       context.waitUntil(ping(env, request, url).catch(() => {}));
     }
   } catch { /* never break the site */ }
