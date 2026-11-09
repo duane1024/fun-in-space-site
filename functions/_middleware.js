@@ -78,6 +78,23 @@ function referrerLabel(ref, host) {
   } catch { return ref.slice(0, 80); }
 }
 
+// Best guess at where a visit came from when the browser sends no Referer header
+// (most app links, email, Messages, Slack, bookmarks, typed URLs).
+function sourceLabel(request, host) {
+  const ref = referrerLabel(request.headers.get('referer'), host);
+  if (ref !== 'direct / app') return ref;
+  const ua = request.headers.get('user-agent') || '';
+  const app = /Twitter/i.test(ua) ? 'X app' : /LinkedInApp/i.test(ua) ? 'LinkedIn app'
+    : /Instagram/i.test(ua) ? 'Instagram app' : /FBAN|FBAV/i.test(ua) ? 'Facebook app'
+    : /Telegram/i.test(ua) ? 'Telegram app' : /GSA\//.test(ua) ? 'Google app'
+    : /Line\//.test(ua) ? 'LINE app' : '';
+  if (app) return `${app} (in-app browser)`;
+  const site = request.headers.get('sec-fetch-site');
+  if (site === 'none') return 'no referrer: typed URL, bookmark, or a link opened from an app (email, Messages, Slack, notes…)';
+  if (site === 'cross-site') return 'link on another site that hides its referrer';
+  return 'unknown (no referrer sent)';
+}
+
 function esc(s) {
   return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
@@ -144,7 +161,7 @@ async function ping(env, request, url) {
   if (skipReason(env, request, url)) return;
   const ua = request.headers.get('user-agent') || '';
   const cf = request.cf || {};
-  const ref = referrerLabel(request.headers.get('referer'), url.hostname);
+  const ref = sourceLabel(request, url.hostname);
 
   // ?r=<tag> marks personalised links (e.g. ?r=amp). Also show utm_source if present.
   const tag = visitTag(url);
@@ -160,7 +177,7 @@ async function ping(env, request, url) {
     `<b>From:</b> ${esc(place)}`,
     `<b>Network:</b> ${esc(cf.asOrganization || 'unknown')}${cf.asn ? ` (AS${cf.asn})` : ''}`,
     `<b>Device:</b> ${esc(device(ua))}`,
-    `<b>Referrer:</b> ${esc(ref)}`,
+    `<b>Source:</b> ${esc(ref)}`,
     `<b>When:</b> ${esc(when)} ET`,
   ];
 
