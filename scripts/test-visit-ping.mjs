@@ -12,12 +12,13 @@ if (real && !process.env.TG_BOT_TOKEN) {
   }
 }
 const sent = [];
+const logged = [];
 const realFetch = globalThis.fetch;
 if (!real) {
-  globalThis.fetch = async (u, init) => { sent.push(JSON.parse(init.body).text); return new Response('{}'); };
+  globalThis.fetch = async (u, init) => { const b = JSON.parse(init.body); (b.chat_id === 'LOG' ? logged : sent).push(b.text); return new Response('{}'); };
 }
 
-const env = { TG_BOT_TOKEN: process.env.TG_BOT_TOKEN || 'x', TG_CHAT_ID: process.env.TG_CHAT_ID || '1', VISIT_PING_IGNORE_IPS: '9.9.9.9' };
+const env = { TG_BOT_TOKEN: process.env.TG_BOT_TOKEN || 'x', TG_CHAT_ID: process.env.TG_CHAT_ID || '1', VISIT_PING_IGNORE_IPS: '9.9.9.9', VISIT_PING_MODE: 'all' };
 const iphoneX = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Twitter for iPhone/10.80';
 const macChrome = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0 Safari/537.36';
 
@@ -43,11 +44,17 @@ const cases = [
   { name: 'mode=tagged drops untagged visit', url: 'https://fun-in-space.com/', ua: macChrome, ref: '', cf: {}, env: { VISIT_PING_MODE: 'tagged' }, expect: 0 },
   { name: 'mode=tagged keeps tagged visit', url: 'https://fun-in-space.com/?r=acme', ua: macChrome, ref: '', cf: {}, env: { VISIT_PING_MODE: 'tagged' }, expect: 1 },
   { name: 'mode=off', url: 'https://fun-in-space.com/?r=acme', ua: macChrome, ref: '', cf: {}, env: { VISIT_PING_MODE: 'off' }, expect: 0 },
+  // Default mode (no VISIT_PING_MODE) = tagged only, plus the silent log chat
+  { name: 'default: untagged Google visit -> log only', url: 'https://fun-in-space.com/projects/', ua: macChrome, ref: 'https://www.google.com/', cf: { city: 'Austin', regionCode: 'TX', country: 'US', asn: 7922, asOrganization: 'Comcast Cable' }, env: { VISIT_PING_MODE: undefined, TG_LOG_CHAT_ID: 'LOG' }, expect: 0, expectLog: 1 },
+  { name: 'default: tagged link -> DM + log', url: 'https://fun-in-space.com/?r=stripe', ua: macChrome, ref: '', cf: { asn: 701, asOrganization: 'Verizon' }, env: { VISIT_PING_MODE: undefined, TG_LOG_CHAT_ID: 'LOG' }, expect: 1, expectLog: 1 },
+  { name: 'default: internal navigation -> log only', url: 'https://fun-in-space.com/about/', ua: macChrome, ref: 'https://fun-in-space.com/', cf: {}, cookie: 'fis_id=abc123', env: { VISIT_PING_MODE: undefined, TG_LOG_CHAT_ID: 'LOG' }, expect: 0, expectLog: 1 },
+  { name: 'default: bot -> nothing', url: 'https://fun-in-space.com/', ua: 'Googlebot/2.1', ref: '', cf: {}, env: { VISIT_PING_MODE: undefined, TG_LOG_CHAT_ID: 'LOG' }, expect: 0, expectLog: 0 },
 ];
 
 let fails = 0;
 for (const c of (real ? cases.slice(0, 1) : cases)) {
   const before = sent.length;
+  c._logBefore = logged.length;
   const headers = new Headers({ 'user-agent': c.ua, accept: c.accept || 'text/html,application/xhtml+xml', 'cf-connecting-ip': c.ip || '1.2.3.4' });
   if (c.nav !== false && !c.accept) { headers.set('sec-fetch-mode', 'navigate'); headers.set('sec-fetch-dest', 'document'); }
   for (const [k, v] of Object.entries(c.extra || {})) headers.set(k, v);
@@ -59,7 +66,12 @@ for (const c of (real ? cases.slice(0, 1) : cases)) {
   const res = await onRequest({ request, env: { ...env, ...(c.env || {}) }, next: async () => new Response('ok', { status: c.status || 200 }), waitUntil: (p) => waits.push(p) });
   await Promise.all(waits);
   if (res.status !== (c.status || 200) || (await res.text()) !== 'ok') { console.log('FAIL response changed', c.name); fails++; }
-  if (c.expect && !res.headers.get('set-cookie')?.startsWith('fis_v=')) { console.log('FAIL no visitor cookie set', c.name); fails++; }
+  if (c.expect && !(res.headers.get('set-cookie') || '').includes('fis_v=')) { console.log('FAIL no visitor cookie set', c.name); fails++; }
+  if (c.expectLog !== undefined && !real) {
+    const gotLog = logged.length - (c._logBefore ?? 0);
+    if (gotLog !== c.expectLog) { console.log(`FAIL log count ${gotLog} != ${c.expectLog}`, c.name); fails++; }
+    else if (gotLog) console.log('   LOG: ' + logged[logged.length - 1].replace(/\n/g, '\n        '));
+  }
   if (!real) {
     const got = sent.length - before;
     const ok = got === c.expect;
