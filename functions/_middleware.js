@@ -4,7 +4,10 @@
 //
 // Required Pages environment variables (Settings -> Variables and Secrets, encrypted):
 //   TG_BOT_TOKEN  Telegram bot token
-//   TG_CHAT_ID    chat to notify (Duane's DM)
+//   TG_CHAT_ID    chat to notify (Duane's DM): tagged links only by default
+// Optional:
+//   TG_LOG_CHAT_ID  silent log chat: every human page view, one line each
+//   VISIT_PING_MODE tagged (default) | all | off
 // Optional:
 //   VISIT_PING_IGNORE_IPS  comma-separated IPs to skip (e.g. your home IP)
 
@@ -48,6 +51,11 @@ function isPageView(request, url) {
 // One ping per visitor per SEEN_HOURS: a cookie remembers the visitor (and any ?r= tags already seen).
 const SEEN_COOKIE = 'fis_v';
 const SEEN_HOURS = 12;
+const ID_COOKIE = 'fis_id';
+function visitorId(request) {
+  const m = (request.headers.get('cookie') || '').match(new RegExp(`(?:^|;\\s*)${ID_COOKIE}=([a-z0-9]{6})`));
+  return m ? { id: m[1], isNew: false } : { id: Math.random().toString(36).slice(2, 8).padEnd(6, '0'), isNew: true };
+}
 function seenTags(request) {
   const m = (request.headers.get('cookie') || '').match(new RegExp(`(?:^|;\\s*)${SEEN_COOKIE}=([^;]*)`));
   return m ? decodeURIComponent(m[1]).split('|') : null; // null = never seen
@@ -99,8 +107,8 @@ function esc(s) {
   return String(s ?? '').replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
 }
 
-// Returns why a request would NOT ping, or null if it would.
-function skipReason(env, request, url) {
+// Returns why a request is NOT a human page view worth logging, or null if it is.
+function botReason(env, request) {
   const ua = request.headers.get('user-agent') || '';
   if (!ua) return 'no user-agent';
   if (BOT_UA.test(ua)) return 'bot/preview user-agent';
@@ -110,11 +118,19 @@ function skipReason(env, request, url) {
   const ip = request.headers.get('cf-connecting-ip') || '';
   const ignore = (env.VISIT_PING_IGNORE_IPS || '').split(',').map((s) => s.trim()).filter(Boolean);
   if (ip && ignore.includes(ip)) return 'ignored IP';
-  if (referrerLabel(request.headers.get('referer'), url.hostname) === null) return 'internal navigation';
-  const mode = (env.VISIT_PING_MODE || 'all').toLowerCase();
+  return null;
+}
+
+// Returns why a human page view should NOT notify the DM, or null if it should.
+// Default mode is 'tagged': only ?r= / ?ref= / utm_source links notify. 'all' = every new visitor; 'off' = none.
+function skipReason(env, request, url) {
+  const bot = botReason(env, request);
+  if (bot) return bot;
+  const mode = (env.VISIT_PING_MODE || 'tagged').toLowerCase();
   const tag = visitTag(url);
   if (mode === 'off') return 'pings turned off (VISIT_PING_MODE=off)';
-  if (mode === 'tagged' && !tag) return 'untagged visit (VISIT_PING_MODE=tagged)';
+  if (mode === 'tagged' && !tag) return 'untagged visit (logged only)';
+  if (!tag && referrerLabel(request.headers.get('referer'), url.hostname) === null) return 'internal navigation';
   const seen = seenTags(request);
   if (seen && (!tag || seen.includes(tag))) return 'already pinged for this visitor';
   return null;
@@ -131,13 +147,16 @@ function visitTag(url) {
 async function diagnostics(env, request, url) {
   const cf = request.cf || {};
   const out = {
-    function: 'visit-ping v3',
+    function: 'visit-ping v4',
+    mode: (env.VISIT_PING_MODE || 'tagged').toLowerCase(),
+    tg_log_chat_id_set: Boolean(env.TG_LOG_CHAT_ID),
     commit: env.CF_PAGES_COMMIT_SHA || null,
     tg_bot_token_set: Boolean(env.TG_BOT_TOKEN),
     tg_chat_id_set: Boolean(env.TG_CHAT_ID),
     bot_ok: null,
     chat_ok: null,
     you: { asn: cf.asn || null, network: cf.asOrganization || null, country: cf.country || null },
+    would_log: !botReason(env, request),
     would_ping_reason_skipped: skipReason(env, request, url),
   };
   if (env.TG_BOT_TOKEN) {
@@ -188,6 +207,29 @@ async function ping(env, request, url) {
   });
 }
 
+// Silent per-page-view log to a separate Telegram chat (TG_LOG_CHAT_ID): every human page view,
+// including internal navigation and repeat visits, one compact line each. The visitor id (#abc123)
+// is a first-party cookie, so you can follow one person across pages.
+async function logVisit(env, request, url, vid) {
+  const ua = request.headers.get('user-agent') || '';
+  const cf = request.cf || {};
+  const place = [cf.city, cf.regionCode || cf.region, cf.country].filter(Boolean).join(', ') || '?';
+  const ref = referrerLabel(request.headers.get('referer'), url.hostname);
+  const src = ref === null ? 'internal' : sourceLabel(request, url.hostname).replace(/^no referrer: .*/, 'direct/app link');
+  const tag = visitTag(url);
+  const when = new Date().toLocaleString('en-US', { timeZone: 'America/New_York', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+  const text = [
+    `${vid.isNew ? '🆕' : '↪️'} <code>#${vid.id}</code> <b>${esc(url.pathname)}</b>${tag ? ` 🔖${esc(tag)}` : ''}`,
+    `${esc(place)} · ${esc(cf.asOrganization || '?')} · ${esc(device(ua))}`,
+    `from ${esc(src)} · ${esc(when)} ET`,
+  ].join('\n');
+  await fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ chat_id: env.TG_LOG_CHAT_ID, text, parse_mode: 'HTML', disable_web_page_preview: true, disable_notification: true }),
+  });
+}
+
 export async function onRequest(context) {
   const { request, env } = context;
   try {
@@ -197,18 +239,25 @@ export async function onRequest(context) {
   const response = await context.next();
   try {
     const url = new URL(request.url);
-    if (env.TG_BOT_TOKEN && env.TG_CHAT_ID && response.status < 400 && isPageView(request, url)
-        && !skipReason(env, request, url)) {
+    if (!env.TG_BOT_TOKEN || response.status >= 400 || !isPageView(request, url) || botReason(env, request)) return response;
+    const cookies = [];
+    const vid = visitorId(request);
+    if (env.TG_LOG_CHAT_ID) {
+      context.waitUntil(logVisit(env, request, url, vid).catch(() => {}));
+      if (vid.isNew) cookies.push(`${ID_COOKIE}=${vid.id}; Max-Age=${90 * 86400}; Path=/; Secure; HttpOnly; SameSite=Lax`);
+    }
+    if (env.TG_CHAT_ID && !skipReason(env, request, url)) {
       context.waitUntil(ping(env, request, url).catch(() => {}));
-      // Remember this visitor so further pages/reloads in the next SEEN_HOURS don't ping again.
+      // Remember tags already pinged so reopening the same link doesn't ping again for SEEN_HOURS.
       const tags = new Set((seenTags(request) || []).filter(Boolean));
       const tag = visitTag(url);
       if (tag) tags.add(tag);
-      const value = encodeURIComponent([...tags].slice(-10).join('|') || '1');
-      const out = new Response(response.body, response);
-      out.headers.append('set-cookie', `${SEEN_COOKIE}=${value}; Max-Age=${SEEN_HOURS * 3600}; Path=/; Secure; HttpOnly; SameSite=Lax`);
-      return out;
+      cookies.push(`${SEEN_COOKIE}=${encodeURIComponent([...tags].slice(-10).join('|') || '1')}; Max-Age=${SEEN_HOURS * 3600}; Path=/; Secure; HttpOnly; SameSite=Lax`);
     }
+    if (!cookies.length) return response;
+    const out = new Response(response.body, response);
+    for (const c of cookies) out.headers.append('set-cookie', c);
+    return out;
   } catch { /* never break the site */ }
   return response;
 }
